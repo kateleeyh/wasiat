@@ -4,7 +4,7 @@ import { createServerClient } from '@supabase/ssr'
 const PROTECTED_ROUTES = ['/dashboard', '/wasiat', '/will', '/payment', '/profile']
 const AUTH_ROUTES = ['/auth/login', '/auth/register']
 
-export async function proxy(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request })
 
   const supabase = createServerClient(
