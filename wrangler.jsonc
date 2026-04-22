@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "wasiathub",
+  "name": "wasiat",
   "main": ".open-next/worker.js",
   "compatibility_date": "2026-04-20",
   "observability": {
