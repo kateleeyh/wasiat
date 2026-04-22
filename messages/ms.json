@@ -265,5 +265,99 @@
     "title": "Penafian",
     "body": "WasiatHub menyediakan perkhidmatan penjana dokumen sahaja dan tidak merupakan nasihat undang-undang. Pengguna dinasihatkan untuk berunding dengan peguam atau pegawai Syariah untuk memastikan dokumen memenuhi keperluan khusus mereka. WasiatHub tidak bertanggungjawab ke atas sebarang pertikaian undang-undang yang timbul daripada penggunaan dokumen yang dijana.",
     "accept": "Saya faham dan bersetuju"
+  },
+  "landing": {
+    "nav": {
+      "features": "Ciri-Ciri",
+      "howItWorks": "Cara Kerja",
+      "pricing": "Harga",
+      "faq": "Soal Jawab",
+      "login": "Log Masuk",
+      "register": "Daftar Percuma"
+    },
+    "hero": {
+      "badge": "Platform Wasiat Digital #1 Malaysia",
+      "headline1": "Urus Warisan",
+      "headline2": "Anda Hari Ini",
+      "sub": "Platform digital untuk menjana Wasiat Islam & Surat Wasiat yang sah di sisi undang-undang Malaysia — selesai dalam 15 minit.",
+      "cta": "Mulakan Sekarang",
+      "ctaSecondary": "Ketahui Lebih Lanjut",
+      "stat1": "RM 49",
+      "stat1Label": "Harga bermula",
+      "stat2": "15 min",
+      "stat2Label": "Masa siapkan",
+      "stat3": "100%",
+      "stat3Label": "Berasaskan undang-undang"
+    },
+    "trust": {
+      "legal": "Sah di Sisi Undang-undang",
+      "legalDesc": "Berpandukan Akta Wasiat 1959 & Undang-undang Syariah Malaysia",
+      "secure": "Bayaran Selamat FPX",
+      "secureDesc": "Sistem pembayaran bank-ke-bank Malaysia yang terpercaya",
+      "fast": "Siap dalam 15 Minit",
+      "fastDesc": "Borang dipandu langkah demi langkah, mudah difahami",
+      "pdf": "PDF Terus ke E-mel",
+      "pdfDesc": "Dokumen anda dihantar terus ke peti masuk anda"
+    },
+    "docTypes": {
+      "title": "Untuk Semua Rakyat Malaysia",
+      "subtitle": "WasiatHub menyokong dua jenis dokumen wasiat mengikut undang-undang Malaysia",
+      "wasiatFor": "Untuk Muslim",
+      "wasiatDesc": "Berpandukan hukum Syariah. Meliputi agihan faraid, wasiat bebas sehingga 1/3 harta, harta alih & tak alih.",
+      "willTitle": "Surat Wasiat",
+      "willFor": "Untuk Bukan Muslim",
+      "willDesc": "Berpandukan Akta Wasiat 1959. Meliputi semua jenis harta, penjagaan anak-anak, dan aset digital."
+    },
+    "howItWorks": {
+      "title": "Mudah. Cepat. Sah.",
+      "subtitle": "4 langkah mudah untuk menjana wasiat anda",
+      "step1": "Daftar Akaun",
+      "step1Desc": "Daftar percuma dengan e-mel atau Google. Simpan kemajuan anda pada bila-bila masa.",
+      "step2": "Isi Borang",
+      "step2Desc": "Borang dipandu langkah demi langkah. Auto-simpan — boleh sambung bila-bila masa.",
+      "step3": "Semak & Pratonton",
+      "step3Desc": "Semak semula maklumat anda dan pratonton dokumen sebelum membuat bayaran.",
+      "step4": "Bayar & Terima PDF",
+      "step4Desc": "Bayar sekali sahaja. PDF dijanakan serta-merta dan dihantar ke e-mel anda."
+    },
+    "features": {
+      "title": "Semua yang Anda Perlukan",
+      "subtitle": "Direka untuk memudahkan proses yang penting ini"
+    },
+    "pricing": {
+      "title": "Harga Telus, Tanpa Bayaran Tersembunyi",
+      "subtitle": "Bayaran sekali sahaja. Tiada langganan.",
+      "wasiatTitle": "Wasiat Islam",
+      "willTitle": "Surat Wasiat",
+      "bundleTitle": "Pakej Pasangan",
+      "bundleBadge": "Paling Popular",
+      "price49": "RM 49",
+      "price79": "RM 79",
+      "cta": "Mulakan Sekarang",
+      "disclaimer": "Semua harga dalam Ringgit Malaysia (RM). Bayaran diproses melalui FPX."
+    },
+    "faq": {
+      "title": "Soalan Lazim",
+      "subtitle": "Ada soalan? Kami ada jawapannya."
+    },
+    "cta": {
+      "title": "Jangan Tunggu Lagi",
+      "subtitle": "Lebih 60% rakyat Malaysia tidak mempunyai wasiat. Jangan biarkan keluarga anda dalam kesulitan.",
+      "button": "Cipta Wasiat Saya Sekarang",
+      "note": "Percuma untuk mendaftar. Bayar hanya apabila anda bersedia."
+    },
+    "footer": {
+      "tagline": "Platform wasiat digital untuk rakyat Malaysia.",
+      "product": "Produk",
+      "legal": "Undang-undang",
+      "disclaimer": "Penafian",
+      "privacy": "Dasar Privasi",
+      "terms": "Terma Penggunaan",
+      "support": "Sokongan",
+      "faq": "Soal Jawab",
+      "contact": "Hubungi Kami",
+      "rights": "Hak cipta terpelihara.",
+      "disclaimerShort": "WasiatHub menyediakan perkhidmatan penjana dokumen sahaja dan bukan nasihat undang-undang."
+    }
   }
 }

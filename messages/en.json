@@ -265,5 +265,99 @@
     "title": "Disclaimer",
     "body": "WasiatHub provides a document generation service only and does not constitute legal advice. Users are advised to consult a lawyer or Syariah officer to ensure the document meets their specific needs. WasiatHub is not liable for any legal disputes arising from the use of generated documents.",
     "accept": "I understand and agree"
+  },
+  "landing": {
+    "nav": {
+      "features": "Features",
+      "howItWorks": "How It Works",
+      "pricing": "Pricing",
+      "faq": "FAQ",
+      "login": "Log In",
+      "register": "Get Started Free"
+    },
+    "hero": {
+      "badge": "Malaysia's #1 Digital Will Platform",
+      "headline1": "Secure Your",
+      "headline2": "Family's Legacy",
+      "sub": "Malaysia's trusted digital platform to create a legally-guided Islamic Will & General Will — done in 15 minutes.",
+      "cta": "Get Started Now",
+      "ctaSecondary": "Learn More",
+      "stat1": "RM 49",
+      "stat1Label": "Starting from",
+      "stat2": "15 min",
+      "stat2Label": "To complete",
+      "stat3": "100%",
+      "stat3Label": "Law-based"
+    },
+    "trust": {
+      "legal": "Legally Compliant",
+      "legalDesc": "Based on Wills Act 1959 & Malaysian Syariah law",
+      "secure": "Secure FPX Payment",
+      "secureDesc": "Malaysia's trusted bank-to-bank payment system",
+      "fast": "Done in 15 Minutes",
+      "fastDesc": "Step-by-step guided form, easy to understand",
+      "pdf": "PDF to Your Inbox",
+      "pdfDesc": "Your document is delivered directly to your email"
+    },
+    "docTypes": {
+      "title": "For All Malaysians",
+      "subtitle": "WasiatHub supports two types of will documents under Malaysian law",
+      "wasiatFor": "For Muslims",
+      "wasiatDesc": "Follows Syariah law. Covers faraid distribution, free bequest up to 1/3 of estate, movable & immovable assets.",
+      "willTitle": "General Will",
+      "willFor": "For Non-Muslims",
+      "willDesc": "Follows Wills Act 1959. Covers all asset types, guardianship for minor children, and digital assets."
+    },
+    "howItWorks": {
+      "title": "Simple. Fast. Legal.",
+      "subtitle": "4 easy steps to generate your will",
+      "step1": "Create Account",
+      "step1Desc": "Sign up free with email or Google. Save your progress anytime.",
+      "step2": "Fill the Form",
+      "step2Desc": "Guided step-by-step form. Auto-saved — continue anytime.",
+      "step3": "Review & Preview",
+      "step3Desc": "Review your information and preview the document before payment.",
+      "step4": "Pay & Get PDF",
+      "step4Desc": "One-time payment. PDF generated instantly and sent to your email."
+    },
+    "features": {
+      "title": "Everything You Need",
+      "subtitle": "Designed to simplify this important process"
+    },
+    "pricing": {
+      "title": "Transparent Pricing, No Hidden Fees",
+      "subtitle": "One-time payment. No subscription.",
+      "wasiatTitle": "Islamic Will",
+      "willTitle": "General Will",
+      "bundleTitle": "Couple Bundle",
+      "bundleBadge": "Most Popular",
+      "price49": "RM 49",
+      "price79": "RM 79",
+      "cta": "Get Started Now",
+      "disclaimer": "All prices in Malaysian Ringgit (RM). Payments processed via FPX."
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "subtitle": "Have questions? We have answers."
+    },
+    "cta": {
+      "title": "Don't Wait Any Longer",
+      "subtitle": "Over 60% of Malaysians don't have a will. Don't leave your family in uncertainty.",
+      "button": "Create My Will Now",
+      "note": "Free to register. Pay only when you're ready."
+    },
+    "footer": {
+      "tagline": "The digital will platform for Malaysians.",
+      "product": "Product",
+      "legal": "Legal",
+      "disclaimer": "Disclaimer",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Use",
+      "support": "Support",
+      "faq": "FAQ",
+      "contact": "Contact Us",
+      "rights": "All rights reserved.",
+      "disclaimerShort": "WasiatHub provides a document generation service only and does not constitute legal advice."
+    }
   }
 }
