@@ -752,15 +752,25 @@ export function WillStep4Beneficiaries({
       {/* ── Residual estate beneficiary (shared by both modes) ── */}
       {((!isItemised && stage === 'form') || (isItemised && subStep === 'assign')) && (
         <div className="border border-border rounded-xl overflow-hidden">
-          <label className="flex items-center gap-3 p-4 cursor-pointer hover:bg-muted/30 transition">
-            <input type="checkbox" className="w-4 h-4 accent-primary" checked={hasResidual} onChange={e => setHasResidual(e.target.checked)} />
-            <div>
+          <label className="flex items-start gap-3 p-4 cursor-pointer hover:bg-muted/30 transition">
+            <input type="checkbox" className="w-4 h-4 accent-primary mt-0.5 shrink-0" checked={hasResidual} onChange={e => setHasResidual(e.target.checked)} />
+            <div className="space-y-1">
               <p className="text-sm font-medium">
-                {ms ? 'Tetapkan Penerima Harta Baki (Pilihan)' : 'Set Residual Estate Beneficiary (Optional)'}
+                {ms ? 'Penerima Harta Baki (Pilihan)' : 'Residual Estate Beneficiary (Optional)'}
               </p>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                {ms ? 'Penerima ini akan menerima semua harta yang tidak diagihkan secara khusus' : 'This person receives all assets not specifically allocated above'}
-              </p>
+              {ms ? (
+                <div className="text-xs text-muted-foreground space-y-1.5">
+                  <p>Sesiapa yang akan menerima harta yang <strong className="text-foreground">tidak dinyatakan secara khusus</strong> dalam wasiat ini.</p>
+                  <p className="text-slate-400 italic">Contoh: Jika anda terlupa menyenaraikan sebuah aset, atau membeli harta baru selepas menulis wasiat ini — ia akan pergi kepada orang ini secara automatik.</p>
+                  <p className="text-amber-600">⚠ Jangan masukkan aset tertentu di sini. Untuk aset seperti rumah, kereta, atau akaun bank — tambah dalam senarai aset di atas dan tetapkan penerima secara khusus.</p>
+                </div>
+              ) : (
+                <div className="text-xs text-muted-foreground space-y-1.5">
+                  <p>The person who receives all assets <strong className="text-foreground">not specifically named</strong> in this Will.</p>
+                  <p className="text-slate-400 italic">Example: If you forgot to list an asset, or acquire new property after writing this Will — it goes to this person automatically.</p>
+                  <p className="text-amber-600">⚠ Do not use this for specific assets. For named assets like property, vehicles, or bank accounts — add them to the asset list above and assign a specific beneficiary.</p>
+                </div>
+              )}
             </div>
           </label>
 
