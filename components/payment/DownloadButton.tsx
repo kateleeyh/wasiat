@@ -4,45 +4,90 @@ import { useState } from 'react'
 import { Download, Loader2 } from 'lucide-react'
 
 interface Props {
-  documentId:     string
+  documentId: string
   existingPdfUrl: string | null
 }
 
-export function DownloadButton({ documentId, existingPdfUrl }: Props) {
-  const [loading, setLoading]   = useState(false)
-  const [pdfUrl, setPdfUrl]     = useState<string | null>(existingPdfUrl)
-  const [error, setError]       = useState('')
+function makeDocRef(type: string, id: string) {
+  const prefix = type === 'wasiat' ? 'WST' : 'WLL'
+  return `${prefix}-${new Date().getFullYear()}-${id.slice(0, 6).toUpperCase()}`
+}
 
-  async function callGenerate() {
-    const res = await fetch('/api/documents/generate', {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ documentId }),
-    })
-    const data = await res.json()
-    if (!res.ok) throw new Error(data.error ?? 'Generation failed')
-    return data
-  }
+export function DownloadButton({ documentId, existingPdfUrl }: Props) {
+  const [loading, setLoading] = useState(false)
+  const [pdfUrl, setPdfUrl] = useState<string | null>(existingPdfUrl)
+  const [error, setError] = useState('')
 
   async function handleGenerate() {
     setLoading(true)
     setError('')
 
     try {
-      let data: { pdf_url?: string }
-      try {
-        data = await callGenerate()
-      } catch {
-        // First attempt failed — likely a cold-start issue. Retry once after a short delay.
-        await new Promise(r => setTimeout(r, 2000))
-        data = await callGenerate()
+      // 1. Fetch document data from server
+      const dataRes = await fetch('/api/documents/data', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ documentId }),
+      })
+      const docPayload = await dataRes.json()
+      if (!dataRes.ok) throw new Error(docPayload.error ?? 'Failed to load document data')
+
+      const { type, language, data } = docPayload
+      const docRef = makeDocRef(type, documentId)
+      const generatedAt = new Date().toISOString()
+
+      // 2. Generate PDF client-side (browser supports WebAssembly)
+      const { pdf } = await import('@react-pdf/renderer')
+      const React = (await import('react')).default
+
+      let element: React.ReactElement
+      let testatorName: string
+      let testatorEmail: string
+      let fileName: string
+
+      if (type === 'wasiat') {
+        const { WasiatPdf } = await import('@/lib/pdf/WasiatPdf')
+        element = React.createElement(WasiatPdf, { data, docRef, generatedAt })
+        testatorName = data.testator_info?.full_name ?? ''
+        testatorEmail = data.testator_info?.email ?? ''
+        fileName = `Wasiat-${testatorName.replace(/\s+/g, '-')}.pdf`
+      } else {
+        const { WillPdf } = await import('@/lib/pdf/WillPdf')
+        element = React.createElement(WillPdf, { data, docRef, generatedAt, language: (language ?? 'ms') as 'ms' | 'en' })
+        testatorName = data.testator_info?.full_name ?? ''
+        testatorEmail = data.testator_info?.email ?? ''
+        fileName = `LastWill-${testatorName.replace(/\s+/g, '-')}.pdf`
       }
 
-      setPdfUrl(data.pdf_url ?? null)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const blob = await pdf(element as any).toBlob()
 
-      if (data.pdf_url) {
-        window.open(data.pdf_url, '_blank')
+      // 3. Trigger browser download immediately
+      const objectUrl = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = objectUrl
+      a.download = fileName
+      a.click()
+      URL.revokeObjectURL(objectUrl)
+
+      // 4. Upload to storage + send email in background
+      const reader = new FileReader()
+      reader.onload = async () => {
+        try {
+          const base64 = (reader.result as string).split(',')[1]
+          const finalRes = await fetch('/api/documents/finalize', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ documentId, pdfBase64: base64, fileName, testatorName, testatorEmail, docType: type, language }),
+          })
+          const finalData = await finalRes.json()
+          if (finalData.pdf_url) setPdfUrl(finalData.pdf_url)
+        } catch (e) {
+          console.error('Finalize error:', e)
+        }
       }
+      reader.readAsDataURL(blob)
+
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong')
     } finally {
@@ -79,23 +124,21 @@ export function DownloadButton({ documentId, existingPdfUrl }: Props) {
         {loading ? (
           <>
             <Loader2 className="w-4 h-4 animate-spin" />
-            Generating PDF...
+            {`Generating PDF...`}
           </>
         ) : (
           <>
             <Download className="w-4 h-4" />
-            Generate & Download PDF
+            {`Generate & Download PDF`}
           </>
         )}
       </button>
       {loading && (
         <p className="text-xs text-muted-foreground">
-          This may take a few seconds. The PDF will open automatically when ready.
+          Generating in your browser — this may take a few seconds.
         </p>
       )}
-      {error && (
-        <p className="text-xs text-destructive">{error}</p>
-      )}
+      {error && <p className="text-xs text-destructive">{error}</p>}
     </div>
   )
 }
