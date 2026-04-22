@@ -1,9 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
-import sgMail from '@sendgrid/mail'
+import nodemailer from 'nodemailer'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 
-sgMail.setApiKey(process.env.SENDGRID_API_KEY ?? '')
+function createTransporter() {
+  return nodemailer.createTransport({
+    host: process.env.SMTP_HOST ?? 'smtp.hostinger.com',
+    port: Number(process.env.SMTP_PORT ?? 465),
+    secure: true,
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
+  })
+}
 
 export async function POST(request: NextRequest) {
   const supabase = await createClient()
@@ -36,21 +46,23 @@ export async function POST(request: NextRequest) {
 
   await supabase.from('documents').update({ pdf_url: pdfUrl }).eq('id', documentId)
 
-  if (testatorEmail && process.env.SENDGRID_API_KEY && process.env.SENDGRID_FROM_EMAIL) {
+  if (testatorEmail && process.env.SMTP_USER && process.env.SMTP_PASS) {
     const isMalay = language === 'ms'
     try {
-      await sgMail.send({
+      const transporter = createTransporter()
+      await transporter.sendMail({
+        from: `WasiatHub <${process.env.SMTP_USER}>`,
         to: testatorEmail,
-        from: process.env.SENDGRID_FROM_EMAIL,
         subject: isWasiat
           ? 'Wasiat Anda Telah Berjaya Dijana — WasiatHub'
-          : isMalay ? 'Surat Wasiat Anda Telah Berjaya Dijana — WasiatHub' : 'Your Last Will Has Been Generated — WasiatHub',
+          : isMalay
+            ? 'Surat Wasiat Anda Telah Berjaya Dijana — WasiatHub'
+            : 'Your Last Will Has Been Generated — WasiatHub',
         html: buildEmail(testatorName, isWasiat, isMalay),
         attachments: [{
-          content: pdfBase64,
           filename: fileName,
-          type: 'application/pdf',
-          disposition: 'attachment',
+          content: pdfBuffer,
+          contentType: 'application/pdf',
         }],
       })
     } catch (emailErr) {
@@ -84,7 +96,7 @@ function buildEmail(name: string, isWasiat: boolean, isMalay: boolean) {
       </p>
     </div>
     <div style="background:#f5f5f5;padding:16px 24px;font-size:12px;color:#888;text-align:center;">
-      © ${new Date().getFullYear()} WasiatHub
+      © ${new Date().getFullYear()} WasiatHub. ${isMalay ? 'Hak cipta terpelihara.' : 'All rights reserved.'}
     </div>
   </div>`
 }
