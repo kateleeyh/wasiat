@@ -272,26 +272,27 @@
       "howItWorks": "How It Works",
       "pricing": "Pricing",
       "faq": "FAQ",
+      "insights": "Insights",
       "login": "Log In",
       "register": "Get Started Free"
     },
     "hero": {
-      "badge": "Malaysia's #1 Digital Will Platform",
-      "headline1": "Secure Your",
-      "headline2": "Family's Legacy",
-      "sub": "Malaysia's trusted digital platform to create a legally-guided Islamic Will & General Will — done in 15 minutes.",
+      "badge": "Malaysia's Digital Will Platform",
+      "headline1": "Your Will,",
+      "headline2": "Your Way.",
+      "sub": "Malaysia's digital platform to create an Islamic Will & General Will, guided by Malaysian legal frameworks — done in 15 minutes.",
       "cta": "Get Started Now",
       "ctaSecondary": "Learn More",
-      "stat1": "RM 49",
+      "stat1": "RM 79",
       "stat1Label": "Starting from",
       "stat2": "15 min",
       "stat2Label": "To complete",
       "stat3": "100%",
-      "stat3Label": "Law-based"
+      "stat3Label": "Guided by Law"
     },
     "trust": {
-      "legal": "Legally Compliant",
-      "legalDesc": "Based on Wills Act 1959 & Malaysian Syariah law",
+      "legal": "Guided by Malaysian Law",
+      "legalDesc": "Based on Wills Act 1959 & Malaysian Syariah frameworks",
       "secure": "Secure FPX Payment",
       "secureDesc": "Malaysia's trusted bank-to-bank payment system",
       "fast": "Done in 15 Minutes",
@@ -309,7 +310,7 @@
       "willDesc": "Follows Wills Act 1959. Covers all asset types, guardianship for minor children, and digital assets."
     },
     "howItWorks": {
-      "title": "Simple. Fast. Legal.",
+      "title": "Simple. Fast. Guided.",
       "subtitle": "4 easy steps to generate your will",
       "step1": "Create Account",
       "step1Desc": "Sign up free with email or Google. Save your progress anytime.",
@@ -329,10 +330,10 @@
       "subtitle": "One-time payment. No subscription.",
       "wasiatTitle": "Islamic Will",
       "willTitle": "General Will",
-      "bundleTitle": "Couple Bundle",
-      "bundleBadge": "Most Popular",
-      "price49": "RM 49",
+      "bundleTitle": "Family Bundle",
+      "bundleBadge": "Best Value",
       "price79": "RM 79",
+      "price129": "RM 129",
       "cta": "Get Started Now",
       "disclaimer": "All prices in Malaysian Ringgit (RM). Payments processed via FPX."
     },

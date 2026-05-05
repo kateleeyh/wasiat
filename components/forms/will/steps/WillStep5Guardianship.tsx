@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { InfoTip } from '@/components/forms/InfoTip'
 import { useLocale } from 'next-intl'
 import { Plus, Trash2 } from 'lucide-react'
 import type { Guardianship, ChildInfo, WillPrimaryGuardian, WillBackupGuardian } from '@/types/database'
@@ -149,7 +150,8 @@ export function WillStep5Guardianship({ initialData, onChange, onValidChange, do
   return (
     <div className="space-y-6">
       {/* Notice */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
+      <InfoTip titleMs="ℹ️ Mengenai Penjagaan Anak-Anak" titleEn="ℹ️ About Guardianship" ms={ms} variant="blue">
+        <div className="text-sm text-blue-800 mt-2">
         <p className="font-semibold mb-1">{ms ? 'Penjagaan Anak-Anak Kecil' : 'Minor Children Guardianship'}</p>
         <p className="text-xs leading-relaxed">
           {ms
@@ -157,6 +159,7 @@ export function WillStep5Guardianship({ initialData, onChange, onValidChange, do
             : 'If you have minor children (under 18), you may appoint a guardian for them. This appointment is subject to court approval.'}
         </p>
       </div>
+      </InfoTip>
 
       {/* Has minor children toggle */}
       <div className="border border-border rounded-xl overflow-hidden">

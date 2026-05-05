@@ -25,3 +25,11 @@ next-env.d.ts
 
 # Vercel
 .vercel
+
+# Cloudflare / OpenNext build output
+.open-next/
+.wrangler/
+
+# Reference files
+"SEO plan.html"
+middleware\ 2.ts

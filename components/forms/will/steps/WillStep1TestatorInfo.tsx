@@ -8,10 +8,12 @@ import {
   genderMismatchWarning,
 } from '@/lib/validation'
 
+import { InfoTip } from '@/components/forms/InfoTip'
+
 function isValidEmail(e: string) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e) }
 
-const MS_RELIGIONS = ['Islam', 'Kristian', 'Buddha', 'Hindu', 'Tao', 'Sikh', 'Tiada Agama', 'Lain-lain']
-const EN_RELIGIONS = ['Islam', 'Christianity', 'Buddhism', 'Hinduism', 'Taoism', 'Sikhism', 'No Religion', 'Others']
+const MS_RELIGIONS = ['Kristian', 'Buddha', 'Hindu', 'Tao', 'Sikh', 'Tiada Agama', 'Lain-lain']
+const EN_RELIGIONS = ['Christianity', 'Buddhism', 'Hinduism', 'Taoism', 'Sikhism', 'No Religion', 'Others']
 
 interface Props {
   initialData:   WillTestatorInfo | null
@@ -34,9 +36,9 @@ export function WillStep1TestatorInfo({ initialData, onChange, onValidChange, do
   const religionList = docLanguage === 'ms' ? MS_RELIGIONS : EN_RELIGIONS
   const [religionCustom, setReligionCustom] = useState(() => {
     const v = initialData?.religion ?? ''
-    return v !== '' && !MS_RELIGIONS.includes(v) && !EN_RELIGIONS.includes(v)
+    return v !== '' && !MS_RELIGIONS.includes(v) && !EN_RELIGIONS.includes(v) && v !== 'Islam'
   })
-  const showReligionInput = religionCustom || (form.religion !== '' && !religionList.includes(form.religion))
+  const showReligionInput = religionCustom || (form.religion !== '' && !religionList.includes(form.religion) && form.religion !== 'Islam')
 
   // Auto-fill DOB and gender from IC
   useEffect(() => {
@@ -87,18 +89,16 @@ export function WillStep1TestatorInfo({ initialData, onChange, onValidChange, do
 
   return (
     <div className="space-y-6">
-      {/* Wills Act notice */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm">
-        <p className="font-semibold text-blue-800 mb-1">{ms ? 'Akta Wasiat 1959' : 'Wills Act 1959'}</p>
-        <p className="text-blue-700 text-xs leading-relaxed">
+      <InfoTip titleMs="ℹ️ Akta Wasiat 1959 — Asas Perundangan" titleEn="ℹ️ Wills Act 1959 — Legal Basis" ms={ms} variant="blue">
+        <p className="text-xs text-blue-700 leading-relaxed mt-2">
           {ms
             ? 'Surat Wasiat Am ini disediakan di bawah Akta Wasiat 1959 (Malaysia). Ia boleh dibuat oleh mana-mana individu yang berumur 18 tahun ke atas dan sihat akal, tanpa mengira agama.'
             : 'This General Will is prepared under the Wills Act 1959 (Malaysia). It may be made by any individual aged 18 and above of sound mind, regardless of religion.'}
         </p>
-      </div>
+      </InfoTip>
 
-      {/* Distribution Act explanation */}
-      <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-800 space-y-3">
+      <InfoTip titleMs="⚠️ Mengapa Surat Wasiat Penting?" titleEn="⚠️ Why Is a Will Important?" ms={ms} variant="amber">
+        <div className="text-sm text-amber-800 space-y-3 mt-2">
         <p className="font-semibold">{ms ? 'Mengapa Surat Wasiat Penting?' : 'Why Is a Will Important?'}</p>
         <div className="space-y-2 text-xs leading-relaxed">
           <p>
@@ -125,7 +125,8 @@ export function WillStep1TestatorInfo({ initialData, onChange, onValidChange, do
               : '⚠ The Act makes no provision for friends, partners, charities, or anyone outside the defined family. A Will lets you decide for yourself.'}
           </p>
         </div>
-      </div>
+        </div>
+      </InfoTip>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
@@ -264,6 +265,15 @@ export function WillStep1TestatorInfo({ initialData, onChange, onValidChange, do
             )}
           </>
           {err('religion') && <p className="text-xs text-destructive mt-1">{err('religion')}</p>}
+          <div className="mt-1.5 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 text-xs text-amber-800">
+            {ms
+              ? '⚠ Penganut Islam? Sila gunakan '
+              : '⚠ Muslim? Please use '}
+            <a href="/dashboard/create" className="underline font-semibold">
+              {ms ? 'Wasiat Islam' : 'Islamic Wasiat'}
+            </a>
+            {ms ? ' sebaliknya.' : ' instead.'}
+          </div>
         </div>
 
         {/* Address */}
@@ -312,7 +322,14 @@ export function WillStep1TestatorInfo({ initialData, onChange, onValidChange, do
             onBlur={() => blur('email')}
             placeholder={docLanguage === 'ms' ? 'ahmad@example.com' : 'john@example.com'}
           />
-          {err('email') && <p className="text-xs text-destructive mt-1">{err('email')}</p>}
+          {err('email')
+            ? <p className="text-xs text-destructive mt-1">{err('email')}</p>
+            : <p className="text-xs text-muted-foreground mt-1">
+                {ms
+                  ? '📄 PDF surat wasiat anda akan dihantar ke e-mel ini selepas dijana. Pastikan e-mel adalah betul.'
+                  : '📄 Your will PDF will be emailed to this address after generation. Make sure it is correct.'}
+              </p>
+          }
         </div>
       </div>
     </div>

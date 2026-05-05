@@ -86,6 +86,25 @@ function currency(n: number) {
   return `RM ${n.toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
 }
 
+// ─── Footer ──────────────────────────────────────────────────────────────────
+
+function Footer({ docRef, name, ic, ms }: { docRef: string; name?: string; ic?: string; ms: boolean }) {
+  const leftText = name ? `${name}  |  IC: ${ic}` : `WasiatHub | ${docRef}`
+  return (
+    <>
+      <View style={{ position: 'absolute', top: 790, left: 72, right: 72, borderTopWidth: 0.5, borderTopColor: '#aaa' }} fixed />
+      <View style={{ position: 'absolute', top: 800, left: 72, right: 72, flexDirection: 'row', justifyContent: 'space-between' }} fixed>
+        <Text style={{ fontSize: 8.5, color: '#666' }}>{leftText}</Text>
+        <Text style={{ fontSize: 8.5, color: '#666' }} render={({ pageNumber, totalPages }) =>
+          ms
+            ? `${docRef}  |  Muka Surat ${pageNumber} / ${totalPages}`
+            : `${docRef}  |  Page ${pageNumber} of ${totalPages}`
+        } />
+      </View>
+    </>
+  )
+}
+
 // ─── Main PDF ─────────────────────────────────────────────────────────────────
 
 interface Props {
@@ -170,6 +189,7 @@ export function WillPdf({ data, docRef, generatedAt, language }: Props) {
           MAIN DOCUMENT
       ═══════════════════════════════════════════════ */}
       <Page size="A4" style={S.page}>
+        <Footer docRef={docRef} name={t.full_name} ic={t.ic_number} ms={ms} />
 
         {/* Header */}
         <View style={S.pageHeader}>
@@ -243,7 +263,7 @@ export function WillPdf({ data, docRef, generatedAt, language }: Props) {
                   Sekiranya pelaksana utama meninggal dunia, enggan berkhidmat, atau tidak layak
                   sebelum atau semasa pentadbiran harta pusaka ini, maka{' '}
                   <Text style={S.bold}>{bk.full_name.toUpperCase()}</Text>{' '}
-                  (No. K/P: {bk.ic_number}), {bk.relationship},
+                  (No. K/P: {bk.ic_number}), {bk.relationship}{bk.phone ? `, Tel: ${bk.phone}` : ''},
                   dilantik sebagai <Text style={S.bold}>Pelaksana Simpanan</Text>.
                 </Text>
               ) : (
@@ -251,7 +271,7 @@ export function WillPdf({ data, docRef, generatedAt, language }: Props) {
                   Should the primary executor predecease me, refuse to act, or be unable to act
                   before or during the administration of this estate,{' '}
                   <Text style={S.bold}>{bk.full_name.toUpperCase()}</Text>{' '}
-                  (IC: {bk.ic_number}), {bk.relationship},
+                  (IC: {bk.ic_number}), {bk.relationship}{bk.phone ? `, Tel: ${bk.phone}` : ''},
                   is appointed as the <Text style={S.bold}>Backup Executor</Text>.
                 </Text>
               )
@@ -640,7 +660,7 @@ export function WillPdf({ data, docRef, generatedAt, language }: Props) {
           )}
         </View>
 
-        <View style={S.sigSection}>
+        <View style={[S.sigSection, { maxWidth: '50%' }]}>
           <View style={S.sigLine} />
           <Text style={S.sigName}>{ms ? 'Tandatangan Pewasiat' : 'Testator Signature'}</Text>
           <Text style={[S.sigDotLine, { marginTop: 8 }]}>
@@ -653,8 +673,8 @@ export function WillPdf({ data, docRef, generatedAt, language }: Props) {
           </Text>
         </View>
 
-        {/* Witnesses — Declaration by Witnesses */}
-        <View style={{ marginTop: 16 }}>
+        {/* Witnesses — Declaration by Witnesses — kept together to avoid page split */}
+        <View style={{ marginTop: 16 }} wrap={false}>
           <Text style={[S.para, { fontFamily: 'Helvetica-Bold', textAlign: 'center', marginBottom: 8 }]}>
             {ms ? 'PENGISYTIHARAN OLEH SAKSI-SAKSI' : 'DECLARATION BY WITNESSES'}
           </Text>
@@ -675,7 +695,7 @@ export function WillPdf({ data, docRef, generatedAt, language }: Props) {
           )}
         </View>
 
-        <View style={S.sigGrid}>
+        <View style={S.sigGrid} wrap={false}>
           <View style={S.sigCol}>
             <Text style={[S.para, { fontFamily: 'Helvetica-Bold', marginBottom: 8 }]}>
               {ms ? 'SAKSI PERTAMA:' : 'FIRST WITNESS:'}
@@ -742,6 +762,7 @@ export function WillPdf({ data, docRef, generatedAt, language }: Props) {
       ═══════════════════════════════════════════════ */}
       {hasSchedule && (
         <Page size="A4" style={S.page}>
+          <Footer docRef={docRef} name={t.full_name} ic={t.ic_number} ms={ms} />
           <Text style={S.scheduleTitle}>
             {ms ? 'LAMPIRAN A' : 'APPENDIX A'}
           </Text>
@@ -810,39 +831,7 @@ export function WillPdf({ data, docRef, generatedAt, language }: Props) {
         </Page>
       )}
 
-      {/* ═══════════════════════════════════════════════
-          DISCLAIMER PAGE (separate, last)
-      ═══════════════════════════════════════════════ */}
-      <Page size="A4" style={[S.page, { paddingTop: 120 }]}>
-        <View style={{ maxWidth: 380, alignSelf: 'center' }}>
-          <Text style={{ fontSize: 11, fontFamily: 'Helvetica-Bold', color: '#444', marginBottom: 16, textAlign: 'center', letterSpacing: 1 }}>
-            {ms ? 'ASAS PERUNDANGAN & PENAFIAN' : 'LEGAL BASIS & DISCLAIMER'}
-          </Text>
-          <View style={{ borderTopWidth: 1, borderTopColor: '#ccc', marginBottom: 20 }} />
-          <Text style={{ fontSize: 9.5, color: '#555', lineHeight: 1.75, textAlign: 'justify', marginBottom: 16 }}>
-            {ms
-              ? 'Surat Wasiat Am ini disediakan di bawah Akta Wasiat 1959 Malaysia. Ia adalah sah dan berkuat kuasa apabila ditandatangani oleh pewasiat di hadapan dua orang saksi yang hadir secara serentak, dan kedua-dua saksi menandatangani di hadapan pewasiat. Saksi tidak boleh merupakan penerima manfaat atau pasangan penerima manfaat di bawah Surat Wasiat ini.'
-              : 'This General Will is prepared under the Wills Act 1959 (Malaysia). It is valid and enforceable when signed by the testator in the presence of two witnesses present at the same time, who also sign in the presence of the testator. Witnesses must not be beneficiaries or spouses of beneficiaries under this Will.'}
-          </Text>
-          <Text style={{ fontSize: 9.5, color: '#555', lineHeight: 1.75, textAlign: 'justify', marginBottom: 16 }}>
-            {ms
-              ? 'Dokumen ini tidak menggantikan nasihat guaman profesional. Pewasiat digalakkan untuk mendapatkan khidmat peguam bertauliah untuk mengesahkan kesahihan dan keberkesanan Surat Wasiat ini mengikut keadaan peribadi masing-masing.'
-              : 'This document does not substitute professional legal advice. The testator is encouraged to consult a qualified lawyer to confirm the validity and effectiveness of this Will according to their individual circumstances.'}
-          </Text>
-          <Text style={{ fontSize: 9.5, color: '#555', lineHeight: 1.75, textAlign: 'justify', marginBottom: 24 }}>
-            {ms
-              ? 'WasiatHub bertindak sebagai platform penyediaan dokumen sahaja dan tidak bertanggungjawab ke atas sebarang pertikaian undang-undang yang timbul daripada penggunaan dokumen ini.'
-              : 'WasiatHub acts solely as a document preparation platform and bears no responsibility for any legal disputes arising from the use of this document.'}
-          </Text>
-          <View style={{ borderTopWidth: 0.5, borderTopColor: '#ccc', paddingTop: 12 }}>
-            <Text style={{ fontSize: 8.5, color: '#aaa', textAlign: 'center', fontStyle: 'italic' }}>
-              {ms
-                ? `Dijana oleh WasiatHub pada ${fmt(generatedAt)} | Rujukan: ${docRef}`
-                : `Generated by WasiatHub on ${fmt(generatedAt)} | Ref: ${docRef}`}
-            </Text>
-          </View>
-        </View>
-      </Page>
+
     </Document>
   )
 }

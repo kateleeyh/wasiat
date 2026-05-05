@@ -52,7 +52,7 @@ export function Step2MovableAssets({ initialData, onChange, onValidChange }: Pro
     if (!initialData) return makeEmpty()
     // Ensure general mode has a pre-filled note
     if (initialData.mode === 'general' && !initialData.general_note) {
-      return { ...initialData, general_note: ms ? GENERAL_STATEMENT_MS : GENERAL_STATEMENT_EN }
+      return { ...initialData, general_note: GENERAL_STATEMENT_MS }
     }
     return initialData
   })
@@ -79,7 +79,7 @@ export function Step2MovableAssets({ initialData, onChange, onValidChange }: Pro
       mode,
       items: mode === 'itemised' ? (prev.items?.length ? prev.items : [{ ...EMPTY_ITEM }]) : prev.items,
       general_note: mode === 'general'
-        ? (prev.general_note || (ms ? GENERAL_STATEMENT_MS : GENERAL_STATEMENT_EN))
+        ? (prev.general_note || (GENERAL_STATEMENT_MS))
         : prev.general_note,
     }))
   }

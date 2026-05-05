@@ -3,8 +3,10 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useLocale } from 'next-intl'
-import { ChevronDown, ChevronUp, Pencil, Check, AlertCircle, Lock } from 'lucide-react'
+import { ChevronDown, ChevronUp, Pencil, Check, AlertCircle, Lock, ShieldAlert } from 'lucide-react'
 import type { WasiatRecord } from '@/types/database'
+import { validateWasiat } from '@/lib/crossValidation'
+import { PRICING } from '@/lib/pricing'
 
 // ─── helpers ──────────────────────────────────────────────────────────────────
 
@@ -124,14 +126,21 @@ export function WasiatReviewSection({ documentId, wasiatData: d, docStatus }: Pr
     1: !!d?.testator_info,
     2: !!d?.movable_assets,
     3: !!d?.immovable_assets,
-    4: !!(d?.beneficiaries?.length),
+    4: d?.beneficiaries !== null && d?.beneficiaries !== undefined,  // [] = all faraid (valid), null = not set
     5: !!d?.executor,
     6: !!(d?.witnesses?.witness_1 && d?.witnesses?.witness_2),
     7: !!d?.declaration,
   }
 
-  // Required steps to proceed to payment (step 6 witnesses is recommended but not blocking)
+  // Cross-field legal validation
+  const crossIssues    = d ? validateWasiat(d) : []
+  const crossErrors    = crossIssues.filter(i => i.severity === 'error')
+  const crossWarnings  = crossIssues.filter(i => i.severity === 'warning')
+  const hasCrossErrors = crossErrors.length > 0
+
+  // Required steps to proceed to payment
   const requiredComplete = complete[1] && complete[2] && complete[3] && complete[4] && complete[5] && complete[7]
+  const canProceed       = requiredComplete && !hasCrossErrors
   const completedCount   = Object.values(complete).filter(Boolean).length
 
   return (
@@ -263,6 +272,54 @@ export function WasiatReviewSection({ documentId, wasiatData: d, docStatus }: Pr
         </SectionCard>
 
       </div>
+
+      {/* ═══ Cross-field validation panel ═══ */}
+      {crossIssues.length > 0 && (
+        <div className="mb-8 space-y-3">
+          {crossErrors.length > 0 && (
+            <div className="bg-red-50 border border-red-200 rounded-xl p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <ShieldAlert className="w-4 h-4 text-red-600 shrink-0" />
+                <p className="text-sm font-semibold text-red-800">
+                  {ms ? 'Konflik Perundangan — Perlu Diperbaiki' : 'Legal Conflicts — Must Be Fixed'}
+                </p>
+              </div>
+              <ul className="space-y-2">
+                {crossErrors.map((issue, i) => (
+                  <li key={i} className="flex items-start gap-2 text-xs text-red-700">
+                    <span className="mt-0.5 shrink-0">•</span>
+                    <span>
+                      {ms ? issue.ms : issue.en}
+                      {' '}
+                      <a href={`/wasiat/${documentId}/step/${issue.step}`} className="underline font-medium">
+                        {ms ? `Perbaiki di Langkah ${issue.step}` : `Fix in Step ${issue.step}`}
+                      </a>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {crossWarnings.length > 0 && (
+            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
+                <p className="text-sm font-semibold text-amber-800">
+                  {ms ? 'Amaran' : 'Warnings'}
+                </p>
+              </div>
+              <ul className="space-y-2">
+                {crossWarnings.map((issue, i) => (
+                  <li key={i} className="flex items-start gap-2 text-xs text-amber-700">
+                    <span className="mt-0.5 shrink-0">•</span>
+                    <span>{ms ? issue.ms : issue.en}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* ═══ SECTION 2: Document preview ═══ */}
       <h2 className="text-base font-semibold mb-1">
@@ -454,8 +511,8 @@ export function WasiatReviewSection({ documentId, wasiatData: d, docStatus }: Pr
             <p className="text-xs text-muted-foreground">{ms ? 'PDF Wasiat + Penghantaran E-mel' : 'Wasiat PDF + Email delivery'}</p>
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-xl font-bold">RM 49</span>
-            {requiredComplete ? (
+            <span className="text-xl font-bold">{PRICING.single.displayRM}</span>
+            {canProceed ? (
               <Link
                 href={`/payment/${documentId}`}
                 className="px-6 py-2.5 bg-primary text-primary-foreground rounded-xl text-sm font-semibold hover:opacity-90 transition"
@@ -466,8 +523,11 @@ export function WasiatReviewSection({ documentId, wasiatData: d, docStatus }: Pr
               <button
                 disabled
                 className="px-6 py-2.5 bg-primary/40 text-primary-foreground rounded-xl text-sm font-semibold cursor-not-allowed"
+                title={hasCrossErrors ? (ms ? 'Sila perbaiki konflik perundangan' : 'Fix legal conflicts first') : undefined}
               >
-                {ms ? 'Lengkapkan semua bahagian' : 'Complete all sections'}
+                {hasCrossErrors
+                  ? (ms ? 'Perbaiki konflik dahulu' : 'Fix conflicts first')
+                  : (ms ? 'Lengkapkan semua bahagian' : 'Complete all sections')}
               </button>
             )}
           </div>

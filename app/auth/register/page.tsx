@@ -8,7 +8,7 @@ export default async function RegisterPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-muted/30 p-4">
-      <div className="w-full max-w-md bg-card border border-border rounded-xl shadow-sm p-8">
+      <div className="w-full max-w-md bg-card border border-border rounded-xl shadow-sm p-5 sm:p-8">
         <div className="mb-6 text-center">
           <h1 className="text-2xl font-bold text-primary">{t('common.appName')}</h1>
           <p className="text-muted-foreground mt-1">{t('auth.register')}</p>

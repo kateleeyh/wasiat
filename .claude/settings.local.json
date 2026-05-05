@@ -48,7 +48,18 @@
       "Bash(curl -s -X POST https://rvceeyywcrvaxbtosfqx.supabase.co/pg/query -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ2Y2VleXl3Y3J2YXhidG9zZnF4Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NTQ4ODU0NCwiZXhwIjoyMDkxMDY0NTQ0fQ.saPSMHOoWWz_77Q2Za4mbXYmsRTDXYjUbKRblXlCEI8' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ2Y2VleXl3Y3J2YXhidG9zZnF4Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NTQ4ODU0NCwiZXhwIjoyMDkxMDY0NTQ0fQ.saPSMHOoWWz_77Q2Za4mbXYmsRTDXYjUbKRblXlCEI8' -H 'Content-Type: application/json' -d '{\"query\": \"alter table public.will_data add column if not exists asset_distributions jsonb;\"}')",
       "Bash(git init *)",
       "Bash(git remote *)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(grep -v \"^$\")",
+      "Bash(git rm *)",
+      "Bash(npx wrangler *)",
+      "Bash(wrangler secret *)",
+      "Bash(find .next -type f -delete)",
+      "Bash(find .open-next -type f -delete)",
+      "Bash(npx rimraf *)",
+      "Bash(xattr -cr /Users/katelee/Desktop/wasiat/.open-next)",
+      "Bash(python3 -c 'import shutil; shutil.rmtree\\('\\\\''__TRACKED_VAR__'\\\\'', ignore_errors=True\\)')"
     ]
   }
 }

@@ -7,6 +7,7 @@ import {
   isValidIC, isValidPhone, formatIC, genderFromIC, dobFromIC,
   genderFromName, genderMismatchWarning,
 } from '@/lib/validation'
+import { InfoTip } from '@/components/forms/InfoTip'
 
 const MALAYSIAN_STATES = [
   'Johor', 'Kedah', 'Kelantan', 'Melaka', 'Negeri Sembilan',
@@ -88,15 +89,13 @@ export function Step1TestatorInfo({ initialData, onChange, onValidChange }: Prop
 
   return (
     <div className="space-y-6">
-      {/* Notice */}
-      <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm">
-        <p className="font-semibold text-amber-800 mb-1">{ms ? 'Peringatan' : 'Notice'}</p>
-        <p className="text-amber-700">
+      <InfoTip titleMs="⚠️ Peringatan Penting — Baca Sebelum Isi" titleEn="⚠️ Important Notice — Read Before Filling" ms={ms} variant="amber">
+        <p className="text-sm text-amber-700 mt-2">
           {ms
-            ? 'Wasiat ini adalah untuk pewasiat beragama Islam sahaja. Sila sahkan status agama anda di bawah.'
-            : 'This Wasiat is for Muslim testators only. Please confirm your religion at the bottom of this form.'}
+            ? 'Wasiat ini adalah untuk pewasiat beragama Islam sahaja. Sila sahkan status agama anda di bawah sebelum meneruskan.'
+            : 'This Wasiat is for Muslim testators only. Please confirm your religion at the bottom of this form before proceeding.'}
         </p>
-      </div>
+      </InfoTip>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
@@ -190,7 +189,7 @@ export function Step1TestatorInfo({ initialData, onChange, onValidChange }: Prop
         {/* State */}
         <div className="sm:col-span-2">
           <label className={lbl}>
-            {ms ? 'Negeri (untuk tujuan Mahkamah Syariah)' : 'State (for Syariah Court purposes)'}
+            {ms ? 'Negeri Kediaman Tetap' : 'State of Domicile'}
             <span className="text-destructive ml-0.5">*</span>
           </label>
           <select className={inp} value={form.state} onChange={e => set('state', e.target.value)} onBlur={() => blur('state')}>
@@ -198,6 +197,16 @@ export function Step1TestatorInfo({ initialData, onChange, onValidChange }: Prop
             {MALAYSIAN_STATES.map(s => <option key={s} value={s}>{s}</option>)}
           </select>
           {err('state') && <p className="text-xs text-destructive mt-1">{err('state')}</p>}
+          <div className="mt-2 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2 text-xs text-blue-800 leading-relaxed">
+            <p className="font-semibold mb-0.5">
+              {ms ? 'ℹ Mengapa negeri kediaman tetap penting?' : 'ℹ Why does state of domicile matter?'}
+            </p>
+            <p>
+              {ms
+                ? 'Pilih negeri di mana anda TINGGAL sekarang — bukan negeri lahir atau lokasi harta. Enakmen Wasiat Orang Islam yang terpakai dan Jabatan Agama Islam yang berwibawa untuk mendaftarkan wasiat ini ditentukan oleh negeri kediaman tetap anda.'
+                : 'Select the state where you CURRENTLY RESIDE — not birthplace or asset location. The applicable Syariah enactment and the Jabatan Agama Islam with jurisdiction to register this Wasiat are determined by your state of domicile.'}
+            </p>
+          </div>
         </div>
 
         {/* Address */}
@@ -246,7 +255,14 @@ export function Step1TestatorInfo({ initialData, onChange, onValidChange }: Prop
             onBlur={() => blur('email')}
             placeholder="ahmad@example.com"
           />
-          {err('email') && <p className="text-xs text-destructive mt-1">{err('email')}</p>}
+          {err('email')
+            ? <p className="text-xs text-destructive mt-1">{err('email')}</p>
+            : <p className="text-xs text-muted-foreground mt-1">
+                {ms
+                  ? '📄 PDF wasiat anda akan dihantar ke e-mel ini selepas dijana. Pastikan e-mel adalah betul.'
+                  : '📄 Your wasiat PDF will be emailed to this address after generation. Make sure it is correct.'}
+              </p>
+          }
         </div>
       </div>
 

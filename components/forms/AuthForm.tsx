@@ -108,6 +108,27 @@ export function AuthForm({ mode, action, googleAction, redirectTo }: AuthFormPro
           </div>
         )}
 
+        {/* PDPA & Marketing consent — register only */}
+        {mode === 'register' && (
+          <div className="space-y-3 pt-1">
+            <label className="flex items-start gap-2.5 cursor-pointer">
+              <input type="checkbox" name="pdpaConsent" required className="mt-0.5 w-4 h-4 accent-primary shrink-0" />
+              <span className="text-xs text-muted-foreground leading-relaxed">
+                <span className="font-semibold text-foreground">* </span>
+                I consent to WasiatHub collecting and storing my personal information (name, IC, contact, document data) for the purpose of generating, delivering and retaining my will/wasiat document, in accordance with the{' '}
+                <a href="/privacy" target="_blank" className="text-primary underline">Privacy Policy</a> and{' '}
+                <a href="/terms" target="_blank" className="text-primary underline">Terms of Use</a>.
+              </span>
+            </label>
+            <label className="flex items-start gap-2.5 cursor-pointer">
+              <input type="checkbox" name="marketingConsent" className="mt-0.5 w-4 h-4 accent-primary shrink-0" />
+              <span className="text-xs text-muted-foreground leading-relaxed">
+                (Optional) I agree to receive updates, tips, and promotional offers from WasiatHub via email. You can unsubscribe anytime.
+              </span>
+            </label>
+          </div>
+        )}
+
         {state?.error && (
           <p className="text-sm text-destructive">{state.error}</p>
         )}

@@ -16,6 +16,25 @@ export default async function DocumentsPage() {
     .eq('user_id', user!.id)
     .order('created_at', { ascending: false }) as { data: DocumentWithStatus[] | null }
 
+  // Fetch testator names from both tables in one query each
+  const docIds = (documents ?? []).map(d => d.id)
+  const nameMap: Record<string, string> = {}
+
+  if (docIds.length > 0) {
+    const [{ data: wasiatRows }, { data: willRows }] = await Promise.all([
+      supabase.from('wasiat_data').select('document_id, testator_info').in('document_id', docIds),
+      supabase.from('will_data').select('document_id, testator_info').in('document_id', docIds),
+    ])
+    wasiatRows?.forEach(r => {
+      const name = (r.testator_info as { full_name?: string } | null)?.full_name
+      if (name) nameMap[r.document_id] = name
+    })
+    willRows?.forEach(r => {
+      const name = (r.testator_info as { full_name?: string } | null)?.full_name
+      if (name) nameMap[r.document_id] = name
+    })
+  }
+
   return (
     <div className="max-w-4xl mx-auto">
       <div className="flex items-center justify-between mb-6">
@@ -44,7 +63,7 @@ export default async function DocumentsPage() {
       ) : (
         <div className="space-y-3">
           {documents.map((doc) => (
-            <DocumentCard key={doc.id} document={doc} />
+            <DocumentCard key={doc.id} document={doc} testatorName={nameMap[doc.id]} />
           ))}
         </div>
       )}

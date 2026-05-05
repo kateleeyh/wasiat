@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { InfoTip } from '@/components/forms/InfoTip'
 import { useLocale } from 'next-intl'
 import type { WillPrimaryExecutor, WillBackupExecutor } from '@/types/database'
 import {
@@ -132,7 +133,8 @@ export function WillStep2Executor({ initialPrimary, initialBackup, onPrimaryChan
   return (
     <div className="space-y-8">
       {/* Notice */}
-      <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm text-amber-800 space-y-2">
+      <InfoTip titleMs="ℹ️ Mengapa Melantik Pelaksana?" titleEn="ℹ️ Why Appoint an Executor?" ms={ms} variant="amber">
+        <div className="text-sm text-amber-800 space-y-2 mt-2">
         <p className="font-semibold">{ms ? 'Syarat Pelaksana (Executor)' : 'Executor Requirements'}</p>
         <ul className="space-y-1 text-xs leading-relaxed list-none">
           <li>✓ {ms ? <><strong>Berumur 18 tahun ke atas</strong> dan sihat akal</> : <><strong>Aged 18 and above</strong> and of sound mind</>}</li>
@@ -146,6 +148,7 @@ export function WillStep2Executor({ initialPrimary, initialBackup, onPrimaryChan
             : 'The executor is responsible for applying for Grant of Probate, settling debts, and distributing assets according to this Will.'}
         </p>
       </div>
+      </InfoTip>
 
       {/* Primary executor */}
       <div>

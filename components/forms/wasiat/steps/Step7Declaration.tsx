@@ -35,7 +35,7 @@ export function Step7Declaration({ initialData, testatorInfo, onChange, onValidC
     personal_wishes:  initialData?.personal_wishes ?? '',
   })
   const [useCustomWishes, setUseCustomWishes] = useState(
-    !!initialData?.personal_wishes && initialData.personal_wishes !== (ms ? PRESET_WISHES_MS : PRESET_WISHES_EN)
+    !!initialData?.personal_wishes && initialData.personal_wishes !== (PRESET_WISHES_MS)
   )
 
   const isValid =
@@ -58,35 +58,18 @@ export function Step7Declaration({ initialData, testatorInfo, onChange, onValidC
     <div className="space-y-6">
       {/* Declaration preview */}
       <div className="bg-muted/50 border border-border rounded-xl p-5 text-sm leading-relaxed text-foreground/80 italic">
-        {ms ? (
-          <>
-            <p>
-              Saya, <strong className="text-foreground not-italic">{testatorInfo?.full_name || '[ Nama Pewasiat ]'}</strong>,
-              No. Kad Pengenalan <strong className="text-foreground not-italic">{testatorInfo?.ic_number || '[ No. IC ]'}</strong>,
-              beralamat di <strong className="text-foreground not-italic">{testatorInfo?.address || '[ Alamat ]'}</strong>,
-              dengan ini mengisytiharkan bahawa ini adalah Wasiat saya yang terakhir dan saya membuat wasiat ini
-              dengan kehendak bebas saya sendiri tanpa sebarang paksaan atau pengaruh luar.
-            </p>
-            <p className="mt-3">
-              Saya mengesahkan bahawa saya adalah seorang Muslim yang berakal dan berumur 18 tahun ke atas,
-              dan wasiat ini dibuat mengikut kehendak saya dengan sepenuhnya.
-            </p>
-          </>
-        ) : (
-          <>
-            <p>
-              I, <strong className="text-foreground not-italic">{testatorInfo?.full_name || '[ Testator Name ]'}</strong>,
-              IC Number <strong className="text-foreground not-italic">{testatorInfo?.ic_number || '[ IC No. ]'}</strong>,
-              of <strong className="text-foreground not-italic">{testatorInfo?.address || '[ Address ]'}</strong>,
-              hereby declare this to be my last Wasiat and that I make this Wasiat of my own free will
-              without any coercion or undue influence.
-            </p>
-            <p className="mt-3">
-              I confirm that I am a Muslim of sound mind and above 18 years of age,
-              and that this Wasiat fully reflects my wishes.
-            </p>
-          </>
-        )}
+        {/* Wasiat is always in Malay regardless of UI language */}
+        <p>
+          Saya, <strong className="text-foreground not-italic">{testatorInfo?.full_name || '[ Nama Pewasiat ]'}</strong>,
+          No. Kad Pengenalan <strong className="text-foreground not-italic">{testatorInfo?.ic_number || '[ No. IC ]'}</strong>,
+          beralamat di <strong className="text-foreground not-italic">{testatorInfo?.address || '[ Alamat ]'}</strong>,
+          dengan ini mengisytiharkan bahawa ini adalah Wasiat saya yang terakhir dan saya membuat wasiat ini
+          dengan kehendak bebas saya sendiri tanpa sebarang paksaan atau pengaruh luar.
+        </p>
+        <p className="mt-3">
+          Saya mengesahkan bahawa saya adalah seorang Muslim yang berakal dan berumur 18 tahun ke atas,
+          dan wasiat ini dibuat mengikut kehendak saya dengan sepenuhnya.
+        </p>
       </div>
 
       {/* Date */}
@@ -143,7 +126,7 @@ export function Step7Declaration({ initialData, testatorInfo, onChange, onValidC
             onClick={() => {
               setUseCustomWishes(true)
               if (!form.personal_wishes) {
-                set('personal_wishes', ms ? PRESET_WISHES_MS : PRESET_WISHES_EN)
+                set('personal_wishes', PRESET_WISHES_MS)
               }
             }}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition ${
@@ -159,7 +142,7 @@ export function Step7Declaration({ initialData, testatorInfo, onChange, onValidC
         {/* Preset preview */}
         {!useCustomWishes && (
           <div className="bg-muted/40 rounded-lg p-3 text-xs text-muted-foreground leading-relaxed italic">
-            "{ms ? PRESET_WISHES_MS : PRESET_WISHES_EN}"
+            "{PRESET_WISHES_MS}"
           </div>
         )}
 

@@ -1,7 +1,8 @@
 import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
-import { MockPaymentButton } from '@/components/payment/MockPaymentButton'
+import { PaymentOptions } from '@/components/payment/PaymentOptions'
+import { PRICING } from '@/lib/pricing'
 
 interface Props {
   params: Promise<{ id: string }>
@@ -26,8 +27,18 @@ export default async function PaymentPage({ params }: Props) {
   if (!doc) redirect('/dashboard/documents')
   if (doc.status === 'completed') redirect(`/payment/${id}/success`)
 
+  // Check if user has a bundle credit to use
+  const { data: profile } = await supabase
+    .from('users')
+    .select('bundle_credits')
+    .eq('id', user.id)
+    .single()
+
+  const bundleCredits = (profile as { bundle_credits?: number } | null)?.bundle_credits ?? 0
+  const hasCredit = bundleCredits > 0
+
   const docLabel = doc.type === 'wasiat'
-    ? (ms ? 'Wasiat (Wasiat Islam)' : 'Wasiat (Islamic Will)')
+    ? (ms ? 'Wasiat Islam' : 'Islamic Will (Wasiat)')
     : (ms ? 'Surat Wasiat Am' : 'General Will')
   const reviewHref = doc.type === 'wasiat' ? `/wasiat/${id}/review` : `/will/${id}/review`
 
@@ -45,10 +56,22 @@ export default async function PaymentPage({ params }: Props) {
           </p>
         </div>
 
-        {/* Dev mode notice */}
-        <div className="bg-amber-50 border border-amber-300 rounded-xl p-3 text-xs text-amber-800 text-center font-medium">
-          DEV MODE — Billplz integration coming in Phase 14. Use the simulate button below.
-        </div>
+        {/* Bundle credit banner — shown when user has a credit */}
+        {hasCredit && (
+          <div className="bg-emerald-50 border border-emerald-300 rounded-xl p-4 flex items-start gap-3">
+            <span className="text-2xl">🎁</span>
+            <div>
+              <p className="font-semibold text-emerald-800 text-sm">
+                {ms ? 'Kredit Bundle Tersedia!' : 'Bundle Credit Available!'}
+              </p>
+              <p className="text-xs text-emerald-700 mt-0.5">
+                {ms
+                  ? `Anda mempunyai ${bundleCredits} kredit bundle. Dokumen ini boleh dijana secara percuma.`
+                  : `You have ${bundleCredits} bundle credit${bundleCredits > 1 ? 's' : ''}. This document can be generated for free.`}
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* Order summary */}
         <div className="border border-border rounded-xl overflow-hidden">
@@ -64,44 +87,45 @@ export default async function PaymentPage({ params }: Props) {
                 </p>
                 <ul className="text-xs text-muted-foreground mt-2 space-y-0.5">
                   <li>✓ {ms ? 'Dokumen berstruktur mengikut undang-undang' : 'Legally structured document'}</li>
-                  <li>✓ {ms ? 'Muat turun PDF (selepas tandatangan)' : 'PDF download (after signing)'}</li>
+                  <li>✓ {ms ? 'Muat turun PDF' : 'PDF download'}</li>
                   <li>✓ {ms ? 'Penghantaran melalui e-mel' : 'Email delivery'}</li>
                 </ul>
               </div>
-              <p className="text-lg font-bold shrink-0">RM 49.00</p>
+              <p className="text-lg font-bold shrink-0">
+                {hasCredit ? <span className="text-emerald-600">{ms ? 'Percuma' : 'Free'}</span> : PRICING.single.displayRM}
+              </p>
             </div>
-
             <div className="border-t border-border pt-4 flex justify-between text-sm font-semibold">
               <span>{ms ? 'Jumlah' : 'Total'}</span>
-              <span>RM 49.00</span>
+              <span>{hasCredit ? (ms ? 'RM 0.00 (kredit)' : 'RM 0.00 (credit)') : PRICING.single.displayFull}</span>
             </div>
           </div>
         </div>
 
         {/* Payment method */}
-        <div className="border border-border rounded-xl p-5 space-y-3">
-          <p className="text-sm font-semibold">{ms ? 'Kaedah Pembayaran' : 'Payment Method'}</p>
-          <div className="flex items-center gap-3 p-3 border border-primary/30 bg-primary/5 rounded-lg">
-            <div className="w-8 h-8 bg-primary/10 rounded flex items-center justify-center text-primary text-xs font-bold">FPX</div>
-            <div>
-              <p className="text-sm font-medium">{ms ? 'Perbankan Dalam Talian (FPX)' : 'Online Banking (FPX)'}</p>
-              <p className="text-xs text-muted-foreground">
-                {ms ? 'melalui Billplz — semua bank Malaysia disokong' : 'via Billplz — all Malaysian banks supported'}
-              </p>
+        {!hasCredit && (
+          <div className="border border-border rounded-xl p-5 space-y-3">
+            <p className="text-sm font-semibold">{ms ? 'Kaedah Pembayaran' : 'Payment Method'}</p>
+            <div className="flex items-center gap-3 p-3 border border-primary/30 bg-primary/5 rounded-lg">
+              <div className="w-8 h-8 bg-primary/10 rounded flex items-center justify-center text-primary text-xs font-bold">FPX</div>
+              <div>
+                <p className="text-sm font-medium">{ms ? 'Perbankan Dalam Talian (FPX)' : 'Online Banking (FPX)'}</p>
+                <p className="text-xs text-muted-foreground">
+                  {ms ? 'melalui Billplz — semua bank Malaysia disokong' : 'via Billplz — all Malaysian banks supported'}
+                </p>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
-        {/* Actions */}
-        <div className="space-y-3">
-          <MockPaymentButton documentId={id} />
-          <a
-            href={reviewHref}
-            className="block text-center text-sm text-muted-foreground hover:text-foreground transition py-2"
-          >
-            {ms ? '← Kembali ke semakan' : '← Back to review'}
-          </a>
-        </div>
+        {/* Payment options (single / bundle / use credit) */}
+        <PaymentOptions
+          documentId={id}
+          ms={ms}
+          hasCredit={hasCredit}
+          reviewHref={reviewHref}
+          pricing={PRICING}
+        />
 
         {/* Disclaimer */}
         <p className="text-xs text-muted-foreground text-center leading-relaxed">

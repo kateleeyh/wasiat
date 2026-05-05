@@ -15,6 +15,7 @@ function makeDocRef(type: string, id: string) {
 
 export function DownloadButton({ documentId, existingPdfUrl }: Props) {
   const [loading, setLoading] = useState(false)
+  const [emailSent, setEmailSent] = useState(false)
   const [pdfUrl, setPdfUrl] = useState<string | null>(existingPdfUrl)
   const [error, setError] = useState('')
 
@@ -82,6 +83,7 @@ export function DownloadButton({ documentId, existingPdfUrl }: Props) {
           })
           const finalData = await finalRes.json()
           if (finalData.pdf_url) setPdfUrl(finalData.pdf_url)
+          if (testatorEmail) setEmailSent(true)
         } catch (e) {
           console.error('Finalize error:', e)
         }
@@ -108,7 +110,9 @@ export function DownloadButton({ documentId, existingPdfUrl }: Props) {
           Download PDF
         </a>
         <p className="text-xs text-muted-foreground">
-          A copy has also been sent to your registered email address.
+          {emailSent
+            ? '✉ A copy has been sent to your registered email address.'
+            : 'A copy will also be sent to your registered email address.'}
         </p>
       </div>
     )
@@ -135,7 +139,7 @@ export function DownloadButton({ documentId, existingPdfUrl }: Props) {
       </button>
       {loading && (
         <p className="text-xs text-muted-foreground">
-          Generating in your browser — this may take a few seconds.
+          Generating in your browser — this may take a few seconds. A copy will be emailed to you automatically.
         </p>
       )}
       {error && <p className="text-xs text-destructive">{error}</p>}

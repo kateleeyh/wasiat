@@ -7,11 +7,11 @@ import { FileText, LayoutDashboard, User, CreditCard, PlusCircle } from 'lucide-
 import { cn } from '@/lib/utils'
 
 const navItems = [
-  { href: '/dashboard', label: 'dashboard.title', icon: LayoutDashboard, exact: true },
+  { href: '/dashboard',           label: 'dashboard.title',       icon: LayoutDashboard, exact: true },
   { href: '/dashboard/documents', label: 'dashboard.myDocuments', icon: FileText },
-  { href: '/dashboard/create', label: 'dashboard.createNew', icon: PlusCircle },
-  { href: '/profile', label: 'dashboard.profile', icon: User },
-  { href: '/dashboard/billing', label: 'dashboard.billingHistory', icon: CreditCard },
+  { href: '/dashboard/create',    label: 'dashboard.createNew',   icon: PlusCircle },
+  { href: '/dashboard/profile',   label: 'dashboard.profile',     icon: User },
+  { href: '/dashboard/billing',   label: 'dashboard.billingHistory', icon: CreditCard },
 ]
 
 export function DashboardNav() {
@@ -19,8 +19,33 @@ export function DashboardNav() {
   const t = useTranslations()
 
   return (
-    <aside className="w-56 border-r border-border bg-card flex flex-col py-4 shrink-0">
-      <nav className="space-y-1 px-3">
+    <>
+      {/* Desktop sidebar */}
+      <aside className="hidden md:flex w-56 border-r border-border bg-card flex-col py-4 shrink-0">
+        <nav className="space-y-1 px-3">
+          {navItems.map(({ href, label, icon: Icon, exact }) => {
+            const isActive = exact ? pathname === href : pathname.startsWith(href)
+            return (
+              <Link
+                key={href}
+                href={href}
+                className={cn(
+                  'flex items-center gap-3 px-3 py-2.5 rounded-md text-sm transition',
+                  isActive
+                    ? 'bg-primary/10 text-primary font-medium'
+                    : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                )}
+              >
+                <Icon className="w-4 h-4 shrink-0" />
+                {t(label)}
+              </Link>
+            )
+          })}
+        </nav>
+      </aside>
+
+      {/* Mobile bottom nav */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-card border-t border-border flex items-center justify-around px-2 py-2 safe-area-pb">
         {navItems.map(({ href, label, icon: Icon, exact }) => {
           const isActive = exact ? pathname === href : pathname.startsWith(href)
           return (
@@ -28,18 +53,18 @@ export function DashboardNav() {
               key={href}
               href={href}
               className={cn(
-                'flex items-center gap-3 px-3 py-2 rounded-md text-sm transition',
-                isActive
-                  ? 'bg-primary/10 text-primary font-medium'
-                  : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                'flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-lg transition min-w-[52px]',
+                isActive ? 'text-primary' : 'text-muted-foreground'
               )}
             >
-              <Icon className="w-4 h-4 shrink-0" />
-              {t(label)}
+              <Icon className={cn('w-5 h-5', isActive && 'stroke-[2.5px]')} />
+              <span className="text-[10px] font-medium leading-tight text-center whitespace-nowrap">
+                {t(label).split(' ')[0]}
+              </span>
             </Link>
           )
         })}
       </nav>
-    </aside>
+    </>
   )
 }

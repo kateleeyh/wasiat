@@ -4,6 +4,7 @@ import Link from 'next/link'
 import {
   Shield, Zap, FileText, Mail, BookOpen, Save,
   Globe, Eye, History, CheckCircle, ArrowRight, Lock,
+  UserPlus, ClipboardList, CreditCard, Download,
 } from 'lucide-react'
 import { Navbar } from '@/components/landing/Navbar'
 import { FaqAccordion } from '@/components/landing/FaqAccordion'
@@ -28,7 +29,7 @@ export default async function LandingPage() {
     { icon: BookOpen, title: isMalay ? 'Borang Dipandu' : 'Guided Form', desc: isMalay ? 'Setiap medan dijelaskan. Tiada pengetahuan undang-undang diperlukan.' : 'Every field explained. No legal knowledge required.' },
     { icon: Save, title: isMalay ? 'Auto-Simpan' : 'Auto-Save', desc: isMalay ? 'Kemajuan disimpan secara automatik. Sambung pada bila-bila masa.' : 'Progress saved automatically. Continue anytime.' },
     { icon: Globe, title: isMalay ? 'Dwibahasa' : 'Bilingual', desc: isMalay ? 'Sepenuhnya dalam Bahasa Malaysia dan Bahasa Inggeris.' : 'Fully available in Bahasa Malaysia and English.' },
-    { icon: Eye, title: isMalay ? 'Pratonton Dokumen' : 'Document Preview', desc: isMalay ? 'Lihat dokumen anda sebelum membayar. Keyakinan penuh.' : 'Preview your document before paying. Full confidence.' },
+    { icon: Eye, title: isMalay ? 'Semak Sebelum Bayar' : 'Review Before Paying', desc: isMalay ? 'Semak semua maklumat anda sebelum membuat pembayaran. Tiada kejutan.' : 'Review all your information before payment. No surprises.' },
     { icon: Mail, title: isMalay ? 'Hantar ke E-mel' : 'Email Delivery', desc: isMalay ? 'PDF dihantar terus ke e-mel anda selepas bayaran berjaya.' : 'PDF sent directly to your email after successful payment.' },
     { icon: History, title: isMalay ? 'Sejarah Dokumen' : 'Document History', desc: isMalay ? 'Akses dan muat turun semula dokumen anda bila-bila masa.' : 'Access and re-download your documents anytime.' },
   ]
@@ -42,8 +43,8 @@ export default async function LandingPage() {
     : ['1 General Will Document', 'PDF generated & emailed', 'Post-generation guidance', 'Re-access from dashboard']
 
   const bundleIncludes = isMalay
-    ? ['1 Wasiat + 1 Surat Wasiat', 'Sesuai untuk pasangan suami isteri', 'PDF dijana & dihantar ke e-mel', 'Akses semula dari papan pemuka']
-    : ['1 Wasiat + 1 General Will', 'Perfect for married couples', 'PDF generated & emailed', 'Re-access from dashboard']
+    ? ['2 dokumen apa-apa jenis', 'Sesuai untuk pasangan atau ahli keluarga', '1 kredit disimpan untuk dokumen kedua', 'PDF dijana & dihantar ke e-mel']
+    : ['Any 2 documents', 'Great for couples, siblings or family', '1 credit saved for your 2nd document', 'PDF generated & emailed']
 
   const faqs = isMalay
     ? [
@@ -64,10 +65,10 @@ export default async function LandingPage() {
       ]
 
   const steps = [
-    { num: '01', title: t('howItWorks.step1'), desc: t('howItWorks.step1Desc') },
-    { num: '02', title: t('howItWorks.step2'), desc: t('howItWorks.step2Desc') },
-    { num: '03', title: t('howItWorks.step3'), desc: t('howItWorks.step3Desc') },
-    { num: '04', title: t('howItWorks.step4'), desc: t('howItWorks.step4Desc') },
+    { num: '01', icon: UserPlus,      title: t('howItWorks.step1'), desc: t('howItWorks.step1Desc') },
+    { num: '02', icon: ClipboardList, title: t('howItWorks.step2'), desc: t('howItWorks.step2Desc') },
+    { num: '03', icon: Eye,           title: t('howItWorks.step3'), desc: t('howItWorks.step3Desc') },
+    { num: '04', icon: CreditCard,    title: t('howItWorks.step4'), desc: t('howItWorks.step4Desc') },
   ]
 
   return (
@@ -80,91 +81,232 @@ export default async function LandingPage() {
           howItWorks: t('nav.howItWorks'),
           pricing: t('nav.pricing'),
           faq: t('nav.faq'),
+          insights: t('nav.insights'),
           login: t('nav.login'),
           register: t('nav.register'),
         }}
       />
 
       {/* ── HERO ── */}
-      <section className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950 min-h-screen flex items-center pt-16 overflow-hidden">
-        {/* Decorative blobs */}
+      <section className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950 pt-16 overflow-hidden">
         <div className="absolute top-1/4 -right-24 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 -left-24 w-80 h-80 bg-teal-500/10 rounded-full blur-3xl" />
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 bg-emerald-500/20 border border-emerald-500/30 rounded-full px-4 py-1.5 mb-8">
-            <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-            <span className="text-emerald-300 text-sm font-medium">{t('hero.badge')}</span>
-          </div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
 
-          {/* Headline */}
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-white leading-tight mb-6">
-            {t('hero.headline1')}{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">
-              {t('hero.headline2')}
-            </span>
-          </h1>
-
-          <p className="text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto mb-10 leading-relaxed">
-            {t('hero.sub')}
-          </p>
-
-          {/* CTAs */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-            <Link
-              href="/auth/register"
-              className="inline-flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-white font-bold px-8 py-4 rounded-xl text-lg transition-all shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:-translate-y-0.5"
-            >
-              {t('hero.cta')}
-              <ArrowRight size={20} />
-            </Link>
-            <button
-              onClick={() => {
-                document.querySelector('#how-it-works')?.scrollIntoView({ behavior: 'smooth' })
-              }}
-              className="inline-flex items-center justify-center gap-2 border border-white/20 text-white/80 hover:text-white hover:border-white/40 font-medium px-8 py-4 rounded-xl text-lg transition-all"
-            >
-              {t('hero.ctaSecondary')}
-            </button>
-          </div>
-
-          {/* Stats */}
-          <div className="flex flex-col sm:flex-row justify-center gap-8 sm:gap-16">
-            {[
-              { val: t('hero.stat1'), label: t('hero.stat1Label') },
-              { val: t('hero.stat2'), label: t('hero.stat2Label') },
-              { val: t('hero.stat3'), label: t('hero.stat3Label') },
-            ].map((s) => (
-              <div key={s.label} className="text-center">
-                <div className="text-3xl font-extrabold text-emerald-400">{s.val}</div>
-                <div className="text-slate-400 text-sm mt-1">{s.label}</div>
+            {/* Left — Text */}
+            <div className="text-center lg:text-left">
+              <div className="inline-flex items-center gap-2 bg-emerald-500/20 border border-emerald-500/30 rounded-full px-4 py-1.5 mb-6">
+                <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
+                <span className="text-emerald-300 text-sm font-medium">{t('hero.badge')}</span>
               </div>
-            ))}
+
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-6">
+                {t('hero.headline1')}{' '}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">
+                  {t('hero.headline2')}
+                </span>
+              </h1>
+
+              <p className="text-lg text-slate-300 mb-8 leading-relaxed max-w-xl mx-auto lg:mx-0">
+                {t('hero.sub')}
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start mb-10">
+                <Link href="/auth/register"
+                  className="inline-flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-white font-bold px-7 py-3.5 rounded-xl text-base transition-all shadow-lg shadow-emerald-500/25 hover:-translate-y-0.5">
+                  {t('hero.cta')} <ArrowRight size={18} />
+                </Link>
+                <a href="#how-it-works"
+                  className="inline-flex items-center justify-center gap-2 border border-white/20 text-white/80 hover:text-white hover:border-white/40 font-medium px-7 py-3.5 rounded-xl text-base transition-all">
+                  {t('hero.ctaSecondary')}
+                </a>
+              </div>
+
+              <div className="flex justify-center lg:justify-start gap-8">
+                {[
+                  { val: t('hero.stat1'), label: t('hero.stat1Label') },
+                  { val: t('hero.stat2'), label: t('hero.stat2Label') },
+                  { val: t('hero.stat3'), label: t('hero.stat3Label') },
+                ].map((s) => (
+                  <div key={s.label} className="text-center">
+                    <div className="text-2xl font-extrabold text-emerald-400">{s.val}</div>
+                    <div className="text-slate-400 text-xs mt-0.5">{s.label}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right — Document Mockup Stack */}
+            <div className="hidden lg:flex justify-center items-center py-8">
+              <div className="relative w-full max-w-sm">
+
+                {/* Back card — Asset / Faraid distribution (peeking behind, rotated) */}
+                <div className="absolute -top-6 -left-8 w-64 bg-white rounded-2xl shadow-xl border border-slate-200/30 p-4 rotate-[-6deg] opacity-90 z-0">
+                  <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wide mb-3">
+                    {isMalay ? 'Agihan Harta / Penerima' : 'Asset Distribution'}
+                  </p>
+                  {[
+                    { name: isMalay ? 'Isteri' : 'Spouse',   pct: 50, color: 'bg-emerald-500' },
+                    { name: isMalay ? 'Anak 1' : 'Child 1',  pct: 30, color: 'bg-teal-400' },
+                    { name: isMalay ? 'Anak 2' : 'Child 2',  pct: 20, color: 'bg-cyan-400' },
+                  ].map(b => (
+                    <div key={b.name} className="mb-2">
+                      <div className="flex justify-between text-[8px] text-slate-500 mb-0.5">
+                        <span>{b.name}</span><span className="font-bold">{b.pct}%</span>
+                      </div>
+                      <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                        <div className={`h-full ${b.color} rounded-full`} style={{ width: `${b.pct}%` }} />
+                      </div>
+                    </div>
+                  ))}
+                  <div className="mt-3 pt-2 border-t border-slate-100">
+                    <p className="text-[8px] text-slate-400">
+                      {isMalay ? '+ Penjaga anak · Wasi · Saksi' : '+ Guardian · Executor · Witnesses'}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Bottom-right floating tag */}
+                <div className="absolute -bottom-4 -right-6 w-52 bg-white rounded-xl shadow-lg border border-slate-200/30 p-3 rotate-[4deg] z-0 opacity-90">
+                  <p className="text-[8px] font-bold text-slate-400 uppercase tracking-wide mb-2">
+                    {isMalay ? 'Semua Ciri Termasuk' : 'Everything Included'}
+                  </p>
+                  {[
+                    isMalay ? '✓ Penerima tanpa had' : '✓ Unlimited beneficiaries',
+                    isMalay ? '✓ Semua jenis aset' : '✓ All asset types',
+                    isMalay ? '✓ Penjaga anak-anak' : '✓ Child guardianship',
+                  ].map(f => (
+                    <p key={f} className="text-[8px] text-emerald-600 font-medium">{f}</p>
+                  ))}
+                </div>
+
+                {/* Main document card */}
+                <div className="relative bg-white rounded-2xl shadow-2xl overflow-hidden border border-slate-200/20">
+                  {/* Document header */}
+                  <div className="bg-slate-900 px-6 py-4 text-center border-b border-slate-700">
+                    <p className="text-[10px] font-bold tracking-[0.2em] text-slate-400 mb-1">
+                      {isMalay ? 'WASIAT RASMI' : 'LAST WILL AND TESTAMENT'}
+                    </p>
+                    <p className="text-white font-bold text-base">AHMAD BIN IBRAHIM</p>
+                    <p className="text-slate-400 text-[10px] mt-0.5">820101-12-3456</p>
+                  </div>
+
+                  {/* Document body — blurred content */}
+                  <div className="px-6 py-5 space-y-4 bg-white">
+                    <div className="space-y-1.5">
+                      <div className="h-1.5 bg-slate-200 rounded-full w-full" />
+                      <div className="h-1.5 bg-slate-200 rounded-full w-5/6" />
+                      <div className="h-1.5 bg-slate-200 rounded-full w-full" />
+                      <div className="h-1.5 bg-slate-200 rounded-full w-4/5" />
+                    </div>
+                    <div className="border-t border-slate-100 pt-3 space-y-1.5">
+                      <p className="text-[9px] font-bold text-slate-500 uppercase tracking-wide">
+                        {isMalay ? 'ARTIKEL 1: PELANTIKAN WASI' : 'ARTICLE 1: APPOINTMENT OF EXECUTOR'}
+                      </p>
+                      <div className="h-1.5 bg-slate-200 rounded-full w-full" />
+                      <div className="h-1.5 bg-slate-200 rounded-full w-3/4" />
+                    </div>
+                    <div className="border-t border-slate-100 pt-3 space-y-1.5">
+                      <p className="text-[9px] font-bold text-slate-500 uppercase tracking-wide">
+                        {isMalay ? 'ARTIKEL 2: SENARAI HARTA' : 'ARTICLE 2: ESTATE ASSETS'}
+                      </p>
+                      <div className="h-1.5 bg-slate-200 rounded-full w-full" />
+                      <div className="h-1.5 bg-slate-200 rounded-full w-5/6" />
+                    </div>
+                    <div className="border-t border-slate-100 pt-3 space-y-1.5">
+                      <p className="text-[9px] font-bold text-slate-500 uppercase tracking-wide">
+                        {isMalay ? 'ARTIKEL 3: PENERIMA MANFAAT' : 'ARTICLE 3: BENEFICIARIES'}
+                      </p>
+                      <div className="h-1.5 bg-slate-200 rounded-full w-full" />
+                      <div className="h-1.5 bg-slate-200 rounded-full w-2/3" />
+                    </div>
+
+                    {/* Signature area */}
+                    <div className="border-t border-slate-200 pt-4 flex gap-6">
+                      <div className="flex-1">
+                        <div className="h-px bg-slate-300 w-full mb-1" />
+                        <p className="text-[8px] text-slate-400">{isMalay ? 'Tandatangan Pewasiat' : 'Testator Signature'}</p>
+                      </div>
+                      <div className="flex-1">
+                        <div className="h-px bg-slate-300 w-full mb-1" />
+                        <p className="text-[8px] text-slate-400">{isMalay ? 'Saksi 1' : 'Witness 1'}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* WasiatHub footer */}
+                  <div className="bg-slate-50 px-6 py-2.5 flex items-center justify-between border-t border-slate-100">
+                    <span className="text-[9px] font-bold text-emerald-600">WasiatHub</span>
+                    <span className="text-[8px] text-slate-400">WST-2026-XXXXXX</span>
+                  </div>
+                </div>
+
+                {/* "Generated instantly" label */}
+                <div className="absolute -top-3 -right-3 bg-emerald-500 text-white text-[10px] font-bold px-3 py-1.5 rounded-full shadow-lg">
+                  ⚡ {isMalay ? 'Jana Segera' : 'Instant PDF'}
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </section>
 
       {/* ── TRUST BAR ── */}
       <section className="bg-white border-b border-slate-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="flex flex-wrap justify-center items-center gap-4 sm:gap-6 lg:gap-10">
             {[
-              { icon: Shield, title: t('trust.legal'), desc: t('trust.legalDesc') },
-              { icon: Lock, title: t('trust.secure'), desc: t('trust.secureDesc') },
-              { icon: Zap, title: t('trust.fast'), desc: t('trust.fastDesc') },
-              { icon: Mail, title: t('trust.pdf'), desc: t('trust.pdfDesc') },
-            ].map(({ icon: Icon, title, desc }) => (
-              <div key={title} className="flex flex-col items-center text-center gap-3">
-                <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center">
-                  <Icon size={22} className="text-emerald-600" />
-                </div>
+              { emoji: '🔒', label: isMalay ? 'SSL Selamat' : 'SSL Secured', sub: isMalay ? 'Data disulitkan' : 'Data encrypted' },
+              { emoji: '🏦', label: 'FPX Online Banking', sub: isMalay ? 'Semua bank Malaysia' : 'All Malaysian banks' },
+              { emoji: '🇲🇾', label: isMalay ? 'Patuh PDPA' : 'PDPA Compliant', sub: isMalay ? 'Perlindungan data' : 'Data protected' },
+              { emoji: '⚡', label: isMalay ? 'PDF Segera' : 'Instant PDF', sub: isMalay ? 'Jana dalam minit' : 'Generated in minutes' },
+              { emoji: '📋', label: isMalay ? 'Akta Wasiat 1959' : 'Wills Act 1959', sub: isMalay ? 'Rangka kerja undang-undang' : 'Legal framework' },
+            ].map(({ emoji, label, sub }) => (
+              <div key={label} className="flex items-center gap-2.5 px-4 py-2.5 bg-slate-50 rounded-xl border border-slate-100">
+                <span className="text-xl">{emoji}</span>
                 <div>
-                  <div className="font-semibold text-slate-900 text-sm">{title}</div>
-                  <div className="text-slate-500 text-xs mt-1">{desc}</div>
+                  <div className="text-xs font-semibold text-slate-800">{label}</div>
+                  <div className="text-[10px] text-slate-400">{sub}</div>
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── DIFFERENTIATOR ── */}
+      <section className="bg-gradient-to-r from-emerald-900 to-teal-900 py-10">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row items-center gap-6 md:gap-10">
+            <div className="shrink-0 text-center md:text-left">
+              <p className="text-emerald-300 text-xs font-bold uppercase tracking-widest mb-1">
+                {isMalay ? 'Kenapa WasiatHub?' : 'Why WasiatHub?'}
+              </p>
+              <h3 className="text-xl sm:text-2xl font-extrabold text-white leading-tight">
+                {isMalay ? 'Satu harga. Tiada had.' : 'One price. Zero limits.'}
+              </h3>
+            </div>
+            <div className="flex-1 grid grid-cols-2 sm:grid-cols-3 gap-3">
+              {[
+                isMalay ? '✓ Penerima manfaat tanpa had' : '✓ Unlimited beneficiaries',
+                isMalay ? '✓ Semua jenis aset' : '✓ All asset types',
+                isMalay ? '✓ Penjaga anak-anak' : '✓ Child guardianship',
+                isMalay ? '✓ Wasi + Saksi' : '✓ Executor + Witnesses',
+                isMalay ? '✓ Semak maklumat sebelum bayar' : '✓ Review all details before paying',
+                isMalay ? '✓ Tiada caj tambahan' : '✓ No extra charges',
+              ].map(f => (
+                <div key={f} className="bg-white/10 rounded-lg px-3 py-2 text-xs text-emerald-100 font-medium">{f}</div>
+              ))}
+            </div>
+            <div className="shrink-0 text-center">
+              <div className="text-3xl font-extrabold text-white">RM 79</div>
+              <div className="text-emerald-300 text-xs mt-0.5">
+                {isMalay ? 'semuanya termasuk' : 'all features included'}
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -242,9 +384,10 @@ export default async function LandingPage() {
                   <div className="hidden lg:block absolute top-8 left-full w-full h-px bg-gradient-to-r from-emerald-200 to-transparent z-0" />
                 )}
                 <div className="relative bg-slate-50 rounded-2xl p-6 hover:shadow-md transition-shadow">
-                  <div className="w-14 h-14 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center text-white font-extrabold text-lg mb-5 shadow-md shadow-emerald-200">
-                    {step.num}
+                  <div className="w-14 h-14 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center mb-5 shadow-md shadow-emerald-200">
+                    <step.icon size={24} className="text-white" />
                   </div>
+                  <div className="text-xs font-bold text-emerald-500 mb-1">{step.num}</div>
                   <h3 className="font-bold text-slate-900 mb-2">{step.title}</h3>
                   <p className="text-slate-500 text-sm leading-relaxed">{step.desc}</p>
                 </div>
@@ -293,7 +436,7 @@ export default async function LandingPage() {
               <div className="mb-6">
                 <h3 className="text-lg font-bold text-slate-900 mb-1">{t('pricing.wasiatTitle')}</h3>
                 <div className="flex items-end gap-1">
-                  <span className="text-4xl font-extrabold text-slate-900">{t('pricing.price49')}</span>
+                  <span className="text-4xl font-extrabold text-slate-900">{t('pricing.price79')}</span>
                 </div>
               </div>
               <ul className="space-y-3 mb-8">
@@ -322,7 +465,7 @@ export default async function LandingPage() {
               <div className="mb-6">
                 <h3 className="text-lg font-bold text-white mb-1">{t('pricing.bundleTitle')}</h3>
                 <div className="flex items-end gap-1">
-                  <span className="text-4xl font-extrabold text-white">{t('pricing.price79')}</span>
+                  <span className="text-4xl font-extrabold text-white">{t('pricing.price129')}</span>
                 </div>
               </div>
               <ul className="space-y-3 mb-8">
@@ -346,7 +489,7 @@ export default async function LandingPage() {
               <div className="mb-6">
                 <h3 className="text-lg font-bold text-slate-900 mb-1">{t('pricing.willTitle')}</h3>
                 <div className="flex items-end gap-1">
-                  <span className="text-4xl font-extrabold text-slate-900">{t('pricing.price49')}</span>
+                  <span className="text-4xl font-extrabold text-slate-900">{t('pricing.price79')}</span>
                 </div>
               </div>
               <ul className="space-y-3 mb-8">
@@ -413,9 +556,9 @@ export default async function LandingPage() {
             <div>
               <div className="text-white font-semibold text-sm mb-4">{t('footer.product')}</div>
               <ul className="space-y-2 text-sm">
-                <li><button onClick={() => {}} className="hover:text-white transition-colors">{t('nav.features')}</button></li>
-                <li><button onClick={() => {}} className="hover:text-white transition-colors">{t('nav.pricing')}</button></li>
-                <li><button onClick={() => {}} className="hover:text-white transition-colors">{t('nav.howItWorks')}</button></li>
+                <li><a href="#features" className="hover:text-white transition-colors">{t('nav.features')}</a></li>
+                <li><a href="#pricing" className="hover:text-white transition-colors">{t('nav.pricing')}</a></li>
+                <li><a href="#how-it-works" className="hover:text-white transition-colors">{t('nav.howItWorks')}</a></li>
               </ul>
             </div>
 
@@ -423,9 +566,9 @@ export default async function LandingPage() {
             <div>
               <div className="text-white font-semibold text-sm mb-4">{t('footer.legal')}</div>
               <ul className="space-y-2 text-sm">
-                <li><Link href="#" className="hover:text-white transition-colors">{t('footer.disclaimer')}</Link></li>
-                <li><Link href="#" className="hover:text-white transition-colors">{t('footer.privacy')}</Link></li>
-                <li><Link href="#" className="hover:text-white transition-colors">{t('footer.terms')}</Link></li>
+                <li><Link href="/disclaimer" className="hover:text-white transition-colors">{t('footer.disclaimer')}</Link></li>
+                <li><Link href="/privacy" className="hover:text-white transition-colors">{t('footer.privacy')}</Link></li>
+                <li><Link href="/terms" className="hover:text-white transition-colors">{t('footer.terms')}</Link></li>
               </ul>
             </div>
 
@@ -433,8 +576,8 @@ export default async function LandingPage() {
             <div>
               <div className="text-white font-semibold text-sm mb-4">{t('footer.support')}</div>
               <ul className="space-y-2 text-sm">
-                <li><button className="hover:text-white transition-colors">{t('footer.faq')}</button></li>
-                <li><Link href="mailto:support@wasiathub.com" className="hover:text-white transition-colors">{t('footer.contact')}</Link></li>
+                <li><a href="/#faq" className="hover:text-white transition-colors">{t('footer.faq')}</a></li>
+                <li><Link href="/contact" className="hover:text-white transition-colors">{t('footer.contact')}</Link></li>
               </ul>
             </div>
           </div>

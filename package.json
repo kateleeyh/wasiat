@@ -4,10 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "rm -rf .next && next build && ([ \"${BUILDING_CF:-}\" = \"1\" ] || BUILDING_CF=1 opennextjs-cloudflare build)",
+    "build": "BUILDING_CF=1 next build",
     "start": "next start",
     "lint": "next lint",
-    "deploy": "opennextjs-cloudflare deploy"
+    "deploy": "npm run build && npx opennextjs-cloudflare build && node -e \"const fs=require('fs'); const f='.open-next/cloudflare/next-env.mjs'; if(fs.existsSync(f)){const lines=[...new Set(fs.readFileSync(f,'utf8').trim().split('\\n'))]; fs.writeFileSync(f,lines.join('\\n')+'\\n');}\" && npx wrangler deploy"
   },
   "dependencies": {
     "@react-pdf/renderer": "^4.1.6",

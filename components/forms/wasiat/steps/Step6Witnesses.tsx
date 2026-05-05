@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { InfoTip } from '@/components/forms/InfoTip'
 import { useLocale } from 'next-intl'
 import { AlertTriangle, Plus, X } from 'lucide-react'
 import type { WasiatWitnesses, WasiatWitness, WasiatBeneficiary } from '@/types/database'
@@ -185,7 +186,8 @@ export function Step6Witnesses({ initialData, beneficiaries, onChange, onValidCh
   return (
     <div className="space-y-6">
       {/* Requirements notice */}
-      <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm text-amber-800 space-y-2">
+      <InfoTip titleMs="ℹ️ Syarat Saksi — Baca Sebelum Isi" titleEn="ℹ️ Witness Requirements — Read First" ms={ms} variant="amber">
+        <div className="text-sm text-amber-800 space-y-2 mt-2">
         <p className="font-semibold">{ms ? 'Syarat Saksi Wasiat' : 'Witness Requirements'}</p>
         <ul className="space-y-1 text-xs leading-relaxed list-none">
           <li>✓ {ms ? <><strong>Muslim</strong> — saksi mestilah beragama Islam</> : <><strong>Muslim</strong> — witnesses must be Muslim</>}</li>
@@ -204,6 +206,7 @@ export function Step6Witnesses({ initialData, beneficiaries, onChange, onValidCh
             : 'Gender is auto-detected from the last digit of the Malaysian IC (odd = male, even = female).'}
         </p>
       </div>
+      </InfoTip>
 
       {/* Duplicate IC warning */}
       {hasDuplicateIC && (

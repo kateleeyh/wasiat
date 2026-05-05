@@ -12,6 +12,7 @@ interface NavbarProps {
     howItWorks: string
     pricing: string
     faq: string
+    insights: string
     login: string
     register: string
   }
@@ -28,7 +29,7 @@ export function Navbar({ locale, t, appName }: NavbarProps) {
     return () => window.removeEventListener('scroll', handler)
   }, [])
 
-  const navLinks = [
+  const scrollLinks = [
     { label: t.features, href: '#features' },
     { label: t.howItWorks, href: '#how-it-works' },
     { label: t.pricing, href: '#pricing' },
@@ -56,7 +57,7 @@ export function Navbar({ locale, t, appName }: NavbarProps) {
 
           {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-6">
-            {navLinks.map((link) => (
+            {scrollLinks.map((link) => (
               <button
                 key={link.href}
                 onClick={() => scrollTo(link.href)}
@@ -65,6 +66,9 @@ export function Navbar({ locale, t, appName }: NavbarProps) {
                 {link.label}
               </button>
             ))}
+            <Link href="/insights" className="text-sm text-white/70 hover:text-white transition-colors">
+              {t.insights}
+            </Link>
           </div>
 
           {/* Desktop right */}
@@ -97,7 +101,7 @@ export function Navbar({ locale, t, appName }: NavbarProps) {
       {/* Mobile menu */}
       {open && (
         <div className="md:hidden bg-slate-900 border-t border-white/10 px-4 py-4 flex flex-col gap-4">
-          {navLinks.map((link) => (
+          {scrollLinks.map((link) => (
             <button
               key={link.href}
               onClick={() => scrollTo(link.href)}
@@ -106,6 +110,9 @@ export function Navbar({ locale, t, appName }: NavbarProps) {
               {link.label}
             </button>
           ))}
+          <Link href="/insights" className="text-left text-white/80 hover:text-white text-sm py-1" onClick={() => setOpen(false)}>
+            {t.insights}
+          </Link>
           <div className="flex items-center gap-3 pt-2 border-t border-white/10">
             <LanguageToggle locale={locale} />
             <Link

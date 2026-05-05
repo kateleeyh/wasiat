@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useLocale } from 'next-intl'
-import { Plus, Trash2 } from 'lucide-react'
+import { Plus, Trash2, ChevronDown, ChevronUp } from 'lucide-react'
 import type { WillBeneficiary, AssetDistribution, ResidualEstateBeneficiary, AssignmentType, WillTestatorInfo, WillAssets, MaritalStatus } from '@/types/database'
 import { isValidIC, isValidIDNumber, isValidPhone, formatIC, genderFromIC, genderMismatchWarning } from '@/lib/validation'
 
@@ -103,26 +103,34 @@ function makeBen(relationship: string, pct: number): WillBeneficiary {
   return { ...EMPTY_BEN, relationship, assignment_type: 'percentage', percentage: pct }
 }
 
-function buildSuggestion(maritalStatus: MaritalStatus | undefined, hasChildren: boolean): WillBeneficiary[] {
-  const isMarried  = maritalStatus === 'married'
-  const isWidowed  = maritalStatus === 'widowed'
-  const isDivorced = maritalStatus === 'divorced'
-  const isSingle   = maritalStatus === 'single'
-  if (isMarried && hasChildren)                              return [makeBen('Spouse / Suami / Isteri', 25), makeBen('Child / Anak', 75)]
-  if (isMarried && !hasChildren)                             return [makeBen('Spouse / Suami / Isteri', 50), makeBen('Parent / Ibu Bapa', 50)]
-  if ((isWidowed || isDivorced || isSingle) && hasChildren)  return [makeBen('Child / Anak', 100)]
-  return [{ ...EMPTY_BEN }]
+// Distribution Act 1958 (Malaysia) — Section 6
+// (a) Spouse + Children + Parents → 25% / 50% / 25%
+// (b) Spouse + Children, no parents → 33% / 67%
+// (c) Spouse + Parents, no children → 50% / 50%
+// (d) Spouse only → 100%
+// (e) Children only (no spouse) → 100%
+// (f) Parents only → 100%
+// (g) No spouse/children/parents → Siblings — must fill manually
+function buildSuggestion(maritalStatus: MaritalStatus | undefined, hasChildren: boolean, parentsAlive: boolean): WillBeneficiary[] {
+  const isMarried = maritalStatus === 'married'
+  if (isMarried && hasChildren && parentsAlive)   return [makeBen('Spouse / Suami / Isteri', 25), makeBen('Child / Anak', 50), makeBen('Parent / Ibu Bapa', 25)]
+  if (isMarried && hasChildren && !parentsAlive)  return [makeBen('Spouse / Suami / Isteri', 33), makeBen('Child / Anak', 67)]
+  if (isMarried && !hasChildren && parentsAlive)  return [makeBen('Spouse / Suami / Isteri', 50), makeBen('Parent / Ibu Bapa', 50)]
+  if (isMarried && !hasChildren && !parentsAlive) return [makeBen('Spouse / Suami / Isteri', 100)]
+  if (hasChildren)                                return [makeBen('Child / Anak', 100)]
+  if (parentsAlive)                               return [makeBen('Parent / Ibu Bapa', 100)]
+  return [{ ...EMPTY_BEN }] // (g) siblings — user must enter manually
 }
 
-function suggestionLabel(maritalStatus: MaritalStatus | undefined, hasChildren: boolean, ms: boolean): string {
-  const isMarried  = maritalStatus === 'married'
-  const isWidowed  = maritalStatus === 'widowed'
-  const isDivorced = maritalStatus === 'divorced'
-  if (isMarried && hasChildren)                     return ms ? 'Pasangan ¼, Anak-anak ¾ (bahagi sama rata)' : 'Spouse ¼, Children ¾ (divided equally)'
-  if (isMarried && !hasChildren)                    return ms ? 'Pasangan ½, Ibu Bapa ½ (bahagi sama rata)' : 'Spouse ½, Parents ½ (divided equally)'
-  if ((isWidowed || isDivorced) && hasChildren)     return ms ? 'Anak-anak 100% (bahagi sama rata)' : 'Children 100% (divided equally)'
-  if (!hasChildren)                                 return ms ? 'Berdasarkan susunan prioriti waris mengikut akta' : 'Based on priority order of heirs under the Act'
-  return ms ? 'Anak-anak 100% (bahagi sama rata)' : 'Children 100% (divided equally)'
+function suggestionLabel(maritalStatus: MaritalStatus | undefined, hasChildren: boolean, parentsAlive: boolean, ms: boolean): string {
+  const isMarried = maritalStatus === 'married'
+  if (isMarried && hasChildren && parentsAlive)   return ms ? 'Pasangan ¼ (25%), Anak-anak ½ (50%), Ibu Bapa ¼ (25%)' : 'Spouse ¼ (25%), Children ½ (50%), Parents ¼ (25%)'
+  if (isMarried && hasChildren && !parentsAlive)  return ms ? 'Pasangan ⅓ (33%), Anak-anak ⅔ (67%)' : 'Spouse ⅓ (33%), Children ⅔ (67%)'
+  if (isMarried && !hasChildren && parentsAlive)  return ms ? 'Pasangan ½ (50%), Ibu Bapa ½ (50%)' : 'Spouse ½ (50%), Parents ½ (50%)'
+  if (isMarried && !hasChildren && !parentsAlive) return ms ? 'Pasangan 100%' : 'Spouse 100%'
+  if (hasChildren)                                return ms ? 'Anak-anak 100% (bahagi sama rata)' : 'Children 100% (divided equally)'
+  if (parentsAlive)                               return ms ? 'Ibu Bapa 100% (bahagi sama rata)' : 'Parents 100% (divided equally)'
+  return ms ? 'Adik-beradik 100% — sila isi nama secara manual' : 'Siblings 100% — please enter names manually'
 }
 
 // ─── Component ───────────────────────────────────────────────────────────────
@@ -174,6 +182,12 @@ export function WillStep4Beneficiaries({
   const [residual, setResidual]       = useState<ResidualEstateBeneficiary>(initialResidual ?? EMPTY_RESIDUAL)
   const [stage, setStage]             = useState<'choose' | 'act' | 'form'>(isFirstLoad && !isItemised ? 'choose' : 'form')
   const [hasChildren, setHasChildren] = useState<boolean | null>(null)
+  const [parentsAlive, setParentsAlive] = useState<boolean | null>(null)
+  const [showActInfo, setShowActInfo] = useState(false)
+
+  // parents question is needed unless: no spouse AND has children (case e — always children 100%)
+  const needsParentsQuestion = !(testatorInfo?.marital_status !== 'married' && hasChildren === true)
+  const canApplyFormula = hasChildren !== null && (!needsParentsQuestion || parentsAlive !== null)
 
   // ── Validation ──
   const poolValid = pool.length > 0 && pool.every(p =>
@@ -304,8 +318,8 @@ export function WillStep4Beneficiaries({
   }
 
   function applyFormula() {
-    if (hasChildren === null) return
-    setList(buildSuggestion(testatorInfo?.marital_status, hasChildren))
+    if (!canApplyFormula) return
+    setList(buildSuggestion(testatorInfo?.marital_status, hasChildren!, parentsAlive ?? false))
     setStage('form')
   }
 
@@ -569,9 +583,12 @@ export function WillStep4Beneficiaries({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <button type="button" onClick={() => setStage('act')}
               className="text-left p-4 rounded-xl border-2 border-border hover:border-primary/50 transition">
-              <p className="text-sm font-semibold mb-1">{ms ? '📋 Gunakan formula Akta Pembahagian' : '📋 Use Distribution Act formula'}</p>
-              <p className="text-xs text-muted-foreground leading-relaxed mb-3">
-                {ms ? 'Kami pra-isi senarai berdasarkan status perkahwinan anda.' : 'We pre-fill the list based on your marital status.'}
+              <p className="text-sm font-semibold mb-1">{ms ? '📋 Pra-isi bahagian menggunakan Akta Pembahagian' : '📋 Pre-fill shares using Distribution Act'}</p>
+              <p className="text-xs text-muted-foreground leading-relaxed mb-1">
+                {ms ? 'Kami tetapkan peratusan berdasarkan status perkahwinan anda.' : 'We set the percentages based on your marital status.'}
+              </p>
+              <p className="text-xs text-amber-600 leading-relaxed mb-3">
+                {ms ? '⚠ Anda masih perlu masukkan nama penerima — kami hanya pra-isi peratusan.' : '⚠ You still need to enter beneficiary names — we only pre-fill the percentages.'}
               </p>
               <p className="text-xs font-medium text-primary">{ms ? 'Pilih ini →' : 'Choose this →'}</p>
             </button>
@@ -589,33 +606,121 @@ export function WillStep4Beneficiaries({
 
       {stage === 'act' && (
         <div className="border border-primary/30 rounded-xl p-5 space-y-4 bg-primary/5">
-          <p className="text-sm font-semibold">{ms ? 'Satu soalan sahaja:' : 'Just one question:'}</p>
+          <div className="flex items-center justify-between">
+            <p className="text-sm font-semibold">{ms ? 'Beberapa soalan ringkas:' : 'A few quick questions:'}</p>
+            <button type="button" onClick={() => setShowActInfo(v => !v)}
+              className="flex items-center gap-1 text-xs text-primary font-medium hover:text-primary/80 transition">
+              {ms ? 'Jadual Akta Pembahagian' : 'Distribution Act table'}
+              {showActInfo ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+            </button>
+          </div>
+
+          {showActInfo && (
+            <div className="bg-white border border-border rounded-lg p-4 text-xs space-y-2">
+              <p className="font-semibold text-foreground">
+                {ms ? 'Akta Pembahagian 1958 — Seksyen 6' : 'Distribution Act 1958 — Section 6'}
+              </p>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="border-b border-border">
+                      <th className="py-1.5 pr-3 font-semibold text-muted-foreground whitespace-nowrap">{ms ? 'Pasangan' : 'Spouse'}</th>
+                      <th className="py-1.5 pr-3 font-semibold text-muted-foreground whitespace-nowrap">{ms ? 'Anak' : 'Children'}</th>
+                      <th className="py-1.5 pr-3 font-semibold text-muted-foreground whitespace-nowrap">{ms ? 'Ibu Bapa' : 'Parents'}</th>
+                      <th className="py-1.5 font-semibold text-muted-foreground">{ms ? 'Pengagihan' : 'Distribution'}</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border/50">
+                    {[
+                      { s: '✓', c: '✓', p: '✓', d: ms ? 'Pasangan ¼ (25%), Anak ½ (50%), Ibu Bapa ¼ (25%)' : 'Spouse ¼ (25%), Children ½ (50%), Parents ¼ (25%)' },
+                      { s: '✓', c: '✓', p: '✗', d: ms ? 'Pasangan ⅓ (33%), Anak ⅔ (67%)' : 'Spouse ⅓ (33%), Children ⅔ (67%)' },
+                      { s: '✓', c: '✗', p: '✓', d: ms ? 'Pasangan ½ (50%), Ibu Bapa ½ (50%)' : 'Spouse ½ (50%), Parents ½ (50%)' },
+                      { s: '✓', c: '✗', p: '✗', d: ms ? 'Pasangan 100%' : 'Spouse 100%' },
+                      { s: '✗', c: '✓', p: '—', d: ms ? 'Anak-anak 100%' : 'Children 100%' },
+                      { s: '✗', c: '✗', p: '✓', d: ms ? 'Ibu Bapa 100%' : 'Parents 100%' },
+                      { s: '✗', c: '✗', p: '✗', d: ms ? 'Adik-beradik 100%' : 'Siblings 100%' },
+                    ].map((row, i) => (
+                      <tr key={i} className="text-muted-foreground">
+                        <td className="py-1.5 pr-3">{row.s}</td>
+                        <td className="py-1.5 pr-3">{row.c}</td>
+                        <td className="py-1.5 pr-3">{row.p}</td>
+                        <td className="py-1.5 font-medium text-foreground">{row.d}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <p className="text-muted-foreground italic pt-1">
+                {ms
+                  ? '* Formula ini hanya digunakan jika tiada Surat Wasiat. Dengan Surat Wasiat, anda bebas menentukan sendiri.'
+                  : '* This formula only applies if there is no Will. With a Will, you are free to decide for yourself.'}
+              </p>
+            </div>
+          )}
+
+
+          {/* Q1: Children */}
           <div>
-            <p className="text-sm font-medium mb-2">{ms ? 'Adakah anda mempunyai anak?' : 'Do you have children?'}</p>
+            <p className="text-sm font-medium mb-2">{ms ? '1. Adakah anda mempunyai anak?' : '1. Do you have children?'}</p>
             <div className="flex gap-2">
               {([true, false] as const).map(val => (
-                <button key={String(val)} type="button" onClick={() => setHasChildren(val)}
+                <button key={String(val)} type="button"
+                  onClick={() => { setHasChildren(val); setParentsAlive(null) }}
                   className={`px-5 py-2 text-sm rounded-lg border font-medium transition ${hasChildren === val ? 'bg-primary text-primary-foreground border-primary' : 'bg-background border-border text-muted-foreground hover:border-primary/50'}`}>
                   {val ? (ms ? 'Ya' : 'Yes') : (ms ? 'Tidak' : 'No')}
                 </button>
               ))}
             </div>
           </div>
-          {hasChildren !== null && (
-            <div className="bg-white border border-border rounded-lg p-3 text-xs space-y-1">
+
+          {/* Q2: Parents alive — shown when relevant */}
+          {hasChildren !== null && needsParentsQuestion && (
+            <div>
+              <p className="text-sm font-medium mb-2">
+                {ms ? '2. Adakah ibu atau bapa anda masih hidup?' : '2. Are either of your parents still alive?'}
+              </p>
+              <div className="flex gap-2">
+                {([true, false] as const).map(val => (
+                  <button key={String(val)} type="button" onClick={() => setParentsAlive(val)}
+                    className={`px-5 py-2 text-sm rounded-lg border font-medium transition ${parentsAlive === val ? 'bg-primary text-primary-foreground border-primary' : 'bg-background border-border text-muted-foreground hover:border-primary/50'}`}>
+                    {val ? (ms ? 'Ya' : 'Yes') : (ms ? 'Tidak' : 'No')}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Preview box */}
+          {canApplyFormula && (
+            <div className="bg-white border border-border rounded-lg p-3 text-xs space-y-1.5">
               <p className="font-semibold text-foreground">{ms ? 'Formula yang akan digunakan:' : 'Formula that will be applied:'}</p>
-              <p className="text-muted-foreground">{suggestionLabel(maritalStatus, hasChildren, ms)}</p>
+              <p className="text-primary font-medium">{suggestionLabel(maritalStatus, hasChildren!, parentsAlive ?? false, ms)}</p>
+              {hasChildren && maritalStatus !== 'married' && (
+                <p className="text-muted-foreground">
+                  {ms
+                    ? 'ℹ Ibu bapa tidak termasuk — anak-anak lebih utama daripada ibu bapa mengikut Akta Pembahagian 1958.'
+                    : 'ℹ Parents are excluded — children take priority over parents under the Distribution Act 1958.'}
+                </p>
+              )}
+              {!hasChildren && !parentsAlive && maritalStatus !== 'married' && (
+                <p className="text-amber-600">
+                  {ms
+                    ? '⚠ Tiada ibu bapa — harta jatuh kepada adik-beradik. Sila isi nama mereka secara manual.'
+                    : '⚠ No parents — estate falls to siblings. Please enter their names manually.'}
+                </p>
+              )}
               <p className="text-muted-foreground italic">
                 {ms ? '* Anda boleh ubah nama, peratusan, dan tambah penerima selepas ini.' : '* You can edit names, percentages, and add more people afterwards.'}
               </p>
             </div>
           )}
+
           <div className="flex gap-2 pt-1">
-            <button type="button" disabled={hasChildren === null} onClick={applyFormula}
+            <button type="button" disabled={!canApplyFormula} onClick={applyFormula}
               className="px-4 py-2 text-sm rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary/90 disabled:opacity-40 disabled:cursor-not-allowed transition">
               {ms ? 'Pra-isi Senarai' : 'Pre-fill List'}
             </button>
-            <button type="button" onClick={() => setStage('choose')}
+            <button type="button" onClick={() => { setStage('choose'); setHasChildren(null); setParentsAlive(null) }}
               className="px-4 py-2 text-sm rounded-lg border border-border text-muted-foreground hover:border-primary/50 transition">
               {ms ? '← Kembali' : '← Back'}
             </button>
@@ -760,15 +865,23 @@ export function WillStep4Beneficiaries({
               </p>
               {ms ? (
                 <div className="text-xs text-muted-foreground space-y-1.5">
-                  <p>Sesiapa yang akan menerima harta yang <strong className="text-foreground">tidak dinyatakan secara khusus</strong> dalam wasiat ini.</p>
-                  <p className="text-slate-400 italic">Contoh: Jika anda terlupa menyenaraikan sebuah aset, atau membeli harta baru selepas menulis wasiat ini — ia akan pergi kepada orang ini secara automatik.</p>
-                  <p className="text-amber-600">⚠ Jangan masukkan aset tertentu di sini. Untuk aset seperti rumah, kereta, atau akaun bank — tambah dalam senarai aset di atas dan tetapkan penerima secara khusus.</p>
+                  <p>Sesiapa yang akan menerima harta yang <strong className="text-foreground">tidak dinyatakan secara khusus</strong> dalam wasiat ini — seperti harta yang terlupa atau diperoleh kemudian.</p>
+                  <p className="text-emerald-700 bg-emerald-50 rounded px-2 py-1">
+                    <strong>Tidak ditanda:</strong> Harta baki akan diagihkan mengikut <strong>Akta Pembahagian 1958</strong> secara automatik (kepada waris mengikut undang-undang).
+                  </p>
+                  <p className="text-emerald-700 bg-emerald-50 rounded px-2 py-1">
+                    <strong>Ditanda:</strong> Anda boleh namakan seseorang khusus untuk menerima harta baki tersebut.
+                  </p>
                 </div>
               ) : (
                 <div className="text-xs text-muted-foreground space-y-1.5">
-                  <p>The person who receives all assets <strong className="text-foreground">not specifically named</strong> in this Will.</p>
-                  <p className="text-slate-400 italic">Example: If you forgot to list an asset, or acquire new property after writing this Will — it goes to this person automatically.</p>
-                  <p className="text-amber-600">⚠ Do not use this for specific assets. For named assets like property, vehicles, or bank accounts — add them to the asset list above and assign a specific beneficiary.</p>
+                  <p>The person who receives any assets <strong className="text-foreground">not specifically named</strong> in this Will — such as forgotten or future-acquired property.</p>
+                  <p className="text-emerald-700 bg-emerald-50 rounded px-2 py-1">
+                    <strong>Not ticked:</strong> Remaining assets are automatically distributed under the <strong>Distribution Act 1958</strong> (to legal heirs by law).
+                  </p>
+                  <p className="text-emerald-700 bg-emerald-50 rounded px-2 py-1">
+                    <strong>Ticked:</strong> You name a specific person to receive any remaining assets.
+                  </p>
                 </div>
               )}
             </div>

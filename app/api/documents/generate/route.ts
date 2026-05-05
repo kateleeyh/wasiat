@@ -180,7 +180,7 @@ function buildWasiatEmail(name: string) {
     </div>
     <p style="color:#666;font-size:13px;">
       Jika anda memerlukan salinan baharu atau mempunyai sebarang pertanyaan,
-      sila hubungi kami di support@wasiathub.com
+      sila hubungi kami di support@wasiathub.my
     </p>
     <p style="color:#666;font-size:13px;">
       <em>WasiatHub tidak memberikan nasihat guaman. Sila rujuk Peguam Syarie yang bertauliah
@@ -204,7 +204,7 @@ function buildWillEmail(name: string) {
       </ol>
     </div>
     <p style="color:#666;font-size:13px;">
-      If you need a new copy or have any questions, please contact us at support@wasiathub.com
+      If you need a new copy or have any questions, please contact us at support@wasiathub.my
     </p>
     <p style="color:#666;font-size:13px;">
       <em>WasiatHub does not provide legal advice. Please consult a qualified lawyer

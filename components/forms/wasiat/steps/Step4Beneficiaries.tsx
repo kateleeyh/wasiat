@@ -62,32 +62,45 @@ const EMPTY_BENEFICIARY: WasiatBeneficiary = {
   assignment_type: 'percentage', percentage: undefined, specific_asset: undefined,
 }
 
+// Sentinel: empty array means "all follows faraid, no 1/3 designation"
+const ALL_FARAID_SENTINEL: WasiatBeneficiary[] = []
+
 export function Step4Beneficiaries({ initialData, onChange, onValidChange }: Props) {
   const locale = useLocale()
   const ms     = locale === 'ms'
+
+  // If initialData is an empty array (not null), user previously chose "all faraid"
+  const [allFaraid, setAllFaraid] = useState<boolean>(
+    initialData !== null && initialData.length === 0
+  )
 
   const [list, setList] = useState<WasiatBeneficiary[]>(
     initialData?.length ? initialData : [{ ...EMPTY_BENEFICIARY }]
   )
 
-  // Total percentage of all percentage-type beneficiaries
   const totalPct = list
     .filter(b => b.assignment_type === 'percentage')
     .reduce((sum, b) => sum + (b.percentage ?? 0), 0)
 
   const exceedsLimit = totalPct > 100
 
-  const isValid = list.length > 0 && list.every(b => {
+  const listValid = list.length > 0 && list.every(b => {
     if (!b.full_name.trim() || !isValidIC(b.ic_number) || !b.relationship.trim() || !isValidPhone(b.phone)) return false
     if (b.assignment_type === 'percentage') return (b.percentage ?? 0) > 0 && (b.percentage ?? 0) <= 100
     if (b.assignment_type === 'specific_asset') return !!(b.specific_asset?.trim())
     return false
   }) && !exceedsLimit
 
+  const isValid = allFaraid ? true : listValid
+
   useEffect(() => {
-    onChange(list)
+    onChange(allFaraid ? ALL_FARAID_SENTINEL : list)
     onValidChange(isValid)
-  }, [list]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [list, allFaraid]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  function toggleFaraid(val: boolean) {
+    setAllFaraid(val)
+  }
 
   function update(idx: number, field: keyof WasiatBeneficiary, value: unknown) {
     setList(prev => {
@@ -114,6 +127,55 @@ export function Step4Beneficiaries({ initialData, onChange, onValidChange }: Pro
 
   return (
     <div className="space-y-6">
+
+      {/* Choice: designate 1/3 or all follows faraid */}
+      <div className="grid grid-cols-2 gap-3">
+        <button
+          type="button"
+          onClick={() => toggleFaraid(false)}
+          className={`p-4 rounded-xl border-2 text-left transition ${!allFaraid ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/40'}`}
+        >
+          <p className={`text-sm font-semibold mb-1 ${!allFaraid ? 'text-primary' : ''}`}>
+            {ms ? 'Lantik Penerima 1/3' : 'Designate 1/3 Beneficiaries'}
+          </p>
+          <p className="text-xs text-muted-foreground">
+            {ms ? 'Namakan penerima untuk bahagian 1/3 harta anda' : 'Name recipients for your 1/3 estate portion'}
+          </p>
+        </button>
+        <button
+          type="button"
+          onClick={() => toggleFaraid(true)}
+          className={`p-4 rounded-xl border-2 text-left transition ${allFaraid ? 'border-emerald-500 bg-emerald-50' : 'border-border hover:border-emerald-400'}`}
+        >
+          <p className={`text-sm font-semibold mb-1 ${allFaraid ? 'text-emerald-700' : ''}`}>
+            {ms ? 'Semua Ikut Faraid' : 'All Follows Faraid'}
+          </p>
+          <p className="text-xs text-muted-foreground">
+            {ms ? 'Tidak melantik penerima 1/3 — keseluruhan harta dibahagi mengikut faraid' : 'No 1/3 designation — entire estate distributed by faraid rules'}
+          </p>
+        </button>
+      </div>
+
+      {/* All faraid info box */}
+      {allFaraid && (
+        <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-sm text-emerald-800 space-y-2">
+          <p className="font-semibold">✓ {ms ? 'Keseluruhan Harta Mengikut Faraid' : 'Entire Estate Follows Faraid'}</p>
+          <p className="text-xs leading-relaxed">
+            {ms
+              ? 'Anda tidak melantik mana-mana penerima untuk bahagian 1/3. Keseluruhan harta anda akan diagihkan kepada waris mengikut undang-undang faraid yang terpakai di negeri anda.'
+              : 'You are not designating any beneficiary for the 1/3 portion. Your entire estate will be distributed to legal heirs according to faraid rules applicable in your state.'}
+          </p>
+          <p className="text-xs text-emerald-700 font-medium">
+            {ms
+              ? 'Wasiat ini masih sah dan penting — ia melantik Wasi (pelaksana) dan merekodkan kehendak anda secara rasmi.'
+              : 'This Wasiat is still valid and important — it appoints a Wasi (executor) and formally records your wishes.'}
+          </p>
+        </div>
+      )}
+
+      {/* Beneficiary form — hidden when all follows faraid */}
+      {!allFaraid && <>
+
       {/* 1/3 rule explanation */}
       <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm text-amber-800 space-y-2">
         <p className="font-semibold">{ms ? 'Peraturan 1/3 Wasiat — Penting' : '1/3 Wasiat Rule — Important'}</p>
@@ -332,6 +394,8 @@ export function Step4Beneficiaries({ initialData, onChange, onValidChange }: Pro
         <Plus className="w-4 h-4" />
         {ms ? 'Tambah Penerima Manfaat' : 'Add Beneficiary'}
       </button>
+
+      </> /* end !allFaraid */}
     </div>
   )
 }

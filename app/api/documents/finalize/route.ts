@@ -1,19 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import nodemailer from 'nodemailer'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
-
-function createTransporter() {
-  return nodemailer.createTransport({
-    host: process.env.SMTP_HOST ?? 'smtp.hostinger.com',
-    port: Number(process.env.SMTP_PORT ?? 465),
-    secure: true,
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
-    },
-  })
-}
 
 export async function POST(request: NextRequest) {
   const supabase = await createClient()
@@ -46,25 +33,34 @@ export async function POST(request: NextRequest) {
 
   await supabase.from('documents').update({ pdf_url: pdfUrl }).eq('id', documentId)
 
-  if (testatorEmail && process.env.SMTP_USER && process.env.SMTP_PASS) {
+  if (testatorEmail && process.env.RESEND_API_KEY) {
     const isMalay = language === 'ms'
     try {
-      const transporter = createTransporter()
-      await transporter.sendMail({
-        from: `WasiatHub <${process.env.SMTP_USER}>`,
-        to: testatorEmail,
-        subject: isWasiat
-          ? 'Wasiat Anda Telah Berjaya Dijana — WasiatHub'
-          : isMalay
-            ? 'Surat Wasiat Anda Telah Berjaya Dijana — WasiatHub'
-            : 'Your Last Will Has Been Generated — WasiatHub',
-        html: buildEmail(testatorName, isWasiat, isMalay),
-        attachments: [{
-          filename: fileName,
-          content: pdfBuffer,
-          contentType: 'application/pdf',
-        }],
+      const emailRes = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          from: 'WasiatHub <services@wasiathub.my>',
+          to: [testatorEmail],
+          subject: isWasiat
+            ? 'Wasiat Anda Telah Berjaya Dijana — WasiatHub'
+            : isMalay
+              ? 'Surat Wasiat Anda Telah Berjaya Dijana — WasiatHub'
+              : 'Your Last Will Has Been Generated — WasiatHub',
+          html: buildEmail(testatorName, isWasiat, isMalay),
+          attachments: [{
+            filename: fileName,
+            content: pdfBase64,
+          }],
+        }),
       })
+      if (!emailRes.ok) {
+        const errBody = await emailRes.text()
+        console.error('Resend error:', emailRes.status, errBody)
+      }
     } catch (emailErr) {
       console.error('Email error:', emailErr)
     }

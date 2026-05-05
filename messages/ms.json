@@ -272,26 +272,27 @@
       "howItWorks": "Cara Kerja",
       "pricing": "Harga",
       "faq": "Soal Jawab",
+      "insights": "Insights",
       "login": "Log Masuk",
       "register": "Daftar Percuma"
     },
     "hero": {
-      "badge": "Platform Wasiat Digital #1 Malaysia",
-      "headline1": "Urus Warisan",
-      "headline2": "Anda Hari Ini",
-      "sub": "Platform digital untuk menjana Wasiat Islam & Surat Wasiat yang sah di sisi undang-undang Malaysia — selesai dalam 15 minit.",
+      "badge": "Platform Wasiat Digital Malaysia",
+      "headline1": "Wasiat Anda,",
+      "headline2": "Cara Anda.",
+      "sub": "Platform digital untuk menjana Wasiat Islam & Surat Wasiat berpandukan rangka kerja undang-undang Malaysia — selesai dalam 15 minit.",
       "cta": "Mulakan Sekarang",
       "ctaSecondary": "Ketahui Lebih Lanjut",
-      "stat1": "RM 49",
+      "stat1": "RM 79",
       "stat1Label": "Harga bermula",
       "stat2": "15 min",
       "stat2Label": "Masa siapkan",
       "stat3": "100%",
-      "stat3Label": "Berasaskan undang-undang"
+      "stat3Label": "Berpandukan Undang-undang"
     },
     "trust": {
-      "legal": "Sah di Sisi Undang-undang",
-      "legalDesc": "Berpandukan Akta Wasiat 1959 & Undang-undang Syariah Malaysia",
+      "legal": "Berpandukan Undang-undang Malaysia",
+      "legalDesc": "Berdasarkan Akta Wasiat 1959 & rangka kerja Syariah Malaysia",
       "secure": "Bayaran Selamat FPX",
       "secureDesc": "Sistem pembayaran bank-ke-bank Malaysia yang terpercaya",
       "fast": "Siap dalam 15 Minit",
@@ -309,7 +310,7 @@
       "willDesc": "Berpandukan Akta Wasiat 1959. Meliputi semua jenis harta, penjagaan anak-anak, dan aset digital."
     },
     "howItWorks": {
-      "title": "Mudah. Cepat. Sah.",
+      "title": "Mudah. Cepat. Dipandu.",
       "subtitle": "4 langkah mudah untuk menjana wasiat anda",
       "step1": "Daftar Akaun",
       "step1Desc": "Daftar percuma dengan e-mel atau Google. Simpan kemajuan anda pada bila-bila masa.",
@@ -329,10 +330,10 @@
       "subtitle": "Bayaran sekali sahaja. Tiada langganan.",
       "wasiatTitle": "Wasiat Islam",
       "willTitle": "Surat Wasiat",
-      "bundleTitle": "Pakej Pasangan",
-      "bundleBadge": "Paling Popular",
-      "price49": "RM 49",
+      "bundleTitle": "Pakej Keluarga",
+      "bundleBadge": "Nilai Terbaik",
       "price79": "RM 79",
+      "price129": "RM 129",
       "cta": "Mulakan Sekarang",
       "disclaimer": "Semua harga dalam Ringgit Malaysia (RM). Bayaran diproses melalui FPX."
     },

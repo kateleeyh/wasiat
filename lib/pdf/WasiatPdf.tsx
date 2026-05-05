@@ -84,9 +84,6 @@ const S = StyleSheet.create({
   itemDetail:    { fontSize: 9.5, color: '#333', marginBottom: 1 },
   itemValue:     { fontSize: 9.5, color: '#666', marginTop: 4 },
 
-  // ── Footer ──
-  footer:      { position: 'absolute', bottom: 28, left: 72, right: 72, borderTopWidth: 0.5, borderTopColor: '#ccc', paddingTop: 5, flexDirection: 'row', justifyContent: 'space-between' },
-  footerText:  { fontSize: 7.5, color: '#999' },
 })
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -109,14 +106,20 @@ function Bullet({ text }: { text: string }) {
   )
 }
 
-function Footer({ docRef }: { docRef: string }) {
+function Footer({ docRef, name, ic }: { docRef: string; name?: string; ic?: string }) {
+  const leftText = name ? `${name}  |  IC: ${ic}` : `WasiatHub | ${docRef}`
   return (
-    <View style={S.footer} fixed>
-      <Text style={S.footerText}>WasiatHub | {docRef}</Text>
-      <Text style={S.footerText} render={({ pageNumber, totalPages }) =>
-        `Muka Surat ${pageNumber} / ${totalPages}`
-      } />
-    </View>
+    <>
+      {/* Border line — using top: 790 to place near bottom of A4 (841pt) */}
+      <View style={{ position: 'absolute', top: 790, left: 72, right: 72, borderTopWidth: 0.5, borderTopColor: '#aaa' }} fixed />
+      {/* Footer row — flexDirection:row with space-between inside View at top:800 */}
+      <View style={{ position: 'absolute', top: 800, left: 72, right: 72, flexDirection: 'row', justifyContent: 'space-between' }} fixed>
+        <Text style={{ fontSize: 8.5, color: '#666' }}>{leftText}</Text>
+        <Text style={{ fontSize: 8.5, color: '#666' }} render={({ pageNumber, totalPages }) =>
+          `${docRef}  |  Muka Surat ${pageNumber} / ${totalPages}`
+        } />
+      </View>
+    </>
   )
 }
 
@@ -172,7 +175,7 @@ export function WasiatPdf({ data, docRef, generatedAt }: Props) {
           MAIN DOCUMENT
       ═══════════════════════════════════════════════ */}
       <Page size="A4" style={S.page}>
-        <Footer docRef={docRef} />
+        <Footer docRef={docRef} name={t.full_name} ic={t.ic_number} />
 
         {/* Header */}
         <View style={S.pageHeader}>
@@ -203,6 +206,13 @@ export function WasiatPdf({ data, docRef, generatedAt }: Props) {
           ada), dan akan menjadi panduan utama bagi pelaksanaan harta pusaka saya kelak.
         </Text>
 
+        <Text style={S.para}>
+          Wasiat ini dibuat dan hendaklah ditadbir mengikut{' '}
+          <Text style={S.bold}>
+            {t.state ? `Enakmen Wasiat Orang Islam (${t.state})` : 'Enakmen Wasiat Orang Islam yang berkuat kuasa di negeri kediaman pewasiat'}
+          </Text>.
+        </Text>
+
         {/* ARTIKEL 1: PELANTIKAN WASI */}
         <Text style={S.articleTitle}>ARTIKEL 1: PELANTIKAN WASI – AMANAH YANG DIPERTANGGUNGJAWABKAN</Text>
 
@@ -210,9 +220,10 @@ export function WasiatPdf({ data, docRef, generatedAt }: Props) {
           <>
             <Text style={S.para}>
               Saya dengan ini melantik <Text style={S.bold}>{ex.full_name.toUpperCase()}</Text>{' '}
-              (No. K/P: {ex.ic_number}) ({ex.relationship}) sebagai wasi utama yang
-              bertanggungjawab menguruskan harta pusaka saya, menyelesaikan hutang dan amanah,
-              serta melaksanakan segala arahan yang dinyatakan dalam wasiat ini selepas kematian saya.
+              (No. K/P: {ex.ic_number}) ({ex.relationship}){ex.address ? `, beralamat di ${ex.address}` : ''}{' '}
+              sebagai wasi utama yang bertanggungjawab menguruskan harta pusaka saya,
+              menyelesaikan hutang dan amanah, serta melaksanakan segala arahan yang dinyatakan
+              dalam wasiat ini selepas kematian saya.
             </Text>
             {bk ? (
               <Text style={S.para}>
@@ -327,12 +338,6 @@ export function WasiatPdf({ data, docRef, generatedAt }: Props) {
           Faraid tersebut adalah hak waris yang wajib dipelihara.
         </Text>
 
-        <Text style={S.para}>
-          Daripada baki bersih harta pusaka tersebut, saya menggunakan hak wasiat saya untuk
-          memperuntukkan sehingga satu pertiga (1/3) kepada penerima-penerima yang dinamakan di
-          bawah, tertakluk kepada had dan syarat yang dibenarkan oleh hukum Syarak.
-        </Text>
-
         {bn.length > 0 ? (
           <>
             <Text style={S.para}>
@@ -368,7 +373,22 @@ export function WasiatPdf({ data, docRef, generatedAt }: Props) {
             </Text>
           </>
         ) : (
-          <Text style={[S.para, { color: '#888' }]}>— Tiada penerima manfaat dinyatakan —</Text>
+          <>
+            <Text style={S.para}>
+              Saya dengan ini mengisytiharkan bahawa saya <Text style={S.bold}>tidak menggunakan
+              hak wasiat 1/3</Text> dalam wasiat ini. Keseluruhan harta pusaka saya hendaklah
+              diagihkan sepenuhnya kepada waris-waris yang berhak mengikut hukum{' '}
+              <Text style={S.bold}>Faraid</Text> yang terpakai di negeri saya, tanpa sebarang
+              peruntukan khusus kepada mana-mana pihak di luar hukum Faraid.
+            </Text>
+            <Text style={S.para}>
+              Keputusan ini dibuat secara sedar dan sukarela. Wasi yang dilantik hendaklah
+              memastikan bahawa pengagihan harta pusaka dilaksanakan sepenuhnya mengikut
+              ketetapan hukum Faraid yang berkuat kuasa di negeri{' '}
+              <Text style={S.bold}>{t.state || 'yang berkenaan'}</Text> dengan bantuan pihak
+              Jabatan Agama Islam atau mahkamah Syariah yang berbidangkuasa.
+            </Text>
+          </>
         )}
 
         {/* ARTIKEL 5: ARAHAN KHAS */}
@@ -424,7 +444,7 @@ export function WasiatPdf({ data, docRef, generatedAt }: Props) {
           selepas pemergian saya.
         </Text>
 
-        <View style={S.quote}>
+        <View style={S.quote} wrap={false}>
           <Text>
             "Apabila seseorang anak Adam meninggal dunia, terputuslah amalannya kecuali tiga
             perkara: sedekah jariah, ilmu yang bermanfaat, dan anak soleh yang mendoakannya."
@@ -442,7 +462,7 @@ export function WasiatPdf({ data, docRef, generatedAt }: Props) {
             <Text style={S.bold}>Tarikh:</Text> {dc?.date ? fmtDate(dc.date) : '___________________________'}
           </Text>
 
-          <View style={{ marginTop: 16 }}>
+          <View style={{ marginTop: 16, maxWidth: '50%' }}>
             <View style={S.sigLine} />
             <Text style={S.sigName}>Tandatangan Pewasiat</Text>
             <Text style={[S.sigDotLine, { marginTop: 8 }]}>
@@ -477,6 +497,7 @@ export function WasiatPdf({ data, docRef, generatedAt }: Props) {
               <Text style={S.bold}>{wt?.witness_1.full_name ? wt.witness_1.full_name.toUpperCase() : '______________________'}</Text>
             </Text>
             <Text style={S.sigDotLine}>{'No. IC: ' + (wt?.witness_1.ic_number || '______________________')}</Text>
+            {wt?.witness_1.address && <Text style={S.sigDotLine}>{'Alamat: ' + wt.witness_1.address}</Text>}
           </View>
           {/* Witness 2 */}
           <View style={S.sigCol}>
@@ -488,6 +509,7 @@ export function WasiatPdf({ data, docRef, generatedAt }: Props) {
               <Text style={S.bold}>{wt?.witness_2.full_name ? wt.witness_2.full_name.toUpperCase() : '______________________'}</Text>
             </Text>
             <Text style={S.sigDotLine}>{'No. IC: ' + (wt?.witness_2.ic_number || '______________________')}</Text>
+            {wt?.witness_2.address && <Text style={S.sigDotLine}>{'Alamat: ' + wt.witness_2.address}</Text>}
           </View>
         </View>
 
@@ -510,29 +532,6 @@ export function WasiatPdf({ data, docRef, generatedAt }: Props) {
 
         <Text style={S.closingLine}>— TAMAT DOKUMEN WASIAT RASMI —</Text>
 
-        {/* Legal basis & disclaimer */}
-        <View style={{ marginTop: 28, borderTopWidth: 0.5, borderTopColor: '#ccc', paddingTop: 12 }}>
-          <Text style={{ fontSize: 8.5, fontFamily: 'Helvetica-Bold', color: '#444', marginBottom: 4 }}>
-            ASAS PERUNDANGAN & PENAFIAN
-          </Text>
-          <Text style={{ fontSize: 8, color: '#666', lineHeight: 1.6, textAlign: 'justify' }}>
-            Dokumen Wasiat ini disediakan berdasarkan prinsip-prinsip Fiqh Muamalat mazhab
-            Syafi'i yang diterima pakai secara universal di Malaysia dan disokong oleh
-            peruntukan Undang-Undang Keluarga Islam yang berkuat kuasa di negeri-negeri Malaysia.
-            Struktur, format dan kandungan dokumen ini adalah selaras dengan amalan peguam-peguam
-            Syarie dan badan-badan agama Islam di seluruh Malaysia.
-          </Text>
-          <Text style={{ fontSize: 8, color: '#666', lineHeight: 1.6, textAlign: 'justify', marginTop: 4 }}>
-            Untuk pendaftaran, sila hubungi Jabatan Agama Islam negeri anda memandangkan
-            prosedur pendaftaran berbeza mengikut negeri. Dokumen ini sah apabila ditandatangani
-            di hadapan saksi-saksi yang memenuhi syarat yang ditetapkan.
-          </Text>
-          <Text style={{ fontSize: 8, color: '#888', lineHeight: 1.6, marginTop: 4, fontStyle: 'italic' }}>
-            WasiatHub tidak memberikan nasihat guaman. Sila rujuk Peguam Syarie yang bertauliah
-            jika anda memerlukan panduan undang-undang khusus berkaitan wasiat anda.
-          </Text>
-        </View>
-
       </Page>
 
       {/* ═══════════════════════════════════════════════
@@ -540,7 +539,7 @@ export function WasiatPdf({ data, docRef, generatedAt }: Props) {
       ═══════════════════════════════════════════════ */}
       {hasLampiranA && (
         <Page size="A4" style={S.page}>
-          <Footer docRef={docRef} />
+          <Footer docRef={docRef} name={t.full_name} ic={t.ic_number} />
 
           <Text style={S.lampiranTitle}>LAMPIRAN A – SENARAI HARTA</Text>
           <Text style={S.lampiranSub}>Rujukan: Wasiat Rasmi {t.full_name} | {docRef}</Text>

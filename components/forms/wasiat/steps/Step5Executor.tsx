@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { InfoTip } from '@/components/forms/InfoTip'
 import { useLocale } from 'next-intl'
 import type { WasiatPrimaryExecutor, WasiatBackupExecutor } from '@/types/database'
 import {
@@ -116,7 +117,8 @@ export function Step5Executor({ initialPrimary, initialBackup, onPrimaryChange, 
   return (
     <div className="space-y-8">
       {/* Notice */}
-      <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm text-amber-800 space-y-2">
+      <InfoTip titleMs="ℹ️ Syarat Pelantikan Wasi" titleEn="ℹ️ Executor (Wasi) Requirements" ms={ms} variant="amber">
+        <div className="text-sm text-amber-800 space-y-2 mt-2">
         <p className="font-semibold">{ms ? 'Syarat Wasi (Pelaksana Wasiat)' : 'Executor (Wasi) Requirements'}</p>
         <ul className="space-y-1 text-xs leading-relaxed list-none">
           <li>✓ {ms ? <><strong>Muslim</strong> — wasi mestilah beragama Islam</> : <><strong>Muslim</strong> — the executor must be Muslim</>}</li>
@@ -130,6 +132,7 @@ export function Step5Executor({ initialPrimary, initialBackup, onPrimaryChange, 
             : 'The Wasi is responsible for executing your wasiat, settling debts, and distributing assets according to Syariah after your death.'}
         </p>
       </div>
+      </InfoTip>
 
       {/* Primary executor */}
       <div>
