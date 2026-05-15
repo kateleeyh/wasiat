@@ -45,6 +45,9 @@ export async function POST(request: NextRequest) {
 
   const name  = user.user_metadata?.full_name || user.email?.split('@')[0] || 'Customer'
   const email = user.email!
+
+  const { data: profile } = await supabase.from('users').select('phone').eq('id', user.id).single()
+  const phone = profile?.phone || '+60100000000'
   const label = doc.type === 'wasiat' ? 'Wasiat Islam' : 'General Will'
 
   let finalAmountSen: number = isBundle ? PRICING.bundle.amountSen : PRICING.single.amountSen
@@ -89,7 +92,7 @@ export async function POST(request: NextRequest) {
       line_items: [{ name: description, price: finalAmountSen, quantity: 1 }],
     },
     payment:  { payment_due_date: 60 },
-    customer: { name: safeName, email },
+    customer: { name: safeName, email, phone },
   }
 
   const bodyStr   = JSON.stringify(bodyObj)
