@@ -4,8 +4,6 @@ import { createClient } from '@/lib/supabase/server'
 import { PaymentOptions } from '@/components/payment/PaymentOptions'
 import { PRICING } from '@/lib/pricing'
 
-const TEST_MODE = false
-
 interface Props {
   params: Promise<{ id: string }>
 }
@@ -127,7 +125,6 @@ export default async function PaymentPage({ params }: Props) {
           hasCredit={hasCredit}
           reviewHref={reviewHref}
           pricing={PRICING}
-          testMode={TEST_MODE}
         />
 
         {/* Disclaimer */}
