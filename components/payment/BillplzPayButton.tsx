@@ -41,7 +41,7 @@ export function BillplzPayButton({ documentId, amountLabel }: Props) {
         {loading ? (
           <>
             <Loader2 className="w-4 h-4 animate-spin" />
-            Redirecting to Billplz...
+            Redirecting to payment...
           </>
         ) : (
           <>Pay with FPX (Online Banking) — {amountLabel}</>

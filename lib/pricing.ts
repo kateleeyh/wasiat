@@ -3,6 +3,9 @@
 //
 // TEST_MODE: set to true to charge RM 1 via Billplz for testing.
 // Set to false before going live.
+// TEST_MODE = true → uses Simulate Payment (no Billplz), prices show RM1 for testing
+// TEST_MODE = false → live Billplz payment at RM79/RM129
+// Switch to false ONLY after DOKU payment gateway is approved & live
 const TEST_MODE = false
 
 export const PRICING = {

@@ -4,6 +4,8 @@ import { createClient } from '@/lib/supabase/server'
 import { PaymentOptions } from '@/components/payment/PaymentOptions'
 import { PRICING } from '@/lib/pricing'
 
+const TEST_MODE = false
+
 interface Props {
   params: Promise<{ id: string }>
 }
@@ -111,7 +113,7 @@ export default async function PaymentPage({ params }: Props) {
               <div>
                 <p className="text-sm font-medium">{ms ? 'Perbankan Dalam Talian (FPX)' : 'Online Banking (FPX)'}</p>
                 <p className="text-xs text-muted-foreground">
-                  {ms ? 'melalui Billplz — semua bank Malaysia disokong' : 'via Billplz — all Malaysian banks supported'}
+                  {ms ? 'melalui DOKU — semua bank Malaysia disokong' : 'via DOKU — all Malaysian banks supported'}
                 </p>
               </div>
             </div>
@@ -125,13 +127,14 @@ export default async function PaymentPage({ params }: Props) {
           hasCredit={hasCredit}
           reviewHref={reviewHref}
           pricing={PRICING}
+          testMode={TEST_MODE}
         />
 
         {/* Disclaimer */}
         <p className="text-xs text-muted-foreground text-center leading-relaxed">
           {ms
-            ? 'Dengan meneruskan, anda bersetuju dengan Terma Perkhidmatan kami. Dokumen ini dijana untuk tujuan maklumat dan mesti ditandatangani di hadapan saksi untuk sah dari segi undang-undang.'
-            : 'By proceeding, you agree to our Terms of Service. This document is generated for informational purposes and must be signed in the presence of witnesses to be legally valid.'}
+            ? 'Dengan meneruskan, anda bersetuju dengan Terma Perkhidmatan kami. Tiada bayaran balik selepas PDF dijana. Sebarang permintaan bayaran balik hendaklah dihantar ke support@wasiathub.my. WasiatHub dikendalikan oleh WF Wealth Management Sdn. Bhd. (202101017850-M).'
+            : 'By proceeding, you agree to our Terms of Service. No refunds after PDF is generated. Refund requests are handled by the WasiatHub team at support@wasiathub.my. WasiatHub is operated by WF Wealth Management Sdn. Bhd. (202101017850-M).'}
         </p>
 
       </div>
