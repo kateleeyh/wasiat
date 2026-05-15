@@ -116,7 +116,8 @@ export async function POST(request: NextRequest) {
 
   const data = await res.json()
   if (!res.ok) {
-    console.error('DOKU create payment error:', JSON.stringify(data))
+    console.error('DOKU error — status:', res.status, 'body:', JSON.stringify(data))
+    console.error('DOKU request body sent:', bodyStr)
     const msg = data.error?.message ?? data.message ?? JSON.stringify(data)
     return NextResponse.json({ error: msg }, { status: 502 })
   }
