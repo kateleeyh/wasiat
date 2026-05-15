@@ -11,7 +11,6 @@ interface Props {
   hasCredit: boolean
   reviewHref: string
   pricing: typeof PRICING
-  testMode?: boolean
 }
 
 interface PromoResult {
@@ -23,7 +22,7 @@ interface PromoResult {
   savingRM: string
 }
 
-export function PaymentOptions({ documentId, ms, hasCredit, reviewHref, pricing, testMode }: Props) {
+export function PaymentOptions({ documentId, ms, hasCredit, reviewHref, pricing }: Props) {
   const [plan, setPlan]           = useState<'single' | 'bundle'>('single')
   const [loading, setLoading]     = useState(false)
   const [error, setError]         = useState('')
@@ -31,8 +30,6 @@ export function PaymentOptions({ documentId, ms, hasCredit, reviewHref, pricing,
   const [promoLoading, setPromoLoading] = useState(false)
   const [promoResult, setPromoResult]   = useState<PromoResult | null>(null)
   const [promoError, setPromoError]     = useState('')
-  const [mockLoading, setMockLoading]   = useState(false)
-
   async function handleUseCredit() {
     setLoading(true); setError('')
     try {
@@ -67,21 +64,6 @@ export function PaymentOptions({ documentId, ms, hasCredit, reviewHref, pricing,
     }
   }
 
-  async function handleMock() {
-    setMockLoading(true); setError('')
-    try {
-      const res = await fetch('/api/payment/mock-complete', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ documentId }),
-      })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error ?? 'Failed')
-      window.location.href = `/payment/${documentId}/success`
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Something went wrong')
-      setMockLoading(false)
-    }
-  }
 
   async function handlePay() {
     setLoading(true); setError('')
@@ -201,24 +183,6 @@ export function PaymentOptions({ documentId, ms, hasCredit, reviewHref, pricing,
         {promoError && <p className="text-xs text-destructive">{promoError}</p>}
       </div>
 
-      {/* Test mode simulate button */}
-      {testMode && (
-        <div className="space-y-2">
-          <div className="relative flex items-center gap-2">
-            <div className="flex-1 border-t border-dashed border-amber-300" />
-            <span className="text-[10px] text-amber-600 font-medium whitespace-nowrap bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
-              {ms ? 'MOD UJIAN' : 'TEST MODE'}
-            </span>
-            <div className="flex-1 border-t border-dashed border-amber-300" />
-          </div>
-          <button onClick={handleMock} disabled={mockLoading}
-            className="w-full py-3.5 rounded-xl font-semibold text-sm transition disabled:opacity-60 flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-600 text-white">
-            {mockLoading
-              ? <><Loader2 className="w-4 h-4 animate-spin" />{ms ? 'Memproses...' : 'Processing...'}</>
-              : (ms ? 'Simulasi Pembayaran' : 'Simulate Payment')}
-          </button>
-        </div>
-      )}
 
       {/* Pay button */}
       <button onClick={handlePay} disabled={loading}
