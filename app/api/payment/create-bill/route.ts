@@ -67,9 +67,11 @@ export async function POST(request: NextRequest) {
     }
   }
 
+  // DOKU only allows: a-z A-Z 0-9 . - / * + , = _ : ' @ % and space
+  const safeName = name.replace(/[^a-zA-Z0-9 .\-/*+,=_:'@%]/g, ' ').trim()
   const description = isBundle
-    ? `WasiatHub Family Bundle (${label} x2)${promoApplied ? ' [PROMO]' : ''}`
-    : `WasiatHub ${label}${promoApplied ? ' [PROMO]' : ''}`
+    ? `WasiatHub Family Bundle - ${label} x2${promoApplied ? ' PROMO' : ''}`
+    : `WasiatHub ${label}${promoApplied ? ' PROMO' : ''}`
 
   // invoice_number encodes documentId + plan so callback can look up both
   const invoiceNumber = `${documentId}_${isBundle ? 'bundle' : 'single'}`
@@ -87,7 +89,7 @@ export async function POST(request: NextRequest) {
       line_items: [{ name: description, price: finalAmountSen, quantity: 1 }],
     },
     payment:  { payment_due_date: 60 },
-    customer: { name, email },
+    customer: { name: safeName, email },
   }
 
   const bodyStr   = JSON.stringify(bodyObj)
