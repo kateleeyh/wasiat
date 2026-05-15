@@ -47,7 +47,11 @@ export async function POST(request: NextRequest) {
   const email = user.email!
 
   const { data: profile } = await supabase.from('users').select('phone').eq('id', user.id).single()
-  const phone = profile?.phone || '+60100000000'
+  const rawPhone = (profile?.phone ?? '').replace(/[\s\-()]/g, '')
+  const phone = rawPhone.startsWith('+')  ? rawPhone
+              : rawPhone.startsWith('60') ? `+${rawPhone}`
+              : rawPhone.startsWith('0')  ? `+6${rawPhone}`
+              : '+601000000000'
   const label = doc.type === 'wasiat' ? 'Wasiat Islam' : 'General Will'
 
   let finalAmountSen: number = isBundle ? PRICING.bundle.amountSen : PRICING.single.amountSen
