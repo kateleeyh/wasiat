@@ -10,8 +10,8 @@
 - [x] Domain `wasiathub.my` — Cloudflare Workers
 - [x] Email: Resend `services@wasiathub.my`
 - [x] Google OAuth for `wasiathub.my`
-- [x] Billplz FPX payment (RM79 single / RM129 bundle)
-- [x] `TEST_MODE = false` — live pricing active
+- [x] DOKU payment gateway (formerly SenangPay Malaysia) — FPX + GrabPay + TnG
+- [x] `TEST_MODE = false` — live pricing active (RM79 single / RM129 bundle)
 
 ### Product
 - [x] Wasiat Islam (7-step form, Malay PDF)
@@ -144,11 +144,13 @@
 ## 🔲 PHASE 3 — PRODUCT IMPROVEMENTS (NEXT SPRINT)
 
 ### Payment
-- [ ] Switch Billplz → DOKU (only `app/api/payment/create-bill/route.ts` needs change)
-- [ ] Billplz server-side webhook (currently relies on redirect params as fallback)
+- [x] Switch Billplz → DOKU (checkout API with HMAC-SHA256 signing)
+- [x] DOKU webhook server-side payment confirmation (`/api/payment/callback`)
+- [x] Payment verifying spinner (60s poll, prevents free-PDF loophole)
+- [x] Promo code system with `validate-promo` API
 
 ### Product Features
-- [ ] Admin dashboard (view all users, documents, payments, revenue)
+- [x] Admin CRM (`/admin`) — users, documents, revenue, promo codes
 - [ ] Annual reminder email to all users ("Review your wasiat — 1 year later")
 - [ ] Referral program ("Share with a friend — both get RM10 off")
 - [ ] Hibah document type (future — after Wasiat & Will are fully stable)
@@ -185,11 +187,16 @@
 
 ## CRITICAL REMINDERS
 
-- `lib/pricing.ts` — `TEST_MODE = false` ✅ (live pricing active)
-- Payment gateway switch: Billplz → DOKU = change only `create-bill/route.ts`
+- `lib/pricing.ts` — `TEST_MODE = false` ✅ (live pricing: RM79 / RM129)
+- **Deploy**: always use `npm run deploy` (NOT `npm run build` + `wrangler deploy` separately)
+- **Cloudflare CI is disconnected** — all deploys are manual via `npm run deploy`
+- Payment gateway: **DOKU** (not Billplz) — amounts sent in whole MYR (e.g. `79`, not `7900`)
+- DOKU response wraps data in `response{}` — use `data.response.payment.url`
+- Webhook URL in DOKU dashboard: `https://wasiathub.my/api/payment/callback`
 - Never name competitors in any content
 - All article claims must reference actual Malaysian law
 - `marketing_consent` users only for promotional emails
+- Admin access: edit `ADMIN_EMAILS` in `app/admin/layout.tsx` then redeploy
 
 ---
-*Last updated: May 2026 | WasiatHub*
+*Last updated: 16 May 2026 | WasiatHub*

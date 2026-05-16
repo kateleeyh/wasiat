@@ -12,7 +12,7 @@
 - **Target Market**: Malaysian residents (Muslim and non-Muslim)
 - **Languages**: Bahasa Malaysia & English (user can toggle)
 - **Monetization**: One-time payment per document generation
-- **Payment Gateway**: Billplz (FPX-based, local Malaysian)
+- **Payment Gateway**: DOKU (formerly SenangPay Malaysia) — FPX + GrabPay + Touch 'n Go
 - **Live Domain**: https://wasiathub.my
 - **Hosting**: Cloudflare Workers (via OpenNext)
 
@@ -51,7 +51,7 @@
 | File Storage | Supabase Storage (generated PDFs) |
 | PDF Generation | React PDF (`@react-pdf/renderer`) — client-side |
 | Email Delivery | Resend (`services@wasiathub.my`) |
-| Payment | Billplz API (FPX) |
+| Payment | DOKU API (FPX + GrabPay + Touch 'n Go) |
 | Hosting | Cloudflare Workers via `@opennextjs/cloudflare` |
 | i18n | `next-intl` (BM + English) |
 
@@ -64,11 +64,9 @@
 | `NEXT_PUBLIC_SUPABASE_URL` | Supabase | Public |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase | Public |
 | `SUPABASE_SERVICE_ROLE_KEY` | Supabase | Server-only |
-| `RESEND_API_KEY` | Resend | Server-only. Domain: wasiathub.my |
-| `BILLPLZ_API_KEY` | Billplz | Server-only |
-| `BILLPLZ_COLLECTION_ID` | Billplz | `rer0vdua` |
-| `BILLPLZ_X_SIGNATURE` | Billplz | Server-only. Webhook verification |
-| `BILLPLZ_BASE_URL` | Billplz | `https://www.billplz.com/api/v3` |
+| `SMTP_HOST` / `SMTP_USER` / `SMTP_PASS` / `SMTP_PORT` | Hostinger SMTP | Server-only. Email via `services@wasiathub.my` |
+| `DOKU_CLIENT_ID` | DOKU | Client ID from DOKU API Keys page |
+| `DOKU_SECRET_KEY` | DOKU | Active Secret Key — used for HMAC-SHA256 signing |
 | `NEXT_PUBLIC_APP_URL` | App | `https://wasiathub.my` |
 
 All secrets stored in `.env.local` and as Cloudflare Worker secrets via `wrangler secret put`.
@@ -81,12 +79,12 @@ Centralized in `lib/pricing.ts`. Change `TEST_MODE` flag only.
 
 | Plan | Price | Details |
 |---|---|---|
-| Single | RM 49 | 1 document, PDF, email |
-| Family Bundle | RM 79 | 2 credits — 1st doc unlocked + 1 credit stored for any future doc |
+| Single | RM 79 | 1 document, PDF, email |
+| Family Bundle | RM 129 | 2 credits — 1st doc unlocked + 1 credit stored for any future doc |
 | Credit redemption | Free | Uses stored bundle credit |
 
 > **TEST_MODE = true** → charges RM 1 for both plans (for testing)
-> **TEST_MODE = false** → live pricing (RM 49 / RM 79)
+> **TEST_MODE = false** → live pricing (RM 79 / RM 129) ✅ currently active
 
 ---
 
@@ -140,20 +138,29 @@ Centralized in `lib/pricing.ts`. Change `TEST_MODE` flag only.
 
 ## 8. Payment Flow
 
-### Single (RM 49)
+### Single (RM 79)
 ```
-Review → Pay RM 49 (Billplz) → Callback marks completed → Success → Generate PDF
+Review → Pay RM 79 → DOKU checkout (checkout.doku.com) → Payment
+  → DOKU fires webhook → /api/payment/callback verifies HMAC signature
+  → Document marked completed + payment record inserted
+  → DOKU redirects to /payment/[id]/success
+  → PaymentVerifying spinner polls DB (3s interval, max 60s) until completed
+  → Success page shown → Generate PDF
 ```
 
-### Family Bundle (RM 79)
+### Family Bundle (RM 129)
 ```
-Review → Pay RM 79 (Billplz) → Callback marks Doc #1 completed + stores 1 credit → Success → Generate PDF
-Doc #2 (anytime) → Review → Payment page shows "Bundle Credit Available" → Use credit (free) → Generate PDF
+Review → Pay RM 129 → DOKU checkout → Payment
+  → Webhook marks Doc #1 completed + stores 1 bundle credit
+  → Success → Generate PDF
+Doc #2 (anytime) → Payment page shows "Bundle Credit Available" → Use credit (free) → Generate PDF
 ```
 
-### Test Mode (Simulate)
-- "Simulate Payment" button on payment page respects selected plan (Single or Bundle)
-- No Billplz involved — marks document completed and stores credit if bundle
+### Security — Free PDF Loophole Prevention
+- `PaymentVerifying` component polls `/api/payment/status/[id]` every 3s
+- Only shows success after webhook confirms `doc.status = completed`
+- Users who cancel/go back without paying: wait 60s → redirected to payment page
+- Test mode simulate button has been **removed** — live payments only
 
 ---
 
@@ -201,26 +208,50 @@ Known issue: `next-env.mjs` gets duplicate exports — `npm run deploy` auto-ded
 
 ---
 
-## 12. What's Remaining (Next Phase)
+## 12. Admin CRM
 
-### Pre-launch (must do)
-- [ ] Set `TEST_MODE = false` in `lib/pricing.ts` when ready to go live
-- [ ] Update Google OAuth callback URL in Google Cloud Console to include `https://wasiathub.my/auth/callback`
-- [ ] Full E2E test with real RM 49 payment
-- [ ] Remove or hide "Test Mode / Simulate Payment" button before going public
+URL: `wasiathub.my/admin` — protected by email whitelist in `app/admin/layout.tsx`.
 
-### Content
-- [ ] Write real Insights articles (currently 3 placeholders with "coming soon")
-- [ ] Review and finalize landing page copy
+Pages:
+- **Overview** — key stats, recent payments, recent registrations
+- **Users** — full user list with PDPA/marketing consent flags
+- **Documents** — all documents with status, type, dates
+- **Revenue** — all paid transactions, monthly breakdown, invoice references
+- **Promo Codes** — create/manage discount codes
 
-### Future Enhancements
-- [ ] Billplz webhook server-side payment confirmation (currently relies on redirect params)
-- [ ] Admin dashboard (document management, user stats)
-- [ ] Faraid calculator info in Wasiat flow
-- [ ] WhatsApp notifications
-- [ ] Reminder emails (annual review nudge)
-- [ ] Hibah document type
+Admin access: edit `ADMIN_EMAILS` array in `app/admin/layout.tsx` and redeploy.
 
 ---
 
-*Document version: 2.0 | Updated: April 2026 | WasiatHub*
+## 13. Deploy Process
+
+```bash
+npm run deploy
+```
+
+Runs: `next build` → `opennextjs-cloudflare build` → dedup `next-env.mjs` → `wrangler deploy`
+
+**IMPORTANT**: Never run `npm run build` + `wrangler deploy` separately. The `.open-next` directory is only updated by `opennextjs-cloudflare build`. Cloudflare CI is disconnected — all deployments are manual.
+
+---
+
+## 14. What's Next
+
+### Done ✅
+- [x] `TEST_MODE = false` — live pricing (RM79 / RM129)
+- [x] DOKU payment gateway (FPX + GrabPay + TnG)
+- [x] DOKU webhook server-side confirmation
+- [x] PaymentVerifying — prevents free PDF loophole
+- [x] Admin CRM dashboard
+- [x] Promo code system
+
+### Up Next
+- [ ] Annual reminder email ("Review your wasiat — 1 year later")
+- [ ] Referral program
+- [ ] Faraid calculator info in Wasiat flow
+- [ ] WhatsApp notifications
+- [ ] Hibah document type (future)
+
+---
+
+*Document version: 3.0 | Updated: 16 May 2026 | WasiatHub*
