@@ -293,12 +293,14 @@
     "trust": {
       "legal": "Guided by Malaysian Law",
       "legalDesc": "Based on Wills Act 1959 & Malaysian Syariah frameworks",
-      "secure": "Secure FPX Payment",
-      "secureDesc": "Malaysia's trusted bank-to-bank payment system",
+      "secure": "Secure Payment",
+      "secureDesc": "FPX · GrabPay · Touch 'n Go",
       "fast": "Done in 15 Minutes",
       "fastDesc": "Step-by-step guided form, easy to understand",
       "pdf": "PDF to Your Inbox",
-      "pdfDesc": "Your document is delivered directly to your email"
+      "pdfDesc": "Your document is delivered directly to your email",
+      "allRaces": "For All Malaysians",
+      "allRacesDesc": "Muslim & Non-Muslim"
     },
     "docTypes": {
       "title": "For All Malaysians",
@@ -313,9 +315,9 @@
       "title": "Simple. Fast. Guided.",
       "subtitle": "4 easy steps to generate your will",
       "step1": "Create Account",
-      "step1Desc": "Sign up free with email or Google. Save your progress anytime.",
+      "step1Desc": "Sign up free with email or Google. Your draft is saved instantly — come back, edit or review anytime before paying.",
       "step2": "Fill the Form",
-      "step2Desc": "Guided step-by-step form. Auto-saved — continue anytime.",
+      "step2Desc": "Guided 7-step form. Auto-saved after every step. No pressure — stop and continue anytime.",
       "step3": "Review & Preview",
       "step3Desc": "Review your information and preview the document before payment.",
       "step4": "Pay & Get PDF",
@@ -327,7 +329,7 @@
     },
     "pricing": {
       "title": "Transparent Pricing, No Hidden Fees",
-      "subtitle": "One-time payment. No subscription.",
+      "subtitle": "One-time payment. No subscription. Banks charge RM 298+. Lawyers charge RM 1,000+.",
       "wasiatTitle": "Islamic Will",
       "willTitle": "General Will",
       "bundleTitle": "Family Bundle",
@@ -335,7 +337,16 @@
       "price79": "RM 79",
       "price129": "RM 129",
       "cta": "Get Started Now",
-      "disclaimer": "All prices in Malaysian Ringgit (RM). Payments processed via FPX."
+      "disclaimer": "All prices in Malaysian Ringgit (RM). Pay via FPX, GrabPay or Touch 'n Go.",
+      "privacyNote": "Your will contents are not stored by WasiatHub. The PDF is generated directly on your device."
+    },
+    "privacy": {
+      "title": "Your will, your way.",
+      "subtitle": "Only you know what's inside.",
+      "body": "Beneficiary names, assets, IC numbers — WasiatHub does not store this sensitive information. Your will PDF is generated directly on your device. We only keep a record that a document was paid for, not what's in it.",
+      "point1": "No WasiatHub staff can read your will",
+      "point2": "PDF is ready on your device — not stored on our servers",
+      "point3": "PDPA compliant — your sensitive data is protected"
     },
     "faq": {
       "title": "Frequently Asked Questions",
