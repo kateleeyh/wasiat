@@ -134,9 +134,35 @@ User → Review → Pay → DOKU checkout (checkout.doku.com)
 
 ---
 
+## Marketing Context
+
+WasiatHub is now in Phase 2 — marketing and lead generation. The product is live and payment works. See `SKILLS.md` for content creation guidelines.
+
+**Target audiences:**
+
+| Segment | Product | Key pain point |
+|---|---|---|
+| Malay/Muslim (primary) | Wasiat | Family disputes, Faraid, who manages estate |
+| Chinese/Indian Malaysian | General Will | Distribution Act 1958, frozen assets, probate cost |
+| Young professionals (25–35) | Both | Marriage, first home, new baby as triggers |
+
+**Active marketing channels:**
+- TikTok `@wasiathub` — awareness, both segments, BM + EN
+- Facebook page — trust, conversion, age 35–55
+- SEO articles — organic search, long-term
+- Landing page — convert arriving traffic
+
+**Content rules:**
+- Never name competitors by name in any public content
+- All legal claims must reference actual Malaysian law (Wills Act 1959, Distribution Act 1958, Syariah)
+- Price RM79 is a major competitive advantage — always mention it
+- Tone: plain language, consequence-driven, never condescending
+
+---
+
 ## Priority
 
 1. Stability — do not break existing working flows
 2. Correctness — legal accuracy matters
 3. UX
-4. SEO
+4. Marketing / SEO
