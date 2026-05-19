@@ -1,0 +1,15 @@
+<svg width="200" height="50" viewBox="0 0 200 50" xmlns="http://www.w3.org/2000/svg">
+  <!-- Icon mark: emerald rounded square with W signature -->
+  <rect width="50" height="50" rx="12" fill="#10b981"/>
+  <!-- W shape (stylised signature/will mark) -->
+  <polyline points="11,14 18,36 25,22 32,36 39,14"
+    stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- Signature underline -->
+  <line x1="14" y1="41" x2="36" y2="41" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.55"/>
+
+  <!-- Wordmark -->
+  <text x="62" y="32"
+    font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+    font-size="22" font-weight="700" letter-spacing="-0.3"
+    fill="#0f172a">Wasiat<tspan fill="#10b981" font-weight="800">Hub</tspan></text>
+</svg>
