@@ -372,26 +372,32 @@ export default async function LandingPage() {
 
       {/* ── HOW IT WORKS ── */}
       <section id="how-it-works" className="bg-white py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">{t('howItWorks.title')}</h2>
             <p className="text-slate-500">{t('howItWorks.subtitle')}</p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-y-12 gap-x-4">
             {steps.map((step, i) => (
-              <div key={step.num} className="relative">
+              <div key={step.num} className="relative flex flex-col items-center text-center">
+                {/* Connector arrow between steps */}
                 {i < steps.length - 1 && (
-                  <div className="hidden lg:block absolute top-8 left-full w-full h-px bg-gradient-to-r from-emerald-200 to-transparent z-0" />
-                )}
-                <div className="relative bg-slate-50 rounded-2xl p-6 hover:shadow-md transition-shadow">
-                  <div className="w-14 h-14 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center mb-5 shadow-md shadow-emerald-200">
-                    <step.icon size={24} className="text-white" />
+                  <div className="hidden lg:flex absolute top-9 left-[calc(50%+2.75rem)] right-[-calc(50%-2.75rem)] items-center">
+                    <div className="flex-1 h-0.5 bg-emerald-200" />
+                    <div className="w-0 h-0 border-t-[5px] border-t-transparent border-b-[5px] border-b-transparent border-l-[7px] border-l-emerald-300" />
                   </div>
-                  <div className="text-xs font-bold text-emerald-500 mb-1">{step.num}</div>
-                  <h3 className="font-bold text-slate-900 mb-2">{step.title}</h3>
-                  <p className="text-slate-500 text-sm leading-relaxed">{step.desc}</p>
+                )}
+                {/* Big step number circle */}
+                <div className="relative z-10 w-[4.5rem] h-[4.5rem] bg-emerald-500 rounded-full flex items-center justify-center mb-4 shadow-lg shadow-emerald-200/60">
+                  <span className="text-white font-extrabold text-2xl leading-none">{step.num}</span>
                 </div>
+                {/* Icon badge */}
+                <div className="w-9 h-9 bg-emerald-50 border border-emerald-100 rounded-lg flex items-center justify-center mb-3">
+                  <step.icon size={18} className="text-emerald-600" />
+                </div>
+                <h3 className="font-bold text-slate-900 mb-2 text-sm sm:text-base">{step.title}</h3>
+                <p className="text-slate-500 text-sm leading-relaxed">{step.desc}</p>
               </div>
             ))}
           </div>
