@@ -110,7 +110,6 @@ export default async function PaymentPage({ params }: Props) {
               <span className="px-2.5 py-1 rounded-md text-[11px] font-bold bg-[#003087] text-white tracking-wide">FPX</span>
               <span className="px-2.5 py-1 rounded-md text-[11px] font-bold bg-[#00B14F] text-white tracking-wide">GrabPay</span>
               <span className="px-2.5 py-1 rounded-md text-[11px] font-bold bg-[#1C4F9C] text-white tracking-wide">TnG</span>
-              <span className="px-2.5 py-1 rounded-md text-[11px] font-bold bg-[#1A1F71] text-white tracking-wide">Visa/MC</span>
             </div>
           </div>
         )}
