@@ -294,7 +294,7 @@
       "legal": "Guided by Malaysian Law",
       "legalDesc": "Based on Wills Act 1959 & Malaysian Syariah frameworks",
       "secure": "Secure Payment",
-      "secureDesc": "FPX · GrabPay · Touch 'n Go",
+      "secureDesc": "FPX · GrabPay · TnG · Credit Card",
       "fast": "Done in 15 Minutes",
       "fastDesc": "Step-by-step guided form, easy to understand",
       "pdf": "PDF to Your Inbox",
@@ -337,7 +337,7 @@
       "price79": "RM 79",
       "price129": "RM 129",
       "cta": "Get Started Now",
-      "disclaimer": "All prices in Malaysian Ringgit (RM). Pay via FPX, GrabPay or Touch 'n Go.",
+      "disclaimer": "All prices in Malaysian Ringgit (RM). Pay via FPX, GrabPay, Touch 'n Go or credit/debit card.",
       "privacyNote": "Your will contents are not stored by WasiatHub. The PDF is generated directly on your device."
     },
     "privacy": {

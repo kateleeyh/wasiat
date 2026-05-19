@@ -104,16 +104,13 @@ export default async function PaymentPage({ params }: Props) {
 
         {/* Payment method */}
         {!hasCredit && (
-          <div className="border border-border rounded-xl p-5 space-y-3">
-            <p className="text-sm font-semibold">{ms ? 'Kaedah Pembayaran' : 'Payment Method'}</p>
-            <div className="flex items-center gap-3 p-3 border border-primary/30 bg-primary/5 rounded-lg">
-              <div className="w-8 h-8 bg-primary/10 rounded flex items-center justify-center text-primary text-xs font-bold">FPX</div>
-              <div>
-                <p className="text-sm font-medium">{ms ? 'Perbankan Dalam Talian (FPX)' : 'Online Banking (FPX)'}</p>
-                <p className="text-xs text-muted-foreground">
-                  {ms ? 'melalui DOKU — semua bank Malaysia disokong' : 'via DOKU — all Malaysian banks supported'}
-                </p>
-              </div>
+          <div className="border border-border rounded-xl px-5 py-4 flex items-center justify-between gap-4">
+            <p className="text-sm font-semibold shrink-0">{ms ? 'Kaedah Pembayaran' : 'Payment Method'}</p>
+            <div className="flex items-center gap-2 flex-wrap justify-end">
+              <span className="px-2.5 py-1 rounded-md text-[11px] font-bold bg-[#003087] text-white tracking-wide">FPX</span>
+              <span className="px-2.5 py-1 rounded-md text-[11px] font-bold bg-[#00B14F] text-white tracking-wide">GrabPay</span>
+              <span className="px-2.5 py-1 rounded-md text-[11px] font-bold bg-[#1C4F9C] text-white tracking-wide">TnG</span>
+              <span className="px-2.5 py-1 rounded-md text-[11px] font-bold bg-[#1A1F71] text-white tracking-wide">Visa/MC</span>
             </div>
           </div>
         )}
