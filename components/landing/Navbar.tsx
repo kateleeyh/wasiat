@@ -16,10 +16,9 @@ interface NavbarProps {
     login: string
     register: string
   }
-  appName: string
 }
 
-export function Navbar({ locale, t, appName }: NavbarProps) {
+export function Navbar({ locale, t }: NavbarProps) {
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
 
@@ -51,8 +50,8 @@ export function Navbar({ locale, t, appName }: NavbarProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <span className="text-xl font-bold text-white">{appName}</span>
+          <Link href="/" className="flex items-center">
+            <img src="/logo-white.svg" alt="WasiatHub" height={32} className="h-8 w-auto" />
           </Link>
 
           {/* Desktop nav */}

@@ -75,7 +75,6 @@ export default async function LandingPage() {
     <div className="min-h-screen bg-white">
       <Navbar
         locale={locale}
-        appName={tCommon('appName')}
         t={{
           features: t('nav.features'),
           howItWorks: t('nav.howItWorks'),
