@@ -1,6 +1,67 @@
-# WasiatHub — Facebook Content Plan: Month 1
+# WasiatHub — Social Media Content Plan: Month 1
 
-## Page Setup
+---
+
+## Which Logo to Use — Per Platform
+
+All 3 platforms display profile pictures as **circles**. The full logo (icon + wordmark) is too wide and the text becomes unreadable when cropped to a circle. Always use the **icon mark only**.
+
+| Platform | Logo file | Profile pic size | Background |
+|---|---|---|---|
+| **Facebook** | `logo-mark.svg` | 1000 × 1000px PNG | White or transparent |
+| **TikTok** | `logo-mark.svg` | 1000 × 1000px PNG | White or transparent |
+| **Instagram** | `logo-mark.svg` | 1000 × 1000px PNG | White or transparent |
+
+**The icon mark** = emerald green rounded square with white W signature — already has its own background, looks good on any platform.
+
+### How to convert SVG → PNG for upload (free, 2 minutes)
+
+SVG files cannot be uploaded directly to social media. Convert using Canva:
+
+1. Go to **canva.com** → Create design → Custom size → **1000 × 1000px**
+2. Set background to **white** (`#ffffff`)
+3. Upload `logo-mark.svg` (Upload → Upload files)
+4. Center it on the canvas, resize to around **700 × 700px** (leave padding around the edges)
+5. Download → **PNG** → upload to Facebook / TikTok / Instagram
+
+### Profile bios — copy-paste ready
+
+**Facebook** (`@wasiathub`):
+```
+Buat wasiat & surat wasiat online dalam 15 minit. Muslim & bukan Muslim. Dari RM 79. 🔗 wasiathub.my
+```
+
+**TikTok** (`@wasiathub`):
+```
+Wasiat & will online 🇲🇾
+15 minit · RM 79 · Semua kaum
+🔗 wasiathub.my
+```
+
+**Instagram** (`@wasiathub`):
+```
+Wasiat & Will online 🇲🇾
+Muslim & Non-Muslim
+15 minit · Dari RM 79
+🔗 wasiathub.my
+```
+
+### Cover photo / banner (Facebook & TikTok)
+
+Facebook cover photo: **820 × 312px**
+TikTok profile banner: not available (TikTok has no banner)
+
+**Canva instructions for Facebook cover:**
+1. Create design → Custom size → **820 × 312px**
+2. Background: dark (`#0f172a`)
+3. Upload `logo-white.svg`, center-left
+4. Add text right side: `"Wasiat Anda, Cara Anda."` in white bold
+5. Small text below: `wasiathub.my · Dari RM 79`
+6. Download as PNG
+
+---
+
+## Page Setup — Facebook
 
 | Field | Content |
 |---|---|
