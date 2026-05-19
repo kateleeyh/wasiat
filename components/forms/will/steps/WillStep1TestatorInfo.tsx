@@ -92,8 +92,8 @@ export function WillStep1TestatorInfo({ initialData, onChange, onValidChange, do
       <InfoTip titleMs="ℹ️ Akta Wasiat 1959 — Asas Perundangan" titleEn="ℹ️ Wills Act 1959 — Legal Basis" ms={ms} variant="blue">
         <p className="text-xs text-blue-700 leading-relaxed mt-2">
           {ms
-            ? 'Surat Wasiat Am ini disediakan di bawah Akta Wasiat 1959 (Malaysia). Ia boleh dibuat oleh mana-mana individu yang berumur 18 tahun ke atas dan sihat akal, tanpa mengira agama.'
-            : 'This General Will is prepared under the Wills Act 1959 (Malaysia). It may be made by any individual aged 18 and above of sound mind, regardless of religion.'}
+            ? 'Surat Wasiat Am ini disediakan di bawah Akta Wasiat 1959 (Malaysia). Ia boleh dibuat oleh mana-mana individu yang berumur 18 tahun ke atas dan sihat akal, tanpa mengira agama. Nota untuk penduduk Sabah: Akta Wasiat Sabah memerlukan umur minimum 21 tahun.'
+            : 'This General Will is prepared under the Wills Act 1959 (Malaysia). It may be made by any individual aged 18 and above of sound mind, regardless of religion. Note for Sabah residents: The Sabah Wills Ordinance requires a minimum age of 21 years.'}
         </p>
       </InfoTip>
 
@@ -287,7 +287,7 @@ export function WillStep1TestatorInfo({ initialData, onChange, onValidChange, do
             value={form.address}
             onChange={e => set('address', e.target.value.toUpperCase())}
             onBlur={() => blur('address')}
-            placeholder={ms ? 'NO. RUMAH, JALAN, BANDAR, POSKOD, NEGERI' : 'HOUSE NO., STREET, CITY, POSTCODE, STATE'}
+            placeholder={ms ? 'NO. RUMAH/UNIT, JALAN, BANDAR, POSKOD, NEGERI\ncth: NO. 12A, JALAN BAHAGIA 3, 47500 SUBANG JAYA, SELANGOR' : 'UNIT/HOUSE NO., STREET, CITY, POSTCODE, STATE\ne.g: 12A, JALAN BAHAGIA 3, 47500 SUBANG JAYA, SELANGOR'}
           />
           {err('address') && <p className="text-xs text-destructive mt-1">{err('address')}</p>}
         </div>

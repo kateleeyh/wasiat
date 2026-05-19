@@ -181,8 +181,8 @@ export function Step4Beneficiaries({ initialData, onChange, onValidChange }: Pro
         <p className="font-semibold">{ms ? 'Peraturan 1/3 Wasiat — Penting' : '1/3 Wasiat Rule — Important'}</p>
         <p>
           {ms
-            ? 'Mengikut undang-undang Islam, anda hanya boleh mewasiatkan sehingga 1/3 daripada harta anda. Baki 2/3 akan dibahagikan kepada waris mengikut hukum Faraid. Peratusan di sini merujuk kepada bahagian daripada 1/3 tersebut.'
-            : 'Under Islamic law, you may only bequeath up to 1/3 of your estate. The remaining 2/3 is distributed to heirs under Faraid. Percentages here refer to shares within that 1/3 portion.'}
+            ? 'Mengikut undang-undang Islam, anda hanya boleh mewasiatkan sehingga 1/3 daripada harta bersih anda (selepas hutang dan perbelanjaan pengkebumian ditolak). Baki 2/3 akan dibahagikan kepada waris mengikut hukum Faraid. Peratusan di sini merujuk kepada bahagian daripada 1/3 tersebut.'
+            : 'Under Islamic law, you may only bequeath up to 1/3 of your net estate (after debts and funeral expenses are deducted). The remaining 2/3 is distributed to heirs under Faraid. Percentages here refer to shares within that 1/3 portion.'}
         </p>
         <div className="border-t border-amber-300 pt-2 space-y-1">
           <p className="font-semibold text-xs">
@@ -221,9 +221,16 @@ export function Step4Beneficiaries({ initialData, onChange, onValidChange }: Pro
           {exceedsLimit && <AlertTriangle className="w-4 h-4 shrink-0" />}
           <span>
             {ms
-              ? `Jumlah peratusan: ${totalPct}% daripada 1/3 harta`
-              : `Total percentage: ${totalPct}% of 1/3 estate`}
+              ? `Jumlah peratusan: ${totalPct}% daripada 1/3 harta bersih`
+              : `Total percentage: ${totalPct}% of 1/3 net estate`}
             {exceedsLimit && (ms ? ' — melebihi had 100%!' : ' — exceeds 100% limit!')}
+            {exceedsLimit && (
+              <span className="block text-xs mt-1 font-normal">
+                {ms
+                  ? 'Nota: Lebih 1/3 dibenarkan jika SEMUA waris Faraid bersetuju selepas kematian anda. Sila dapatkan nasihat Peguam Syarie.'
+                  : 'Note: Exceeding 1/3 is permitted if ALL Faraid heirs consent after your death. Please consult a Peguam Syarie.'}
+              </span>
+            )}
             {totalPct === 100 && !exceedsLimit && (ms ? ' ✓ Tepat' : ' ✓ Fully allocated')}
           </span>
         </div>

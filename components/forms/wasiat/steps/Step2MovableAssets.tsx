@@ -168,6 +168,22 @@ export function Step2MovableAssets({ initialData, onChange, onValidChange }: Pro
               : 'Movable assets: savings, vehicles, investments, jewellery, EPF, insurance, etc. Immovable assets (land, houses, buildings) will be listed in the next step.'}
           </div>
 
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-xs text-blue-800 space-y-1.5">
+            <p className="font-semibold">
+              {ms ? 'ℹ️ Insurans / Takaful — Nota Penting' : 'ℹ️ Insurance / Takaful — Important Note'}
+            </p>
+            <p className="leading-relaxed">
+              {ms
+                ? 'Wang insurans / takaful yang mempunyai penamaan benefisiari (hibah bersyarat) akan dibayar terus kepada benefisiari tersebut dan TIDAK menjadi sebahagian daripada harta wasiat.'
+                : 'Insurance / takaful proceeds with a named beneficiary (conditional hibah) are paid directly to the beneficiary and do NOT form part of the wasiat estate.'}
+            </p>
+            <p className="leading-relaxed">
+              {ms
+                ? 'Walau bagaimanapun, jika tiada penamaan benefisiari, atau polisi tersebut diserahkan mutlak (absolute assignment) kepada seseorang, ia akan menjadi harta pusaka dan tertakluk kepada agihan Faraid. Senaraikan di sini untuk rujukan wasi anda sahaja.'
+                : 'However, if no beneficiary is named, or the policy has been absolutely assigned to someone, it becomes part of the estate and is subject to Faraid distribution. List here for your executor\'s reference only.'}
+            </p>
+          </div>
+
           <div>
             <div className="flex items-center justify-between mb-3">
               <p className="text-sm font-medium">
