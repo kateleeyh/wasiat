@@ -144,6 +144,14 @@ export function AuthForm({ mode, action, googleAction, redirectTo }: AuthFormPro
               ? t('auth.login')
               : t('auth.register')}
         </button>
+
+        {mode === 'register' && (
+          <p className="text-xs text-muted-foreground text-center leading-relaxed pt-1">
+            📧 Selepas mendaftar, semak e-mel anda untuk mengesahkan akaun sebelum log masuk.
+            <br />
+            <span className="text-[11px]">After registering, check your email to verify your account before logging in.</span>
+          </p>
+        )}
       </form>
     </div>
   )
