@@ -104,12 +104,14 @@ export default async function PaymentPage({ params }: Props) {
 
         {/* Payment method */}
         {!hasCredit && (
-          <div className="border border-border rounded-xl px-5 py-4 flex items-center justify-between gap-4">
+          <div className="border border-border rounded-xl px-5 py-4 flex items-center justify-between gap-3">
             <p className="text-sm font-semibold shrink-0">{ms ? 'Kaedah Pembayaran' : 'Payment Method'}</p>
             <div className="flex items-center gap-2 flex-wrap justify-end">
-              <span className="px-2.5 py-1 rounded-md text-[11px] font-bold bg-[#003087] text-white tracking-wide">FPX</span>
-              <span className="px-2.5 py-1 rounded-md text-[11px] font-bold bg-[#00B14F] text-white tracking-wide">GrabPay</span>
-              <span className="px-2.5 py-1 rounded-md text-[11px] font-bold bg-[#1C4F9C] text-white tracking-wide">TnG</span>
+              <img src="/payment/fpx.svg"        alt="FPX"        className="h-7 w-auto rounded" />
+              <img src="/payment/grabpay.svg"    alt="GrabPay"    className="h-7 w-auto rounded" />
+              <img src="/payment/tng.svg"        alt="Touch 'n Go" className="h-7 w-auto rounded" />
+              <img src="/payment/visa.svg"       alt="Visa"       className="h-7 w-auto rounded" />
+              <img src="/payment/mastercard.svg" alt="Mastercard" className="h-7 w-auto rounded" />
             </div>
           </div>
         )}

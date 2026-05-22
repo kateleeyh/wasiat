@@ -259,14 +259,24 @@ export default async function LandingPage() {
           <div className="flex flex-wrap justify-center items-center gap-4 sm:gap-6 lg:gap-10">
             {[
               { emoji: '🔒', label: isMalay ? 'SSL Selamat' : 'SSL Secured', sub: isMalay ? 'Data disulitkan' : 'Data encrypted' },
-              { emoji: '💳', label: t('trust.secure'), sub: t('trust.secureDesc') },
+              { emoji: null, label: t('trust.secure'), sub: t('trust.secureDesc') },
               { emoji: '🇲🇾', label: isMalay ? 'Patuh PDPA' : 'PDPA Compliant', sub: isMalay ? 'Perlindungan data' : 'Data protected' },
               { emoji: '⚡', label: isMalay ? 'PDF Segera' : 'Instant PDF', sub: isMalay ? 'Jana dalam minit' : 'Generated in minutes' },
               { emoji: '📋', label: isMalay ? 'Akta Wasiat 1959' : 'Wills Act 1959', sub: isMalay ? 'Rangka kerja undang-undang' : 'Legal framework' },
               { emoji: '🧑‍🤝‍🧑', label: t('trust.allRaces'), sub: t('trust.allRacesDesc') },
             ].map(({ emoji, label, sub }) => (
               <div key={label} className="flex items-center gap-2.5 px-4 py-2.5 bg-slate-50 rounded-xl border border-slate-100">
-                <span className="text-xl">{emoji}</span>
+                {emoji === null ? (
+                  <div className="flex items-center gap-1">
+                    <img src="/payment/fpx.svg"        alt="FPX"     className="h-5 w-auto rounded" />
+                    <img src="/payment/grabpay.svg"    alt="GrabPay" className="h-5 w-auto rounded" />
+                    <img src="/payment/tng.svg"        alt="TnG"     className="h-5 w-auto rounded" />
+                    <img src="/payment/visa.svg"       alt="Visa"    className="h-5 w-auto rounded" />
+                    <img src="/payment/mastercard.svg" alt="MC"      className="h-5 w-auto rounded" />
+                  </div>
+                ) : (
+                  <span className="text-xl">{emoji}</span>
+                )}
                 <div>
                   <div className="text-xs font-semibold text-slate-800">{label}</div>
                   <div className="text-[10px] text-slate-400">{sub}</div>
