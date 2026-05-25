@@ -1,3 +1,29 @@
+// ─── Legal Rules Reference — General Will (Wills Act 1959) ───────────────────
+//
+//  Scenario                              | Legal?        | Enforced
+//  --------------------------------------|---------------|---------------------------
+//  Witness = named beneficiary           | Void gift     | Error (blocked)
+//  Witness = residual estate beneficiary | Void gift     | Error (blocked)
+//  Witness = spouse of beneficiary       | Void gift     | Warning (text only)
+//  Witness = testator                    | Invalid will  | Error (blocked)
+//  Witness = executor (not beneficiary)  | Allowed       | Warning (advisory only)
+//  Two witnesses = same person           | Invalid will  | Error (blocked)
+//  Executor = beneficiary                | Allowed       | Permitted
+//  Executor = testator                   | Invalid       | Error (blocked)
+//
+// ─── Legal Rules Reference — Wasiat Islam (Syariah Enactments) ───────────────
+//
+//  Scenario                              | Legal?        | Enforced
+//  --------------------------------------|---------------|---------------------------
+//  Witness = beneficiary                 | Void gift     | Error (blocked)
+//  Witness = testator                    | Invalid       | Error (blocked)
+//  Wasi = witness                        | Discouraged   | Error (blocked, conservative)
+//  Two witnesses = same person           | Invalid       | Error (blocked)
+//  Wasi = beneficiary                    | Conflict risk | Warning (advisory)
+//
+// Source: Wills Act 1959 s.10, Distribution Act 1958, state Syariah enactments
+// ─────────────────────────────────────────────────────────────────────────────
+
 import type { WasiatRecord, WillRecord } from '@/types/database'
 
 export interface ValidationIssue {
@@ -259,17 +285,18 @@ export function validateWill(d: WillRecord): ValidationIssue[] {
     })
   }
 
-  // 9. Executor ≠ Witnesses (warning)
+  // 9. Executor = Witness — legally allowed under Wills Act 1959 (executor holds no gift),
+  //    but advisable to use an independent witness to avoid any undue-influence challenge.
   if (primaryExecIC && witness1IC && conflict(primaryExecIC, witness1IC)) {
     issues.push({ severity: 'warning', step: 6,
-      en: 'Primary executor is also Witness 1. This is not recommended.',
-      ms: 'Pelaksana Utama juga adalah Saksi 1. Ini tidak digalakkan.',
+      en: 'Primary executor is also Witness 1. This is legally permitted but using an independent witness is advisable to avoid any future challenge.',
+      ms: 'Pelaksana Utama juga adalah Saksi 1. Ini dibenarkan undang-undang tetapi menggunakan saksi bebas adalah lebih elok untuk mengelakkan sebarang pertikaian.',
     })
   }
   if (primaryExecIC && witness2IC && conflict(primaryExecIC, witness2IC)) {
     issues.push({ severity: 'warning', step: 6,
-      en: 'Primary executor is also Witness 2. This is not recommended.',
-      ms: 'Pelaksana Utama juga adalah Saksi 2. Ini tidak digalakkan.',
+      en: 'Primary executor is also Witness 2. This is legally permitted but using an independent witness is advisable to avoid any future challenge.',
+      ms: 'Pelaksana Utama juga adalah Saksi 2. Ini dibenarkan undang-undang tetapi menggunakan saksi bebas adalah lebih elok untuk mengelakkan sebarang pertikaian.',
     })
   }
 

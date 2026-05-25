@@ -134,7 +134,7 @@
       "fullName": "Nama Penuh",
       "icNumber": "No. Kad Pengenalan",
       "address": "Alamat",
-      "notice": "Saksi tidak boleh merupakan penerima manfaat dalam wasiat ini."
+      "notice": "Saksi tidak boleh merupakan penerima manfaat dalam wasiat ini, dan tidak boleh merupakan pewasiat sendiri."
     },
     "step7": {
       "title": "Perisytiharan",
@@ -224,14 +224,14 @@
       "fullName": "Nama Penuh",
       "icNumber": "No. Kad Pengenalan",
       "address": "Alamat",
-      "notice": "Saksi tidak boleh merupakan penerima manfaat atau pasangan penerima manfaat dalam surat wasiat ini."
+      "notice": "Saksi tidak boleh merupakan penerima manfaat, pasangan penerima manfaat, atau pewasiat dalam surat wasiat ini."
     },
     "step7": {
       "title": "Perisytiharan",
       "date": "Tarikh Pelaksanaan",
       "signatureName": "Nama Penuh (sebagai tandatangan)",
       "acknowledgement": "Saya mengesahkan bahawa semua maklumat yang diberikan adalah benar dan tepat, dan saya membuat surat wasiat ini dengan kehendak sendiri tanpa sebarang paksaan.",
-      "disclaimer": "WasiatHub menyediakan perkhidmatan penjana dokumen sahaja dan bukan nasihat undang-undang. Untuk surat wasiat ini sah, ia mesti ditandatangani di hadapan 2 orang saksi yang tidak terlibat sebagai penerima manfaat."
+      "disclaimer": "WasiatHub menyediakan perkhidmatan penjana dokumen sahaja dan bukan nasihat undang-undang. Untuk surat wasiat ini sah, ia mesti ditandatangani di hadapan 2 orang saksi yang bukan penerima manfaat dan bukan pewasiat sendiri."
     }
   },
   "review": {
@@ -259,7 +259,7 @@
   },
   "postPayment": {
     "wasiatNotice": "Untuk wasiat ini berkuat kuasa penuh, ia mesti ditandatangani di hadapan 2 orang saksi Muslim dan didaftarkan dengan Jabatan Agama Islam Negeri yang berkenaan.",
-    "willNotice": "Untuk surat wasiat ini sah di sisi undang-undang di bawah Akta Wasiat 1959, ia mesti ditandatangani di hadapan 2 orang saksi yang bukan penerima manfaat."
+    "willNotice": "Untuk surat wasiat ini sah di sisi undang-undang di bawah Akta Wasiat 1959, ia mesti ditandatangani di hadapan 2 orang saksi yang bukan penerima manfaat dan bukan pewasiat sendiri."
   },
   "disclaimer": {
     "title": "Penafian",

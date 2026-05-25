@@ -141,7 +141,7 @@ export function WillStep7Declaration({ initialData, testatorInfo, onChange, onVa
                 <ul className="list-disc list-inside mt-2 space-y-1 font-normal text-muted-foreground">
                   <li>Kandungan Surat Wasiat ini adalah benar dan tepat mengikut pengetahuan saya</li>
                   <li>Surat Wasiat ini mesti ditandatangani di hadapan dua orang saksi secara serentak</li>
-                  <li>Kedua-dua saksi <strong>bukan</strong> penerima manfaat atau pasangan penerima manfaat</li>
+                  <li>Kedua-dua saksi <strong>bukan</strong> penerima manfaat, pasangan penerima manfaat, atau pewasiat sendiri</li>
                   <li>Surat Wasiat asal mesti disimpan di tempat yang selamat</li>
                   <li>WasiatHub tidak memberikan nasihat guaman — sila rujuk peguam jika perlu</li>
                 </ul>
@@ -152,7 +152,7 @@ export function WillStep7Declaration({ initialData, testatorInfo, onChange, onVa
                 <ul className="list-disc list-inside mt-2 space-y-1 font-normal text-muted-foreground">
                   <li>The contents of this Will are true and accurate to the best of my knowledge</li>
                   <li>This Will must be signed in the presence of two witnesses simultaneously</li>
-                  <li>Both witnesses are <strong>not</strong> beneficiaries or spouses of beneficiaries</li>
+                  <li>Both witnesses are <strong>not</strong> beneficiaries, spouses of beneficiaries, or the testator</li>
                   <li>The original Will must be kept in a safe place</li>
                   <li>WasiatHub does not provide legal advice — consult a lawyer if needed</li>
                 </ul>

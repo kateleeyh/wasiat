@@ -134,7 +134,7 @@
       "fullName": "Full Name",
       "icNumber": "IC Number",
       "address": "Address",
-      "notice": "Witnesses must not be beneficiaries named in this Wasiat."
+      "notice": "Witnesses must not be beneficiaries named in this Wasiat, and cannot be the testator."
     },
     "step7": {
       "title": "Declaration",
@@ -224,14 +224,14 @@
       "fullName": "Full Name",
       "icNumber": "IC Number",
       "address": "Address",
-      "notice": "Witnesses must not be beneficiaries or spouses of beneficiaries named in this Will."
+      "notice": "Witnesses must not be beneficiaries, spouses of beneficiaries, or the testator."
     },
     "step7": {
       "title": "Declaration",
       "date": "Date of Execution",
       "signatureName": "Full Name (as signature)",
       "acknowledgement": "I confirm that all information provided is true and accurate, and I am making this Will of my own free will without coercion.",
-      "disclaimer": "WasiatHub provides a document generation service only and does not constitute legal advice. For this Will to be legally valid, it must be signed in the presence of 2 witnesses who are not beneficiaries."
+      "disclaimer": "WasiatHub provides a document generation service only and does not constitute legal advice. For this Will to be legally valid, it must be signed in the presence of 2 witnesses who are not beneficiaries and are not the testator."
     }
   },
   "review": {
@@ -259,7 +259,7 @@
   },
   "postPayment": {
     "wasiatNotice": "For this Wasiat to take full legal effect, it must be signed in front of 2 Muslim witnesses and registered with the relevant State Islamic Religious Department.",
-    "willNotice": "For this Will to be legally valid under the Wills Act 1959, it must be signed in front of 2 witnesses who are not beneficiaries."
+    "willNotice": "For this Will to be legally valid under the Wills Act 1959, it must be signed in front of 2 witnesses who are not beneficiaries and are not the testator."
   },
   "disclaimer": {
     "title": "Disclaimer",

@@ -2,17 +2,16 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
-import { createAdminClient } from '@/lib/supabase/admin'
 import { DownloadButton } from '@/components/payment/DownloadButton'
+import { PaymentVerifying } from '@/components/payment/PaymentVerifying'
 
 interface Props {
   params: Promise<{ id: string }>
   searchParams: Promise<Record<string, string>>
 }
 
-export default async function PaymentSuccessPage({ params, searchParams }: Props) {
+export default async function PaymentSuccessPage({ params }: Props) {
   const { id } = await params
-  const sp = await searchParams
   const supabase = await createClient()
   const cookieStore = await cookies()
   const ms = (cookieStore.get('locale')?.value ?? 'ms') === 'ms'
@@ -29,26 +28,10 @@ export default async function PaymentSuccessPage({ params, searchParams }: Props
 
   if (!doc) redirect('/dashboard/documents')
 
-  // Handle Billplz redirect — mark as paid if redirect says paid=true
-  if (doc.status !== 'completed' && sp['billplz[paid]'] === 'true') {
-    const now   = new Date().toISOString()
-    const admin = createAdminClient()
-    await admin.from('documents').update({ status: 'completed', paid_at: now }).eq('id', id)
-    await admin.from('payments').insert({
-      document_id:     id,
-      user_id:         doc.user_id,
-      billplz_bill_id: sp['billplz[id]'] ?? '',
-      amount:          100,   // RM 1 test — update when TEST_MODE = false
-      currency:        'MYR',
-      status:          'paid',
-      paid_at:         now,
-      plan:            'single',
-    })
-    doc.status  = 'completed'
-    doc.paid_at = now
+  // Payment not yet confirmed by webhook — show verifying screen
+  if (doc.status !== 'completed') {
+    return <PaymentVerifying documentId={id} ms={ms} />
   }
-
-  if (doc.status !== 'completed') redirect(`/payment/${id}`)
 
   const isWasiat = doc.type === 'wasiat'
   const paidAt   = doc.paid_at
@@ -126,14 +109,14 @@ export default async function PaymentSuccessPage({ params, searchParams }: Props
               ms ? (
                 <>
                   <li>Cetak dokumen Surat Wasiat PDF</li>
-                  <li>Tandatangan di hadapan <strong className="text-foreground">2 orang saksi</strong> (bukan penerima manfaat) secara serentak</li>
+                  <li>Tandatangan di hadapan <strong className="text-foreground">2 orang saksi</strong> (bukan penerima manfaat, bukan pewasiat) secara serentak</li>
                   <li>Ketiga-tiga pihak menandatangani pada masa yang sama</li>
                   <li>Simpan dokumen asal di tempat selamat dan maklumkan pelaksana anda</li>
                 </>
               ) : (
                 <>
                   <li>Print the Will PDF</li>
-                  <li>Sign in front of <strong className="text-foreground">2 witnesses</strong> (not beneficiaries) simultaneously</li>
+                  <li>Sign in front of <strong className="text-foreground">2 witnesses</strong> (not beneficiaries, not the testator) simultaneously</li>
                   <li>All 3 parties sign at the same time</li>
                   <li>Store the original safely and inform your executor</li>
                 </>

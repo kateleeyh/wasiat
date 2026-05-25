@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { InfoTip } from '@/components/forms/InfoTip'
 import { useLocale } from 'next-intl'
 import { AlertTriangle } from 'lucide-react'
-import type { WillWitnesses, WillWitness, WillBeneficiary } from '@/types/database'
+import type { WillWitnesses, WillWitness, WillBeneficiary, ResidualEstateBeneficiary, WillTestatorInfo } from '@/types/database'
 import { isValidIC, isValidIDNumber, isValidPassport, formatIC, genderFromIC } from '@/lib/validation'
 
 const inp = 'w-full border border-border rounded-lg px-3 py-2 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary/20'
@@ -167,25 +167,31 @@ function WitnessForm({ num, data, isBeneficiary, ms, update }: WitnessFormProps)
 }
 
 interface Props {
-  initialData:   WillWitnesses | null
-  beneficiaries: WillBeneficiary[] | null
-  onChange:      (data: WillWitnesses) => void
-  onValidChange: (valid: boolean) => void
+  initialData:         WillWitnesses | null
+  beneficiaries:       WillBeneficiary[] | null
+  residualBeneficiary: ResidualEstateBeneficiary | null
+  testatorInfo:        WillTestatorInfo | null
+  onChange:            (data: WillWitnesses) => void
+  onValidChange:       (valid: boolean) => void
 }
 
 const EMPTY: WillWitness = { full_name: '', id_type: 'ic', ic_number: '', phone: '', email: '', address: '' }
 
-export function WillStep6Witnesses({ initialData, beneficiaries, onChange, onValidChange }: Props) {
+export function WillStep6Witnesses({ initialData, beneficiaries, residualBeneficiary, testatorInfo, onChange, onValidChange }: Props) {
   const locale = useLocale()
   const ms     = locale === 'ms'
 
   const [w1, setW1] = useState<WillWitness>(initialData?.witness_1 ?? { ...EMPTY })
   const [w2, setW2] = useState<WillWitness>(initialData?.witness_2 ?? { ...EMPTY })
 
-  // Normalise all beneficiary IDs for cross-check (strip dashes from IC, uppercase passport)
-  const beneficiaryIDs = new Set(
-    (beneficiaries ?? []).map(b => b.ic_number.replace(/\D/g, '') || b.ic_number.trim().toUpperCase())
-  )
+  // Build blocked ID set: named beneficiaries + residual beneficiary
+  const normaliseRaw = (ic: string) => ic.replace(/\D/g, '') || ic.trim().toUpperCase()
+  const beneficiaryIDs = new Set([
+    ...(beneficiaries ?? []).map(b => normaliseRaw(b.ic_number)),
+    ...(residualBeneficiary?.ic_number ? [normaliseRaw(residualBeneficiary.ic_number)] : []),
+  ])
+
+  const testatorID = testatorInfo?.ic_number ? normaliseRaw(testatorInfo.ic_number) : ''
 
   function normaliseID(w: WillWitness) {
     return (w.id_type ?? 'ic') === 'ic'
@@ -198,6 +204,8 @@ export function WillStep6Witnesses({ initialData, beneficiaries, onChange, onVal
 
   const w1IsBeneficiary = w1ID.length >= 6 && beneficiaryIDs.has(w1ID)
   const w2IsBeneficiary = w2ID.length >= 6 && beneficiaryIDs.has(w2ID)
+  const w1IsTestator    = testatorID.length >= 6 && w1ID === testatorID
+  const w2IsTestator    = testatorID.length >= 6 && w2ID === testatorID
   const hasDuplicateID  = w1ID.length >= 6 && w1ID === w2ID
 
   const w1Valid = w1.full_name.trim() !== '' && isValidIDNumber(w1.ic_number) && w1.address.trim() !== ''
@@ -206,6 +214,7 @@ export function WillStep6Witnesses({ initialData, beneficiaries, onChange, onVal
   const isValid =
     w1Valid && w2Valid &&
     !w1IsBeneficiary && !w2IsBeneficiary &&
+    !w1IsTestator && !w2IsTestator &&
     !hasDuplicateID
 
   useEffect(() => {
@@ -261,8 +270,16 @@ export function WillStep6Witnesses({ initialData, beneficiaries, onChange, onVal
         </div>
       )}
 
-      <WitnessForm num={1} data={w1} isBeneficiary={w1IsBeneficiary} ms={ms} update={updateW1} />
-      <WitnessForm num={2} data={w2} isBeneficiary={w2IsBeneficiary} ms={ms} update={updateW2} />
+      {/* Testator-as-witness warning */}
+      {(w1IsTestator || w2IsTestator) && (
+        <div className="flex items-center gap-2 p-3 rounded-lg bg-destructive/5 border border-destructive text-sm text-destructive">
+          <AlertTriangle className="w-4 h-4 shrink-0" />
+          <span>{ms ? 'Pewasiat tidak boleh menjadi saksi kepada wasiat sendiri.' : 'The testator cannot witness their own Will.'}</span>
+        </div>
+      )}
+
+      <WitnessForm num={1} data={w1} isBeneficiary={w1IsBeneficiary || w1IsTestator} ms={ms} update={updateW1} />
+      <WitnessForm num={2} data={w2} isBeneficiary={w2IsBeneficiary || w2IsTestator} ms={ms} update={updateW2} />
     </div>
   )
 }

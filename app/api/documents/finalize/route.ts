@@ -76,9 +76,9 @@ function buildEmail(name: string, isWasiat: boolean, isMalay: boolean) {
        <p><strong>Langkah seterusnya:</strong> Cetak, tandatangan di hadapan 2 saksi Muslim, dan daftar di Jabatan Agama Islam negeri anda.</p>`
     : isMalay
     ? `<p>Tahniah! Surat Wasiat anda telah berjaya dijana dan dilampirkan bersama e-mel ini.</p>
-       <p><strong>Langkah seterusnya:</strong> Cetak dan tandatangan di hadapan 2 saksi (bukan penerima manfaat) secara serentak.</p>`
+       <p><strong>Langkah seterusnya:</strong> Cetak dan tandatangan di hadapan 2 saksi (bukan penerima manfaat, bukan pewasiat) secara serentak.</p>`
     : `<p>Your Last Will and Testament has been successfully generated and is attached to this email.</p>
-       <p><strong>Next steps:</strong> Print and sign in front of 2 witnesses (not beneficiaries) simultaneously.</p>`
+       <p><strong>Next steps:</strong> Print and sign in front of 2 witnesses (not beneficiaries, not the testator) simultaneously.</p>`
 
   return `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
     <div style="background:#14532d;padding:20px 24px;">

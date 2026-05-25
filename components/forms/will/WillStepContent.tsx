@@ -140,6 +140,8 @@ export function WillStepContent({ documentId, currentStep, steps, completedField
           <WillStep6Witnesses
             initialData={savedData?.witnesses ?? null}
             beneficiaries={savedData?.beneficiaries ?? null}
+            residualBeneficiary={savedData?.residual_estate_beneficiary ?? null}
+            testatorInfo={savedData?.testator_info ?? null}
             onChange={handleChange}
             onValidChange={setIsValid}
           />
