@@ -180,8 +180,8 @@ export default async function Article() {
           <Link href="/insights/epf-nomination-bukan-wasiat" className="text-emerald-600 hover:underline block">
             → {ms ? 'EPF Nomination Bukan Wasiat — Ramai Yang Silap Faham' : 'EPF Nomination Is NOT a Will'}
           </Link>
-          <Link href="/insights/wasiat-vs-surat-wasiat" className="text-emerald-600 hover:underline block mt-1">
-            → {ms ? 'Wasiat Islam vs Surat Wasiat Am — Mana Satu Untuk Anda?' : 'Islamic Will vs General Will — Which Is For You?'}
+          <Link href="/wasiat-101" className="text-emerald-600 hover:underline block mt-1">
+            → {ms ? 'Wasiat 101 — Semua Yang Perlu Anda Tahu Tentang Wasiat Islam' : 'Wasiat 101 — Everything You Need to Know About Islamic Will'}
           </Link>
         </div>
 

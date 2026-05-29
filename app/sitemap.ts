@@ -8,7 +8,6 @@ export const insightsArticles = [
   { slug: 'grant-of-probate-vs-loa',    publishedAt: '2026-05-01', featured: false },
   { slug: 'salah-faham-wasiat',         publishedAt: '2026-05-01', featured: false },
   { slug: 'epf-nomination-bukan-wasiat', publishedAt: '2026-04-28', featured: false },
-  { slug: 'wasiat-vs-surat-wasiat',     publishedAt: '2026-04-28', featured: false },
 ] as const
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -20,6 +19,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/terms`,    lastModified: new Date('2026-05-01'),   changeFrequency: 'yearly', priority: 0.5 },
     { url: `${BASE}/disclaimer`, lastModified: new Date('2026-05-01'), changeFrequency: 'yearly', priority: 0.4 },
     { url: `${BASE}/contact`,  lastModified: new Date('2026-05-01'),   changeFrequency: 'yearly', priority: 0.5 },
+    { url: `${BASE}/wasiat-101`, lastModified: new Date('2026-05-29'), changeFrequency: 'monthly', priority: 0.8 },
   ]
 
   const articleRoutes: MetadataRoute.Sitemap = insightsArticles.map((article) => ({

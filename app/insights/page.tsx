@@ -63,18 +63,6 @@ const articles = [
     tagColor: 'bg-purple-50 text-purple-700',
     isPillar: false,
   },
-  {
-    slug: 'wasiat-vs-surat-wasiat',
-    titleMs: 'Wasiat Islam vs Surat Wasiat Am — Apa Bezanya dan Mana Satu Untuk Anda?',
-    titleEn: 'Islamic Will vs General Will — What\'s the Difference and Which Is For You?',
-    excerptMs: 'Dua dokumen berbeza di bawah undang-undang Malaysia. Pilih yang betul berdasarkan agama dan situasi anda.',
-    excerptEn: 'Two different documents under Malaysian law. Choose the right one based on your religion and situation.',
-    date: '28 April 2026',
-    tag: 'Panduan',
-    tagEn: 'Guide',
-    tagColor: 'bg-blue-50 text-blue-700',
-    isPillar: false,
-  },
 ]
 
 export default async function InsightsPage() {
