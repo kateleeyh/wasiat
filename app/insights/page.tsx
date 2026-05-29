@@ -140,6 +140,24 @@ export default async function InsightsPage() {
           </div>
         )}
 
+        {/* Wasiat 101 banner */}
+        <Link href="/wasiat-101">
+          <div className="mb-8 bg-emerald-900 rounded-2xl p-5 flex items-center justify-between gap-4 hover:bg-emerald-800 transition-colors group">
+            <div>
+              <span className="text-emerald-300 text-xs font-bold uppercase tracking-wider">
+                {ms ? 'Baca Sebelum Mulakan' : 'Read Before You Start'}
+              </span>
+              <p className="text-white font-bold mt-1">
+                {ms ? 'Wasiat 101 — Semua Yang Perlu Anda Tahu Tentang Wasiat Islam' : 'Wasiat 101 — Everything You Need to Know About Islamic Will'}
+              </p>
+              <p className="text-emerald-300 text-xs mt-1">
+                {ms ? 'Had ⅓, harta yang boleh diwasiatkan, syarat saksi, akibat tiada wasiat & lebih.' : '⅓ rule, what can be bequeathed, witness rules, consequences of no Wasiat & more.'}
+              </p>
+            </div>
+            <ArrowRight className="w-5 h-5 text-emerald-400 shrink-0 group-hover:translate-x-1 transition-transform" />
+          </div>
+        </Link>
+
         {/* Supporting articles */}
         <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">
           {ms ? 'Artikel Lain' : 'More Articles'}

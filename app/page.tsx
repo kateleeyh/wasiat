@@ -622,6 +622,7 @@ export default async function LandingPage() {
               <div className="text-white font-semibold text-sm mb-4">{t('footer.support')}</div>
               <ul className="space-y-2 text-sm">
                 <li><a href="/#faq" className="hover:text-white transition-colors">{t('footer.faq')}</a></li>
+                <li><Link href="/wasiat-101" className="hover:text-white transition-colors">{isMalay ? 'Wasiat 101' : 'Wasiat 101'}</Link></li>
                 <li><Link href="/contact" className="hover:text-white transition-colors">{t('footer.contact')}</Link></li>
               </ul>
             </div>
