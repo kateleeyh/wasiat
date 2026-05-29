@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { useLocale } from 'next-intl'
+import Link from 'next/link'
 import { createDocument } from './actions'
 import type { Locale } from '@/types/database'
 import { PRICING } from '@/lib/pricing'
@@ -35,6 +36,22 @@ export function CreateDocumentClient() {
                 : 'Create a new document for your estate planning.'}
             </p>
           </div>
+
+          <Link href="/wasiat-101" target="_blank"
+            className="flex items-start gap-3 mb-6 p-4 rounded-xl border border-emerald-200 bg-emerald-50 hover:bg-emerald-100 transition-colors group">
+            <span className="text-xl shrink-0">📖</span>
+            <div>
+              <p className="text-sm font-semibold text-emerald-800">
+                {locale === 'ms' ? 'Baca Wasiat 101 sebelum bermula' : 'Read Wasiat 101 before you start'}
+              </p>
+              <p className="text-xs text-emerald-700 mt-0.5">
+                {locale === 'ms'
+                  ? 'Had ⅓, harta yang boleh diwasiatkan, syarat saksi & lebih — 10 minit bacaan'
+                  : '⅓ rule, what can be bequeathed, witness rules & more — 10 min read'}
+              </p>
+            </div>
+            <span className="ml-auto text-emerald-500 text-sm group-hover:translate-x-0.5 transition-transform shrink-0">→</span>
+          </Link>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <button type="button" disabled={isPending} onClick={submitWasiat}

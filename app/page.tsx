@@ -351,6 +351,9 @@ export default async function LandingPage() {
               >
                 {isMalay ? 'Mulakan Wasiat' : 'Start Wasiat'} <ArrowRight size={15} />
               </Link>
+              <Link href="/wasiat-101" className="mt-3 flex items-center gap-1.5 text-emerald-200 hover:text-white text-xs transition-colors">
+                📖 {isMalay ? 'Baca Wasiat 101 dahulu — apa yang perlu anda tahu' : 'Read Wasiat 101 first — what you need to know'}
+              </Link>
             </div>
 
             {/* Will card */}
