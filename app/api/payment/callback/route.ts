@@ -33,13 +33,18 @@ export async function POST(request: NextRequest) {
   }
 
   const payload = JSON.parse(body)
-  console.log('DOKU callback: sig OK, status:', payload.transaction?.status, 'invoice:', payload.order?.invoice_number)
+  console.log('DOKU callback full payload:', JSON.stringify(payload))
 
-  if (payload.transaction?.status !== 'SUCCESS') {
+  // DOKU wraps webhook data inside response{}
+  const data           = payload.response ?? payload
+  const txStatus       = data.transaction?.status ?? payload.transaction?.status
+  const invoiceNumber  = (data.order?.invoice_number ?? payload.order?.invoice_number ?? '') as string
+
+  console.log('DOKU callback: status:', txStatus, 'invoice:', invoiceNumber)
+
+  if (txStatus !== 'SUCCESS') {
     return new NextResponse('OK', { status: 200 })
   }
-
-  const invoiceNumber  = (payload.order?.invoice_number as string) ?? ''
   const lastUnderscore = invoiceNumber.lastIndexOf('_')
   const documentId     = invoiceNumber.slice(0, lastUnderscore)
   const plan           = invoiceNumber.slice(lastUnderscore + 1)
@@ -70,15 +75,18 @@ export async function POST(request: NextRequest) {
       .update({ status: 'completed', paid_at: now })
       .eq('id', documentId)
 
-    const pricingPlan = isBundle ? PRICING.bundle : PRICING.single
+    const pricingPlan  = isBundle ? PRICING.bundle : PRICING.single
+    const rawAmount    = data.order?.amount ?? payload.order?.amount
+    // DOKU sends amount in whole RM; convert to sen for storage
+    const amountSen    = rawAmount ? Math.round(Number(rawAmount) * 100) : pricingPlan.amountSen
     await supabase.from('payments').insert({
       document_id:     documentId,
       user_id:         doc.user_id,
-      billplz_bill_id: requestId,
-      amount:          payload.order?.amount ?? pricingPlan.amountSen,
+      billplz_bill_id: invoiceNumber,
+      amount:          amountSen,
       currency:        'MYR',
       status:          'paid',
-      paid_at:         payload.transaction?.date ?? now,
+      paid_at:         data.transaction?.date ?? payload.transaction?.date ?? now,
       plan:            isBundle ? 'bundle' : 'single',
     })
 

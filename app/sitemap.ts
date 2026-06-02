@@ -20,6 +20,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/disclaimer`, lastModified: new Date('2026-05-01'), changeFrequency: 'yearly', priority: 0.4 },
     { url: `${BASE}/contact`,  lastModified: new Date('2026-05-01'),   changeFrequency: 'yearly', priority: 0.5 },
     { url: `${BASE}/wasiat-101`, lastModified: new Date('2026-05-29'), changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${BASE}/will-101`,   lastModified: new Date('2026-05-29'), changeFrequency: 'monthly', priority: 0.8 },
   ]
 
   const articleRoutes: MetadataRoute.Sitemap = insightsArticles.map((article) => ({

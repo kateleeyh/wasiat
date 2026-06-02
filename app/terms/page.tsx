@@ -43,10 +43,10 @@ export default async function TermsPage() {
               <h2 className="text-lg font-bold text-slate-900 mb-3">4. Pembayaran dan Bayaran Balik</h2>
               <ul className="list-disc pl-5 space-y-1">
                 <li>Pembayaran adalah satu kali sahaja per dokumen</li>
-                <li>Harga semasa: RM49 (Wasiat atau Surat Wasiat), RM79 (Pakej Pasangan)</li>
+                <li>Harga semasa: RM79 (Wasiat atau Surat Wasiat), RM129 (Pakej Keluarga)</li>
                 <li><strong>Tiada bayaran balik</strong> selepas PDF dokumen dijana dan dihantar</li>
                 <li>Sekiranya dokumen gagal dijana atas kegagalan teknikal kami, kami akan memproses bayaran balik penuh</li>
-                <li>Pembayaran diproses melalui Billplz menggunakan FPX</li>
+                <li>Pembayaran diproses melalui pemproses pembayaran berlesen menggunakan FPX</li>
               </ul>
             </section>
             <section>
@@ -73,7 +73,21 @@ export default async function TermsPage() {
               <p>Terma ini ditadbir di bawah undang-undang Malaysia. Sebarang pertikaian tertakluk kepada bidang kuasa eksklusif mahkamah Malaysia.</p>
             </section>
             <section>
-              <h2 className="text-lg font-bold text-slate-900 mb-3">8. Hubungi Kami</h2>
+              <h2 className="text-lg font-bold text-slate-900 mb-3">8. Pembatalan & Bayaran Balik</h2>
+              <p className="mb-2">WasiatHub dikendalikan oleh <strong>WF Wealth Management Sdn. Bhd. (202101017850-M)</strong>. Semua permintaan pembatalan atau bayaran balik hendaklah dihantar terus kepada pasukan WasiatHub.</p>
+              <ul className="list-disc pl-5 space-y-1">
+                <li><strong>Sebelum PDF dijana:</strong> Pembayaran belum dikenakan — tiada bayaran balik diperlukan.</li>
+                <li><strong>Selepas PDF dijana:</strong> Tiada bayaran balik kerana dokumen telah berjaya dijana dan dihantar. Walau bagaimanapun, jika kegagalan teknikal berlaku di pihak kami, bayaran balik penuh akan diproses.</li>
+                <li><strong>Cara memohon:</strong> Hubungi kami di <a href="mailto:support@wasiathub.my" className="text-emerald-600 hover:underline">support@wasiathub.my</a> dengan menyatakan No. Rujukan dokumen dan sebab permohonan.</li>
+                <li><strong>Masa pemprosesan:</strong> Permohonan bayaran balik yang diluluskan akan diproses dalam tempoh 7–14 hari bekerja.</li>
+              </ul>
+            </section>
+            <section>
+              <h2 className="text-lg font-bold text-slate-900 mb-3">9. Pengendali Platform</h2>
+              <p>WasiatHub (wasiathub.my) dikendalikan oleh <strong>WF Wealth Management Sdn. Bhd.</strong>, sebuah syarikat yang diperbadankan di Malaysia di bawah Akta Syarikat 2016 (No. Pendaftaran: 202101017850-M).</p>
+            </section>
+            <section>
+              <h2 className="text-lg font-bold text-slate-900 mb-3">10. Hubungi Kami</h2>
               <p>Untuk pertanyaan berkaitan terma ini: <a href="mailto:support@wasiathub.my" className="text-emerald-600 hover:underline">support@wasiathub.my</a></p>
             </section>
           </div>
@@ -100,10 +114,10 @@ export default async function TermsPage() {
               <h2 className="text-lg font-bold text-slate-900 mb-3">4. Payment and Refunds</h2>
               <ul className="list-disc pl-5 space-y-1">
                 <li>Payment is one-time per document</li>
-                <li>Current pricing: RM49 (Wasiat or General Will), RM79 (Couple Bundle)</li>
+                <li>Current pricing: RM79 (Wasiat or General Will), RM129 (Family Bundle)</li>
                 <li><strong>No refunds</strong> once the PDF document has been generated and delivered</li>
                 <li>If a document fails to generate due to our technical error, a full refund will be processed</li>
-                <li>Payments are processed via Billplz using FPX</li>
+                <li>Payments are processed via licensed payment processor using FPX</li>
               </ul>
             </section>
             <section>
@@ -130,7 +144,21 @@ export default async function TermsPage() {
               <p>These Terms are governed by the laws of Malaysia. Any disputes are subject to the exclusive jurisdiction of Malaysian courts.</p>
             </section>
             <section>
-              <h2 className="text-lg font-bold text-slate-900 mb-3">8. Contact Us</h2>
+              <h2 className="text-lg font-bold text-slate-900 mb-3">8. Cancellation & Refund Policy</h2>
+              <p className="mb-2">WasiatHub is operated by <strong>WF Wealth Management Sdn. Bhd. (202101017850-M)</strong>. All cancellation or refund requests are handled directly by the WasiatHub team.</p>
+              <ul className="list-disc pl-5 space-y-1">
+                <li><strong>Before PDF is generated:</strong> No charge has been made — no refund required.</li>
+                <li><strong>After PDF is generated:</strong> No refunds as the document has been successfully generated and delivered. However, if a technical failure occurs on our end, a full refund will be processed.</li>
+                <li><strong>How to request:</strong> Email us at <a href="mailto:support@wasiathub.my" className="text-emerald-600 hover:underline">support@wasiathub.my</a> with your document Reference Number and reason for request.</li>
+                <li><strong>Processing time:</strong> Approved refund requests will be processed within 7–14 business days.</li>
+              </ul>
+            </section>
+            <section>
+              <h2 className="text-lg font-bold text-slate-900 mb-3">9. Platform Operator</h2>
+              <p>WasiatHub (wasiathub.my) is operated by <strong>WF Wealth Management Sdn. Bhd.</strong>, a company incorporated in Malaysia under the Companies Act 2016 (Registration No: 202101017850-M).</p>
+            </section>
+            <section>
+              <h2 className="text-lg font-bold text-slate-900 mb-3">10. Contact Us</h2>
               <p>For enquiries regarding these terms: <a href="mailto:support@wasiathub.my" className="text-emerald-600 hover:underline">support@wasiathub.my</a></p>
             </section>
           </div>

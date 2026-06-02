@@ -92,12 +92,13 @@ export function WillStep2Executor({ initialPrimary, initialBackup, onPrimaryChan
   const [hasBackup, setHasBackup] = useState<boolean>(!!initialBackup)
   const [backup, setBackup]       = useState<WillBackupExecutor>(initialBackup ?? EMPTY_BACKUP)
 
+  const addressMinLength = 20
   const primaryValid =
     primary.full_name.trim() !== '' &&
     isValidIC(primary.ic_number) &&
     primary.relationship.trim() !== '' &&
     isValidPhone(primary.phone) &&
-    primary.address.trim() !== ''
+    primary.address.trim().length >= addressMinLength
 
   const backupValid = !hasBackup || (
     backup.full_name.trim() !== '' &&
@@ -153,7 +154,7 @@ export function WillStep2Executor({ initialPrimary, initialBackup, onPrimaryChan
       {/* Primary executor */}
       <div>
         <h3 className="text-base font-semibold mb-4 pb-2 border-b border-border">
-          {ms ? 'Pelaksana Utama' : 'Primary Executor'}
+          {ms ? 'Pelaksana Utama (Executor)' : 'Primary Executor'}
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="sm:col-span-2">
@@ -234,8 +235,20 @@ export function WillStep2Executor({ initialPrimary, initialBackup, onPrimaryChan
               className={`${inp} min-h-[80px] resize-y`}
               value={primary.address}
               onChange={e => setPrimaryField('address', e.target.value.toUpperCase())}
-              placeholder={ms ? 'NO. RUMAH, JALAN, BANDAR, POSKOD, NEGERI' : 'HOUSE NO., STREET, CITY, POSTCODE, STATE'}
+              placeholder={ms ? 'NO. RUMAH / UNIT, NAMA JALAN, BANDAR, POSKOD, NEGERI\ncth: NO. 12A, JALAN BAHAGIA 3, TAMAN MAJU, 47500 SUBANG JAYA, SELANGOR' : 'UNIT/HOUSE NO., STREET NAME, CITY, POSTCODE, STATE\ne.g: NO. 12A, JALAN BAHAGIA 3, TAMAN MAJU, 47500 SUBANG JAYA, SELANGOR'}
             />
+            {primary.address.trim().length > 0 && primary.address.trim().length < addressMinLength && (
+              <p className="text-xs text-amber-600 mt-1">
+                {ms
+                  ? '⚠ Sila masukkan alamat penuh termasuk no. rumah, jalan, bandar, poskod dan negeri.'
+                  : '⚠ Please enter the full address including house/unit number, street, city, postcode and state.'}
+              </p>
+            )}
+            {primary.address.trim().length >= addressMinLength && (
+              <p className="text-xs text-muted-foreground mt-1">
+                {ms ? '✓ Format alamat kelihatan lengkap.' : '✓ Address format looks complete.'}
+              </p>
+            )}
           </div>
         </div>
       </div>

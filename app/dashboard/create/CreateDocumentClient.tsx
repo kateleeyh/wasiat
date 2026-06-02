@@ -37,21 +37,34 @@ export function CreateDocumentClient() {
             </p>
           </div>
 
-          <Link href="/wasiat-101" target="_blank"
-            className="flex items-start gap-3 mb-6 p-4 rounded-xl border border-emerald-200 bg-emerald-50 hover:bg-emerald-100 transition-colors group">
-            <span className="text-xl shrink-0">📖</span>
-            <div>
-              <p className="text-sm font-semibold text-emerald-800">
-                {locale === 'ms' ? 'Baca Wasiat 101 sebelum bermula' : 'Read Wasiat 101 before you start'}
-              </p>
-              <p className="text-xs text-emerald-700 mt-0.5">
-                {locale === 'ms'
-                  ? 'Had ⅓, harta yang boleh diwasiatkan, syarat saksi & lebih — 10 minit bacaan'
-                  : '⅓ rule, what can be bequeathed, witness rules & more — 10 min read'}
-              </p>
-            </div>
-            <span className="ml-auto text-emerald-500 text-sm group-hover:translate-x-0.5 transition-transform shrink-0">→</span>
-          </Link>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+            <Link href="/wasiat-101" target="_blank"
+              className="flex items-start gap-3 p-4 rounded-xl border border-emerald-200 bg-emerald-50 hover:bg-emerald-100 transition-colors group">
+              <span className="text-lg shrink-0">📖</span>
+              <div className="min-w-0">
+                <p className="text-xs font-semibold text-emerald-800">
+                  {locale === 'ms' ? 'Baca Wasiat 101' : 'Read Wasiat 101'}
+                </p>
+                <p className="text-xs text-emerald-700 mt-0.5 leading-relaxed">
+                  {locale === 'ms' ? 'Had ⅓, saksi, wasi & lebih' : '⅓ rule, witness, wasi & more'}
+                </p>
+              </div>
+              <span className="ml-auto text-emerald-500 text-xs group-hover:translate-x-0.5 transition-transform shrink-0 mt-0.5">→</span>
+            </Link>
+            <Link href="/will-101" target="_blank"
+              className="flex items-start gap-3 p-4 rounded-xl border border-blue-200 bg-blue-50 hover:bg-blue-100 transition-colors group">
+              <span className="text-lg shrink-0">📖</span>
+              <div className="min-w-0">
+                <p className="text-xs font-semibold text-blue-800">
+                  {locale === 'ms' ? 'Baca General Will 101' : 'Read General Will 101'}
+                </p>
+                <p className="text-xs text-blue-700 mt-0.5 leading-relaxed">
+                  {locale === 'ms' ? 'Kebebasan penuh, penjaga anak & lebih' : 'Full freedom, guardianship & more'}
+                </p>
+              </div>
+              <span className="ml-auto text-blue-500 text-xs group-hover:translate-x-0.5 transition-transform shrink-0 mt-0.5">→</span>
+            </Link>
+          </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <button type="button" disabled={isPending} onClick={submitWasiat}
@@ -130,6 +143,22 @@ export function CreateDocumentClient() {
                 : 'Your will document will be generated in the selected language.'}
             </p>
           </div>
+
+          <Link href="/will-101" target="_blank"
+            className="flex items-start gap-3 mb-6 p-4 rounded-xl border border-blue-200 bg-blue-50 hover:bg-blue-100 transition-colors group">
+            <span className="text-xl shrink-0">📖</span>
+            <div>
+              <p className="text-sm font-semibold text-blue-800">
+                {locale === 'ms' ? 'Baca General Will 101 sebelum bermula' : 'Read General Will 101 before you start'}
+              </p>
+              <p className="text-xs text-blue-700 mt-0.5">
+                {locale === 'ms'
+                  ? 'Kebebasan penuh, penjagaan anak, syarat saksi & lebih — 10 minit bacaan'
+                  : 'Complete freedom, child guardianship, witness rules & more — 10 min read'}
+              </p>
+            </div>
+            <span className="ml-auto text-blue-500 text-sm group-hover:translate-x-0.5 transition-transform shrink-0">→</span>
+          </Link>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <button type="button" disabled={isPending} onClick={() => submitWill('ms')}

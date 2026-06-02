@@ -19,7 +19,7 @@ export default async function PrivacyPage() {
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12 prose prose-slate max-w-none">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {ms ? (
           <div className="space-y-8 text-slate-700 text-sm leading-relaxed">
             <section>
@@ -28,7 +28,7 @@ export default async function PrivacyPage() {
               <ul className="list-disc pl-5 mt-2 space-y-1">
                 <li><strong>Maklumat akaun:</strong> Nama penuh, alamat e-mel, kata laluan (disulitkan)</li>
                 <li><strong>Maklumat dokumen:</strong> No. Kad Pengenalan, tarikh lahir, jantina, alamat, no. telefon, agama, status perkahwinan, maklumat waris dan pelaksana</li>
-                <li><strong>Maklumat pembayaran:</strong> Rekod transaksi diproses melalui Billplz (kami tidak menyimpan maklumat kad bank)</li>
+                <li><strong>Maklumat pembayaran:</strong> Rekod transaksi pembayaran (kami tidak menyimpan maklumat kad atau akaun bank)</li>
                 <li><strong>Data teknikal:</strong> Alamat IP, jenis peranti, dan data log untuk tujuan keselamatan</li>
               </ul>
             </section>
@@ -38,7 +38,7 @@ export default async function PrivacyPage() {
               <ul className="list-disc pl-5 mt-2 space-y-1">
                 <li>Menjana dokumen Wasiat atau Surat Wasiat anda</li>
                 <li>Menghantar PDF dokumen ke e-mel anda</li>
-                <li>Memproses pembayaran melalui Billplz</li>
+                <li>Memproses pembayaran melalui pemproses pembayaran berlesen</li>
                 <li>Menyediakan sokongan pelanggan</li>
                 <li>Meningkatkan perkhidmatan kami</li>
               </ul>
@@ -47,10 +47,10 @@ export default async function PrivacyPage() {
               <h2 className="text-lg font-bold text-slate-900 mb-3">3. Perkongsian Maklumat</h2>
               <p>Kami <strong>tidak menjual</strong> maklumat peribadi anda kepada pihak ketiga. Maklumat dikongsi hanya dengan penyedia perkhidmatan berikut:</p>
               <ul className="list-disc pl-5 mt-2 space-y-1">
-                <li><strong>Supabase</strong> — pangkalan data dan pengesahan (pelayan di AS/Singapura)</li>
-                <li><strong>Resend</strong> — penghantaran e-mel (pelayan di AS)</li>
-                <li><strong>Billplz</strong> — pemprosesan pembayaran (Malaysia)</li>
-                <li><strong>Cloudflare</strong> — hosting dan CDN (rangkaian global)</li>
+                <li>Penyedia perkhidmatan pangkalan data dan pengesahan (pelayan mungkin terletak di luar Malaysia)</li>
+                <li>Penyedia perkhidmatan penghantaran e-mel</li>
+                <li>Penyedia pemprosesan pembayaran yang berlesen di Malaysia</li>
+                <li>Penyedia perkhidmatan hosting dan rangkaian penghantaran kandungan</li>
               </ul>
             </section>
             <section>
@@ -85,7 +85,7 @@ export default async function PrivacyPage() {
               <ul className="list-disc pl-5 mt-2 space-y-1">
                 <li><strong>Account information:</strong> Full name, email address, password (encrypted)</li>
                 <li><strong>Document information:</strong> IC number, date of birth, gender, address, phone, religion, marital status, beneficiary and executor details</li>
-                <li><strong>Payment information:</strong> Transaction records processed via Billplz (we do not store banking card details)</li>
+                <li><strong>Payment information:</strong> Payment transaction records (we do not store banking card or account details)</li>
                 <li><strong>Technical data:</strong> IP address, device type, and log data for security purposes</li>
               </ul>
             </section>
@@ -95,7 +95,7 @@ export default async function PrivacyPage() {
               <ul className="list-disc pl-5 mt-2 space-y-1">
                 <li>Generate your Wasiat or General Will document</li>
                 <li>Send your PDF document to your email</li>
-                <li>Process payment via Billplz</li>
+                <li>Process payment via licensed payment processor</li>
                 <li>Provide customer support</li>
                 <li>Improve our services</li>
               </ul>
@@ -104,10 +104,10 @@ export default async function PrivacyPage() {
               <h2 className="text-lg font-bold text-slate-900 mb-3">3. Information Sharing</h2>
               <p>We <strong>do not sell</strong> your personal information to third parties. Information is shared only with the following service providers:</p>
               <ul className="list-disc pl-5 mt-2 space-y-1">
-                <li><strong>Supabase</strong> — database and authentication (servers in US/Singapore)</li>
-                <li><strong>Resend</strong> — email delivery (servers in US)</li>
-                <li><strong>Billplz</strong> — payment processing (Malaysia)</li>
-                <li><strong>Cloudflare</strong> — hosting and CDN (global network)</li>
+                <li>Cloud database and authentication service provider (servers may be located outside Malaysia)</li>
+                <li>Email delivery service provider</li>
+                <li>Licensed payment processing provider in Malaysia</li>
+                <li>Web hosting and content delivery service provider</li>
               </ul>
             </section>
             <section>

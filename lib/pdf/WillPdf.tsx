@@ -172,9 +172,7 @@ export function WillPdf({ data, docRef, generatedAt, language }: Props) {
         )}
         <Text style={S.coverName}>{t.full_name.toUpperCase()}</Text>
         <Text style={S.coverMeta}>{ms ? 'No. Kad Pengenalan' : 'IC No.'}: {t.ic_number}</Text>
-        <Text style={S.coverMeta}>
-          {t.nationality}{showReligion ? ` | ${t.religion}` : ''}
-        </Text>
+        <Text style={S.coverMeta}>{t.nationality}</Text>
         <View style={S.coverLine} />
         <Text style={S.coverMeta}>{ms ? 'Tarikh Dijana' : 'Generated'}: {fmt(generatedAt)}</Text>
         <Text style={[S.coverMeta, { marginTop: 4 }]}>{ms ? 'No. Rujukan' : 'Ref'}: {docRef}</Text>

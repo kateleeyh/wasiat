@@ -45,13 +45,22 @@ export function FormShell({
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6">
 
         {/* Breadcrumb */}
-        <div className="mb-4">
+        <div className="mb-4 flex items-center justify-between gap-3 flex-wrap">
           <Link
             href="/dashboard"
             className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground border border-border rounded-lg px-3 py-1.5 hover:text-foreground hover:bg-muted/50 transition"
           >
             <LayoutDashboard className="w-3.5 h-3.5" />
             {locale === 'ms' ? 'Kembali ke Dashboard' : 'Back to Dashboard'}
+          </Link>
+          <Link
+            href={docType === 'will' ? '/will-101' : '/wasiat-101'}
+            target="_blank"
+            className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition"
+          >
+            📖 {docType === 'will'
+              ? (locale === 'ms' ? 'General Will 101' : 'General Will 101')
+              : (locale === 'ms' ? 'Wasiat 101' : 'Wasiat 101')}
           </Link>
         </div>
 

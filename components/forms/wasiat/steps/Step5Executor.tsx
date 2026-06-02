@@ -224,8 +224,11 @@ export function Step5Executor({ initialPrimary, initialBackup, onPrimaryChange, 
               className={`${inp} min-h-[80px] resize-y`}
               value={primary.address}
               onChange={e => setPrimaryField('address', e.target.value.toUpperCase())}
-              placeholder={ms ? 'NO. RUMAH, JALAN, BANDAR, POSKOD, NEGERI' : 'HOUSE NO., STREET, CITY, POSTCODE, STATE'}
+              placeholder={ms ? 'NO. RUMAH/UNIT, JALAN, BANDAR, POSKOD, NEGERI\ncth: NO. 12A, JALAN BAHAGIA 3, 47500 SUBANG JAYA, SELANGOR' : 'UNIT/HOUSE NO., STREET, CITY, POSTCODE, STATE\ne.g: 12A, JALAN BAHAGIA 3, 47500 SUBANG JAYA, SELANGOR'}
             />
+            <p className="text-xs text-muted-foreground mt-1">
+              {ms ? 'Sertakan no. rumah/unit, nama jalan, bandar, poskod dan negeri.' : 'Include house/unit number, street name, city, postcode and state.'}
+            </p>
           </div>
         </div>
       </div>

@@ -21,6 +21,7 @@ function buildSignature(
 }
 
 export async function POST(request: NextRequest) {
+  try {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -85,15 +86,16 @@ export async function POST(request: NextRequest) {
   const requestId     = crypto.randomUUID()
   const timestamp     = new Date().toISOString().replace(/\.\d{3}Z$/, 'Z')
 
+  const amountRM = finalAmountSen / 100
   const bodyObj = {
     order: {
-      amount:              finalAmountSen,
+      amount:              amountRM,
       invoice_number:      invoiceNumber,
       currency:            'MYR',
       callback_url:        `${appUrl}/payment/${documentId}/success`,
       callback_url_cancel: `${appUrl}/payment/${documentId}`,
       auto_redirect:       true,
-      line_items: [{ name: description, price: finalAmountSen, quantity: 1 }],
+      line_items: [{ name: description, price: amountRM, quantity: 1 }],
     },
     payment:  { payment_due_date: 60 },
     customer: { name: safeName, email, phone },
@@ -115,12 +117,18 @@ export async function POST(request: NextRequest) {
   })
 
   const data = await res.json()
-  if (!res.ok) {
-    console.error('DOKU error — status:', res.status, 'body:', JSON.stringify(data))
-    console.error('DOKU request body sent:', bodyStr)
-    const msg = data.error?.message ?? data.message ?? JSON.stringify(data)
+  const success = Array.isArray(data.message)
+    ? data.message.includes('SUCCESS')
+    : data.message === 'SUCCESS'
+  if (!res.ok || !success) {
+    console.error('DOKU error:', JSON.stringify(data))
+    const msg = data.response?.error?.message ?? JSON.stringify(data.message ?? data)
     return NextResponse.json({ error: msg }, { status: 502 })
   }
 
-  return NextResponse.json({ billUrl: data.payment.url })
+  return NextResponse.json({ billUrl: data.response.payment.url })
+  } catch (e) {
+    console.error('create-bill unhandled exception:', e)
+    return NextResponse.json({ error: String(e) }, { status: 500 })
+  }
 }

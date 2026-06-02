@@ -220,7 +220,7 @@ export function Step1TestatorInfo({ initialData, onChange, onValidChange }: Prop
             value={form.address}
             onChange={e => set('address', e.target.value.toUpperCase())}
             onBlur={() => blur('address')}
-            placeholder={ms ? 'NO. RUMAH, JALAN, BANDAR, POSKOD, NEGERI' : 'HOUSE NO., STREET, CITY, POSTCODE, STATE'}
+            placeholder={ms ? 'NO. RUMAH/UNIT, JALAN, BANDAR, POSKOD, NEGERI\ncth: NO. 12A, JALAN BAHAGIA 3, 47500 SUBANG JAYA, SELANGOR' : 'UNIT/HOUSE NO., STREET, CITY, POSTCODE, STATE\ne.g: 12A, JALAN BAHAGIA 3, 47500 SUBANG JAYA, SELANGOR'}
           />
           {err('address') && <p className="text-xs text-destructive mt-1">{err('address')}</p>}
         </div>

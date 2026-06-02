@@ -377,6 +377,9 @@ export default async function LandingPage() {
               >
                 {isMalay ? 'Mulakan Surat Wasiat' : 'Start General Will'} <ArrowRight size={15} />
               </Link>
+              <Link href="/will-101" className="mt-3 flex items-center gap-1.5 text-slate-400 hover:text-slate-700 text-xs transition-colors">
+                📖 {isMalay ? 'Baca General Will 101 dahulu — apa yang perlu anda tahu' : 'Read General Will 101 first — what you need to know'}
+              </Link>
             </div>
           </div>
         </div>
@@ -625,7 +628,8 @@ export default async function LandingPage() {
               <div className="text-white font-semibold text-sm mb-4">{t('footer.support')}</div>
               <ul className="space-y-2 text-sm">
                 <li><a href="/#faq" className="hover:text-white transition-colors">{t('footer.faq')}</a></li>
-                <li><Link href="/wasiat-101" className="hover:text-white transition-colors">{isMalay ? 'Wasiat 101' : 'Wasiat 101'}</Link></li>
+                <li><Link href="/wasiat-101" className="hover:text-white transition-colors">Wasiat 101</Link></li>
+                <li><Link href="/will-101" className="hover:text-white transition-colors">General Will 101</Link></li>
                 <li><Link href="/contact" className="hover:text-white transition-colors">{t('footer.contact')}</Link></li>
               </ul>
             </div>

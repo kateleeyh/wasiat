@@ -25,17 +25,16 @@ export default async function AdminOverview() {
     admin.from('payments').select('amount, plan, paid_at, user_id').eq('status', 'paid').gt('amount', 0).order('paid_at', { ascending: false }).limit(8),
   ])
 
-  const totalRevenue = (allPayments ?? []).reduce((s, p) => s + (p.amount / 100), 0)
+  const totalRevenue   = (allPayments ?? []).reduce((s, p) => s + (p.amount / 100), 0)
   const conversionRate = totalUsers ? Math.round(((completedDocs ?? 0) / totalUsers) * 100) : 0
 
   const stats = [
-    { label: 'Total Users', value: totalUsers ?? 0, sub: `${marketingConsent ?? 0} opted in to marketing`, icon: Users, color: 'text-blue-400', bg: 'bg-blue-400/10', href: '/admin/users' },
-    { label: 'Total Documents', value: totalDocs ?? 0, sub: `${draftDocs ?? 0} drafts`, icon: FileText, color: 'text-slate-300', bg: 'bg-slate-700/50', href: '/admin/documents' },
-    { label: 'Paid Documents', value: completedDocs ?? 0, sub: `${conversionRate}% conversion`, icon: TrendingUp, color: 'text-emerald-400', bg: 'bg-emerald-400/10', href: '/admin/documents' },
-    { label: 'Total Revenue', value: `RM ${totalRevenue.toFixed(2)}`, sub: `${(allPayments ?? []).length} transactions`, icon: CreditCard, color: 'text-amber-400', bg: 'bg-amber-400/10', href: '/admin/payments' },
+    { label: 'Total Users',    value: totalUsers ?? 0,               sub: `${marketingConsent ?? 0} opted in to marketing`, icon: Users,      color: 'text-blue-400',    bg: 'bg-blue-400/10',    href: '/admin/users' },
+    { label: 'Total Documents',value: totalDocs ?? 0,                sub: `${draftDocs ?? 0} drafts`,                       icon: FileText,   color: 'text-slate-200',   bg: 'bg-slate-700/50',   href: '/admin/documents' },
+    { label: 'Paid Documents', value: completedDocs ?? 0,            sub: `${conversionRate}% conversion`,                  icon: TrendingUp, color: 'text-emerald-400', bg: 'bg-emerald-400/10', href: '/admin/documents' },
+    { label: 'Total Revenue',  value: `RM ${totalRevenue.toFixed(2)}`,sub: `${(allPayments ?? []).length} transactions`,     icon: CreditCard, color: 'text-amber-400',   bg: 'bg-amber-400/10',   href: '/admin/payments' },
   ]
 
-  // Get user map for recent payments
   const userIds = [...new Set((recentPayments ?? []).map(p => p.user_id))]
   const { data: payUsers } = await admin.from('users').select('id, email, full_name').in('id', userIds)
   const userMap: Record<string, string> = {}
@@ -45,44 +44,42 @@ export default async function AdminOverview() {
     <div className="p-8">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-white">Overview</h1>
-        <p className="text-slate-400 text-sm mt-1">WasiatHub platform summary — real-time data</p>
+        <p className="text-slate-300 text-sm mt-1">WasiatHub platform summary</p>
       </div>
 
-      {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {stats.map(({ label, value, sub, icon: Icon, color, bg, href }) => (
           <Link key={label} href={href}
-            className="bg-slate-900 border border-slate-800 rounded-xl p-5 hover:border-slate-600 transition group">
+            className="bg-slate-900 border border-slate-700 rounded-xl p-5 hover:border-slate-500 transition">
             <div className={`w-9 h-9 ${bg} rounded-lg flex items-center justify-center mb-3`}>
               <Icon className={`w-5 h-5 ${color}`} />
             </div>
             <p className={`text-2xl font-bold ${color}`}>{value}</p>
-            <p className="text-slate-300 text-xs font-medium mt-0.5">{label}</p>
-            <p className="text-slate-500 text-[10px] mt-0.5">{sub}</p>
+            <p className="text-slate-200 text-sm font-medium mt-0.5">{label}</p>
+            <p className="text-slate-400 text-xs mt-0.5">{sub}</p>
           </Link>
         ))}
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6">
-        {/* Recent payments */}
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-5">
+        <div className="bg-slate-900 border border-slate-700 rounded-xl p-5">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-white font-semibold text-sm">Recent Payments</h2>
             <Link href="/admin/payments" className="text-xs text-emerald-400 hover:underline">View all →</Link>
           </div>
           {(recentPayments ?? []).length === 0 ? (
-            <p className="text-slate-500 text-sm py-4 text-center">No payments yet</p>
+            <p className="text-slate-400 text-sm py-4 text-center">No payments yet</p>
           ) : (
-            <div className="space-y-2">
+            <div className="space-y-1">
               {(recentPayments ?? []).map((p, i) => (
-                <div key={i} className="flex items-center justify-between py-2 border-b border-slate-800 last:border-0">
+                <div key={i} className="flex items-center justify-between py-2.5 border-b border-slate-800 last:border-0">
                   <div>
-                    <p className="text-slate-300 text-xs font-medium">{userMap[p.user_id] || '—'}</p>
+                    <p className="text-slate-200 text-sm font-medium">{userMap[p.user_id] || '—'}</p>
                     <div className="flex items-center gap-2 mt-0.5">
-                      <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${
+                      <span className={`text-xs px-2 py-0.5 rounded font-medium ${
                         p.plan === 'bundle' ? 'bg-purple-900 text-purple-300' : 'bg-slate-700 text-slate-300'
                       }`}>{p.plan ?? 'single'}</span>
-                      <span className="text-slate-600 text-[10px]">
+                      <span className="text-slate-400 text-xs">
                         {p.paid_at ? new Date(p.paid_at).toLocaleDateString('en-MY', { day: '2-digit', month: 'short' }) : '—'}
                       </span>
                     </div>
@@ -94,23 +91,22 @@ export default async function AdminOverview() {
           )}
         </div>
 
-        {/* Recent users */}
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-5">
+        <div className="bg-slate-900 border border-slate-700 rounded-xl p-5">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-white font-semibold text-sm">Recent Registrations</h2>
             <Link href="/admin/users" className="text-xs text-emerald-400 hover:underline">View all →</Link>
           </div>
           {(recentUsers ?? []).length === 0 ? (
-            <p className="text-slate-500 text-sm py-4 text-center">No users yet</p>
+            <p className="text-slate-400 text-sm py-4 text-center">No users yet</p>
           ) : (
-            <div className="space-y-2">
+            <div className="space-y-1">
               {(recentUsers ?? []).map((u, i) => (
-                <div key={i} className="flex items-center justify-between py-2 border-b border-slate-800 last:border-0">
+                <div key={i} className="flex items-center justify-between py-2.5 border-b border-slate-800 last:border-0">
                   <div>
-                    <p className="text-slate-300 text-xs font-medium">{u.full_name || '—'}</p>
-                    <p className="text-slate-500 text-[10px]">{u.email}</p>
+                    <p className="text-slate-200 text-sm font-medium">{u.full_name || '—'}</p>
+                    <p className="text-slate-400 text-xs">{u.email}</p>
                   </div>
-                  <p className="text-slate-500 text-[10px]">
+                  <p className="text-slate-400 text-xs whitespace-nowrap">
                     {new Date(u.created_at).toLocaleDateString('en-MY', { day: '2-digit', month: 'short', year: 'numeric' })}
                   </p>
                 </div>
