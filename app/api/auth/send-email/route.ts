@@ -187,15 +187,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const webhookTimestamp = request.headers.get('webhook-timestamp') ?? ''
   const webhookSignature = request.headers.get('webhook-signature') ?? ''
 
-  console.log('[send-email] headers:', {
-    'webhook-id': webhookId,
-    'webhook-timestamp': webhookTimestamp,
-    'webhook-signature': webhookSignature,
-    'x-supabase-signature': request.headers.get('x-supabase-signature'),
-    hasSecret: !!HOOK_SECRET,
-    secretPrefix: HOOK_SECRET?.slice(0, 12),
-  })
-
   if (!isValidSignature(rawBody, webhookId, webhookTimestamp, webhookSignature)) {
     return NextResponse.json({ error: 'Invalid signature' }, { status: 401 })
   }
