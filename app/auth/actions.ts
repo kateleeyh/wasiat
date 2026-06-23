@@ -55,6 +55,11 @@ export async function register(formData: FormData) {
     }, { onConflict: 'id' })
   }
 
+  // No session means Supabase requires email confirmation first
+  if (!data.session) {
+    redirect('/auth/verify-email')
+  }
+
   redirect('/dashboard')
 }
 

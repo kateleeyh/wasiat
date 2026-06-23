@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createHmac, timingSafeEqual } from 'crypto'
 
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const HOOK_SECRET = process.env.SUPABASE_AUTH_HOOK_SECRET!
 const RESEND_API_KEY = process.env.RESEND_API_KEY!
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL!
@@ -35,6 +34,12 @@ interface HookPayload {
 // Secret format in env: "v1,whsec_<base64_key>"
 // Signed payload: "<webhook-id>\n<webhook-timestamp>\n<body>"
 // Signature header: "v1,<base64_hmac>"
+function computeSig(key: Buffer | string, signedPayload: string): string {
+  const hmac = createHmac('sha256', key)
+  hmac.update(signedPayload)
+  return hmac.digest('base64')
+}
+
 function isValidSignature(
   rawBody: string,
   webhookId: string,
@@ -43,31 +48,35 @@ function isValidSignature(
 ): boolean {
   try {
     const secretPart = HOOK_SECRET.replace(/^v1,whsec_/, '')
-    const keyBytes = Buffer.from(secretPart, 'base64')
-    const signedPayload = `${webhookId}\n${webhookTimestamp}\n${rawBody}`
-    const hmac = createHmac('sha256', keyBytes)
-    hmac.update(signedPayload)
-    const expected = hmac.digest('base64')
-    // header may contain multiple space-separated sigs like "v1,abc v1,def"
+    const signedPayload = `${webhookId}.${webhookTimestamp}.${rawBody}`
+
+    // Try decoded bytes (Standard Webhooks spec) and raw string (Supabase fallback)
+    const candidates = [
+      computeSig(Buffer.from(secretPart, 'base64'), signedPayload),
+      computeSig(secretPart, signedPayload),
+    ]
+
     const signatures = signatureHeader.split(' ')
     return signatures.some((sig) => {
       const sigValue = sig.replace(/^v1,/, '')
-      try {
-        const a = Buffer.from(expected, 'base64')
-        const b = Buffer.from(sigValue, 'base64')
-        return a.length === b.length && timingSafeEqual(a, b)
-      } catch {
-        return false
-      }
+      return candidates.some((expected) => {
+        try {
+          const a = Buffer.from(expected, 'base64')
+          const b = Buffer.from(sigValue, 'base64')
+          return a.length === b.length && timingSafeEqual(a, b)
+        } catch {
+          return false
+        }
+      })
     })
   } catch {
     return false
   }
 }
 
-function verifyUrl(tokenHash: string, type: string, redirectTo: string): string {
-  const params = new URLSearchParams({ token: tokenHash, type, redirect_to: redirectTo })
-  return `${SUPABASE_URL}/auth/v1/verify?${params}`
+function verifyUrl(tokenHash: string, type: string): string {
+  const params = new URLSearchParams({ token_hash: tokenHash, type })
+  return `${APP_URL}/auth/confirm?${params}`
 }
 
 function buildSignupEmail(name: string, confirmUrl: string): { subject: string; html: string } {
@@ -178,6 +187,15 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const webhookTimestamp = request.headers.get('webhook-timestamp') ?? ''
   const webhookSignature = request.headers.get('webhook-signature') ?? ''
 
+  console.log('[send-email] headers:', {
+    'webhook-id': webhookId,
+    'webhook-timestamp': webhookTimestamp,
+    'webhook-signature': webhookSignature,
+    'x-supabase-signature': request.headers.get('x-supabase-signature'),
+    hasSecret: !!HOOK_SECRET,
+    secretPrefix: HOOK_SECRET?.slice(0, 12),
+  })
+
   if (!isValidSignature(rawBody, webhookId, webhookTimestamp, webhookSignature)) {
     return NextResponse.json({ error: 'Invalid signature' }, { status: 401 })
   }
@@ -185,15 +203,15 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const payload = JSON.parse(rawBody) as HookPayload
   const { user, email_data } = payload
   const name = user.user_metadata?.full_name ?? user.email
-  const { email_action_type, token_hash, redirect_to } = email_data
+  const { email_action_type, token_hash } = email_data
 
   try {
     if (email_action_type === 'signup' || email_action_type === 'invite') {
-      const confirmUrl = verifyUrl(token_hash, 'signup', redirect_to || `${APP_URL}/dashboard`)
+      const confirmUrl = verifyUrl(token_hash, 'signup')
       const { subject, html } = buildSignupEmail(name, confirmUrl)
       await sendViaResend(user.email, subject, html)
     } else if (email_action_type === 'recovery') {
-      const resetUrl = verifyUrl(token_hash, 'recovery', redirect_to || `${APP_URL}/auth/reset-password`)
+      const resetUrl = verifyUrl(token_hash, 'recovery')
       const { subject, html } = buildRecoveryEmail(name, resetUrl)
       await sendViaResend(user.email, subject, html)
     }
