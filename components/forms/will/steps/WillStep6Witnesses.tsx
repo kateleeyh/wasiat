@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { InfoTip } from '@/components/forms/InfoTip'
 import { useLocale } from 'next-intl'
-import { AlertTriangle } from 'lucide-react'
+import { AlertTriangle, PenLine, Clock } from 'lucide-react'
 import type { WillWitnesses, WillWitness, WillBeneficiary, ResidualEstateBeneficiary, WillTestatorInfo } from '@/types/database'
 import { isValidIC, isValidIDNumber, isValidPassport, formatIC, genderFromIC } from '@/lib/validation'
 
@@ -181,6 +181,7 @@ export function WillStep6Witnesses({ initialData, beneficiaries, residualBenefic
   const locale = useLocale()
   const ms     = locale === 'ms'
 
+  const [deferred, setDeferred] = useState<boolean>(initialData?.deferred ?? false)
   const [w1, setW1] = useState<WillWitness>(initialData?.witness_1 ?? { ...EMPTY })
   const [w2, setW2] = useState<WillWitness>(initialData?.witness_2 ?? { ...EMPTY })
 
@@ -218,68 +219,111 @@ export function WillStep6Witnesses({ initialData, beneficiaries, residualBenefic
     !hasDuplicateID
 
   useEffect(() => {
-    onChange({ witness_1: w1, witness_2: w2 })
-    onValidChange(isValid)
-  }, [w1, w2]) // eslint-disable-line react-hooks/exhaustive-deps
+    if (deferred) {
+      onChange({ witness_1: { ...EMPTY }, witness_2: { ...EMPTY }, deferred: true })
+      onValidChange(true)
+    } else {
+      onChange({ witness_1: w1, witness_2: w2 })
+      onValidChange(isValid)
+    }
+  }, [w1, w2, deferred]) // eslint-disable-line react-hooks/exhaustive-deps
 
   function updateW1(key: keyof WillWitness, value: string) { setW1(prev => ({ ...prev, [key]: value })) }
   function updateW2(key: keyof WillWitness, value: string) { setW2(prev => ({ ...prev, [key]: value })) }
 
   return (
     <div className="space-y-6">
-      {/* Requirements notice — positive criteria only */}
-      <InfoTip titleMs="ℹ️ Syarat Saksi — Baca Sebelum Isi" titleEn="ℹ️ Witness Requirements — Read First" ms={ms} variant="blue">
-        <div className="text-sm text-blue-800 space-y-2 mt-2">
-        <p className="font-semibold">{ms ? 'Syarat Saksi (Akta Wasiat 1959)' : 'Witness Requirements (Wills Act 1959)'}</p>
-        <ul className="space-y-1 text-xs leading-relaxed list-none">
-          <li>✓ {ms ? <><strong>Dua saksi</strong> diperlukan — tandatangan serentak di hadapan pewasiat</> : <><strong>Two witnesses</strong> required — sign simultaneously in the testator's presence</>}</li>
-          <li>✓ {ms ? <><strong>Berumur 18 tahun ke atas</strong> dan sihat akal</> : <><strong>Aged 18 and above</strong> and of sound mind</>}</li>
-          <li>✓ {ms ? <><strong>Tiada sekatan jantina, agama, atau kewarganegaraan</strong> — warganegara asing diterima</> : <><strong>No gender, religion, or nationality restriction</strong> — foreign nationals accepted</>}</li>
-          <li>✓ {ms ? <><strong>Pasport diterima</strong> bagi saksi asing</> : <><strong>Passport accepted</strong> for foreign witnesses</>}</li>
-        </ul>
-      </div>
-      </InfoTip>
 
-      {/* Restriction — separate red/amber box so it stands out clearly */}
-      <div className="flex gap-3 bg-amber-50 border border-amber-300 rounded-lg p-3 text-xs text-amber-800">
-        <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5 text-amber-600" />
-        <div>
-          <p className="font-semibold mb-0.5">
-            {ms ? 'Larangan Undang-Undang' : 'Legal Restriction'}
+      {/* Fill now vs fill at signing toggle */}
+      <div className="grid grid-cols-2 gap-3">
+        {([
+          { value: false, icon: PenLine, labelMs: 'Isi Sekarang',           labelEn: 'Fill In Now',     descMs: 'Masukkan maklumat saksi dalam borang ini',                                        descEn: 'Enter witness details in this form' },
+          { value: true,  icon: Clock,   labelMs: 'Isi Semasa Tandatangan', labelEn: 'Fill At Signing', descMs: 'Biarkan kosong — isi secara tulis tangan semasa menandatangani dokumen bercetak', descEn: 'Leave blank — fill in by hand when signing the printed document' },
+        ] as const).map(({ value, icon: Icon, labelMs, labelEn, descMs, descEn }) => (
+          <button
+            key={String(value)}
+            type="button"
+            onClick={() => setDeferred(value)}
+            className={`flex flex-col items-start gap-1.5 rounded-xl border-2 p-4 text-left transition ${
+              deferred === value
+                ? 'border-primary bg-primary/5'
+                : 'border-border bg-background hover:border-primary/40'
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              <Icon className={`w-4 h-4 ${deferred === value ? 'text-primary' : 'text-muted-foreground'}`} />
+              <span className={`text-sm font-semibold ${deferred === value ? 'text-primary' : 'text-foreground'}`}>
+                {ms ? labelMs : labelEn}
+              </span>
+            </div>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              {ms ? descMs : descEn}
+            </p>
+          </button>
+        ))}
+      </div>
+
+      {deferred ? (
+        <div className="rounded-xl border border-border bg-muted/30 p-5 text-sm space-y-2">
+          <p className="font-medium text-foreground">
+            {ms ? 'Maklumat saksi akan diisi semasa tandatangan.' : 'Witness details will be filled in at signing.'}
           </p>
-          <p className="leading-relaxed">
+          <p className="text-xs text-muted-foreground leading-relaxed">
             {ms
-              ? 'Saksi TIDAK BOLEH menjadi penerima manfaat atau pasangan kepada penerima manfaat dalam Surat Wasiat ini. Wasiat yang ditandatangani oleh saksi yang juga penerima manfaat adalah sah, tetapi pemberian kepada saksi tersebut akan terbatal.'
-              : 'A witness MUST NOT be a beneficiary or the spouse of a beneficiary in this Will. The Will remains valid, but any gift to such a witness will be void.'}
+              ? 'PDF akan dijanakan dengan ruangan saksi yang kosong. Tuliskan nama, no. kad pengenalan, alamat dan tandatangan saksi secara tangan pada dokumen bercetak semasa majlis tandatangan.'
+              : 'The PDF will be generated with blank witness fields. Write in the witness names, IC numbers, addresses and signatures by hand on the printed document at signing.'}
           </p>
         </div>
-      </div>
+      ) : (
+        <>
+          <InfoTip titleMs="ℹ️ Syarat Saksi — Baca Sebelum Isi" titleEn="ℹ️ Witness Requirements — Read First" ms={ms} variant="blue">
+            <div className="text-sm text-blue-800 space-y-2 mt-2">
+              <p className="font-semibold">{ms ? 'Syarat Saksi (Akta Wasiat 1959)' : 'Witness Requirements (Wills Act 1959)'}</p>
+              <ul className="space-y-1 text-xs leading-relaxed list-none">
+                <li>✓ {ms ? <><strong>Dua saksi</strong> diperlukan — tandatangan serentak di hadapan pewasiat</> : <><strong>Two witnesses</strong> required — sign simultaneously in the testator&apos;s presence</>}</li>
+                <li>✓ {ms ? <><strong>Berumur 18 tahun ke atas</strong> dan sihat akal</> : <><strong>Aged 18 and above</strong> and of sound mind</>}</li>
+                <li>✓ {ms ? <><strong>Tiada sekatan jantina, agama, atau kewarganegaraan</strong> — warganegara asing diterima</> : <><strong>No gender, religion, or nationality restriction</strong> — foreign nationals accepted</>}</li>
+                <li>✓ {ms ? <><strong>Pasport diterima</strong> bagi saksi asing</> : <><strong>Passport accepted</strong> for foreign witnesses</>}</li>
+              </ul>
+            </div>
+          </InfoTip>
 
-      {/* IC gender note */}
-      <p className="text-xs text-muted-foreground">
-        {ms
-          ? '* Jantina dikesan secara automatik daripada digit terakhir No. IC Malaysia (ganjil = lelaki, genap = perempuan).'
-          : '* Gender is auto-detected from the last digit of a Malaysian IC number (odd = male, even = female).'}
-      </p>
+          <div className="flex gap-3 bg-amber-50 border border-amber-300 rounded-lg p-3 text-xs text-amber-800">
+            <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5 text-amber-600" />
+            <div>
+              <p className="font-semibold mb-0.5">{ms ? 'Larangan Undang-Undang' : 'Legal Restriction'}</p>
+              <p className="leading-relaxed">
+                {ms
+                  ? 'Saksi TIDAK BOLEH menjadi penerima manfaat atau pasangan kepada penerima manfaat dalam Surat Wasiat ini. Wasiat yang ditandatangani oleh saksi yang juga penerima manfaat adalah sah, tetapi pemberian kepada saksi tersebut akan terbatal.'
+                  : 'A witness MUST NOT be a beneficiary or the spouse of a beneficiary in this Will. The Will remains valid, but any gift to such a witness will be void.'}
+              </p>
+            </div>
+          </div>
 
-      {/* Duplicate ID warning */}
-      {hasDuplicateID && (
-        <div className="flex items-center gap-2 p-3 rounded-lg bg-destructive/5 border border-destructive text-sm text-destructive">
-          <AlertTriangle className="w-4 h-4 shrink-0" />
-          <span>{ms ? 'Saksi-saksi mestilah orang yang berbeza.' : 'Witnesses must be different individuals.'}</span>
-        </div>
+          <p className="text-xs text-muted-foreground">
+            {ms
+              ? '* Jantina dikesan secara automatik daripada digit terakhir No. IC Malaysia (ganjil = lelaki, genap = perempuan).'
+              : '* Gender is auto-detected from the last digit of a Malaysian IC number (odd = male, even = female).'}
+          </p>
+
+          {hasDuplicateID && (
+            <div className="flex items-center gap-2 p-3 rounded-lg bg-destructive/5 border border-destructive text-sm text-destructive">
+              <AlertTriangle className="w-4 h-4 shrink-0" />
+              <span>{ms ? 'Saksi-saksi mestilah orang yang berbeza.' : 'Witnesses must be different individuals.'}</span>
+            </div>
+          )}
+
+          {(w1IsTestator || w2IsTestator) && (
+            <div className="flex items-center gap-2 p-3 rounded-lg bg-destructive/5 border border-destructive text-sm text-destructive">
+              <AlertTriangle className="w-4 h-4 shrink-0" />
+              <span>{ms ? 'Pewasiat tidak boleh menjadi saksi kepada wasiat sendiri.' : 'The testator cannot witness their own Will.'}</span>
+            </div>
+          )}
+
+          <WitnessForm num={1} data={w1} isBeneficiary={w1IsBeneficiary || w1IsTestator} ms={ms} update={updateW1} />
+          <WitnessForm num={2} data={w2} isBeneficiary={w2IsBeneficiary || w2IsTestator} ms={ms} update={updateW2} />
+        </>
       )}
-
-      {/* Testator-as-witness warning */}
-      {(w1IsTestator || w2IsTestator) && (
-        <div className="flex items-center gap-2 p-3 rounded-lg bg-destructive/5 border border-destructive text-sm text-destructive">
-          <AlertTriangle className="w-4 h-4 shrink-0" />
-          <span>{ms ? 'Pewasiat tidak boleh menjadi saksi kepada wasiat sendiri.' : 'The testator cannot witness their own Will.'}</span>
-        </div>
-      )}
-
-      <WitnessForm num={1} data={w1} isBeneficiary={w1IsBeneficiary || w1IsTestator} ms={ms} update={updateW1} />
-      <WitnessForm num={2} data={w2} isBeneficiary={w2IsBeneficiary || w2IsTestator} ms={ms} update={updateW2} />
     </div>
   )
 }

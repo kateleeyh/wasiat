@@ -110,6 +110,7 @@ export interface WasiatWitnesses {
   witness_1:  WasiatWitness
   witness_2:  WasiatWitness
   witness_3?: WasiatWitness   // optional — required when witness_1 or witness_2 is female
+  deferred?:  boolean         // true = user chose to fill in witnesses at signing time
 }
 
 // ─── WASIAT — Step 7: Declaration ────────────────────────────────────────────
@@ -280,8 +281,9 @@ export interface WillWitness {
 }
 
 export interface WillWitnesses {
-  witness_1: WillWitness
-  witness_2: WillWitness
+  witness_1:  WillWitness
+  witness_2:  WillWitness
+  deferred?:  boolean         // true = user chose to fill in witnesses at signing time
 }
 
 // ─── WILL — Step 7: Declaration ──────────────────────────────────────────────

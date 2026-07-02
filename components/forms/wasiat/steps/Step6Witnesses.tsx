@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { InfoTip } from '@/components/forms/InfoTip'
 import { useLocale } from 'next-intl'
-import { AlertTriangle, Plus, X } from 'lucide-react'
+import { AlertTriangle, Plus, X, PenLine, Clock } from 'lucide-react'
 import type { WasiatWitnesses, WasiatWitness, WasiatBeneficiary } from '@/types/database'
 import { isValidIC, formatIC, genderFromIC } from '@/lib/validation'
 
@@ -126,6 +126,7 @@ export function Step6Witnesses({ initialData, beneficiaries, onChange, onValidCh
   const locale = useLocale()
   const ms     = locale === 'ms'
 
+  const [deferred, setDeferred] = useState<boolean>(initialData?.deferred ?? false)
   const [w1, setW1] = useState<WasiatWitness>(initialData?.witness_1 ?? EMPTY_WITNESS)
   const [w2, setW2] = useState<WasiatWitness>(initialData?.witness_2 ?? EMPTY_WITNESS)
   const [w3, setW3] = useState<WasiatWitness | null>(initialData?.witness_3 ?? null)
@@ -175,9 +176,14 @@ export function Step6Witnesses({ initialData, beneficiaries, onChange, onValidCh
     !hasDuplicateIC && genderValid && !needsThirdWitness
 
   useEffect(() => {
-    onChange({ witness_1: w1, witness_2: w2, ...(w3 ? { witness_3: w3 } : {}) })
-    onValidChange(isValid)
-  }, [w1, w2, w3]) // eslint-disable-line react-hooks/exhaustive-deps
+    if (deferred) {
+      onChange({ witness_1: EMPTY_WITNESS, witness_2: EMPTY_WITNESS, deferred: true })
+      onValidChange(true)
+    } else {
+      onChange({ witness_1: w1, witness_2: w2, ...(w3 ? { witness_3: w3 } : {}) })
+      onValidChange(isValid)
+    }
+  }, [w1, w2, w3, deferred]) // eslint-disable-line react-hooks/exhaustive-deps
 
   function updateW1(key: keyof WasiatWitness, value: string) { setW1(prev => ({ ...prev, [key]: value })) }
   function updateW2(key: keyof WasiatWitness, value: string) { setW2(prev => ({ ...prev, [key]: value })) }
@@ -185,83 +191,123 @@ export function Step6Witnesses({ initialData, beneficiaries, onChange, onValidCh
 
   return (
     <div className="space-y-6">
-      {/* Requirements notice */}
-      <InfoTip titleMs="ℹ️ Syarat Saksi — Baca Sebelum Isi" titleEn="ℹ️ Witness Requirements — Read First" ms={ms} variant="amber">
-        <div className="text-sm text-amber-800 space-y-2 mt-2">
-        <p className="font-semibold">{ms ? 'Syarat Saksi Wasiat' : 'Witness Requirements'}</p>
-        <ul className="space-y-1 text-xs leading-relaxed list-none">
-          <li>✓ {ms ? <><strong>Muslim</strong> — saksi mestilah beragama Islam</> : <><strong>Muslim</strong> — witnesses must be Muslim</>}</li>
-          <li>✓ {ms
-            ? <><strong>Bilangan & jantina</strong> — dua lelaki Muslim, ATAU seorang lelaki + dua perempuan Muslim (3 saksi)</>
-            : <><strong>Number & gender</strong> — two Muslim men, OR one Muslim man + two Muslim women (3 witnesses)</>}
-          </li>
-          <li>✓ {ms ? <><strong>Baligh & berakal</strong> — dewasa dan sihat akal</> : <><strong>Baligh & berakal</strong> — adult and of sound mind</>}</li>
-          <li>✓ {ms ? <><strong>Adil</strong> — berkelakuan baik dan boleh dipercayai</> : <><strong>Adil</strong> — of good character and trustworthy</>}</li>
-          <li>✗ {ms ? <><strong>Bukan penerima manfaat</strong> dalam wasiat ini</> : <><strong>Not a beneficiary</strong> in this Wasiat</>}</li>
-          <li>✗ {ms ? <><strong>Bukan suami/isteri</strong> kepada mana-mana penerima manfaat</> : <><strong>Not spouse</strong> of any beneficiary</>}</li>
-        </ul>
-        <p className="text-xs text-amber-700 italic border-t border-amber-300 pt-2">
-          {ms
-            ? 'Jantina dikesan secara automatik daripada digit terakhir No. IC Malaysia (ganjil = lelaki, genap = perempuan).'
-            : 'Gender is auto-detected from the last digit of the Malaysian IC (odd = male, even = female).'}
-        </p>
+
+      {/* Fill now vs fill at signing toggle */}
+      <div className="grid grid-cols-2 gap-3">
+        {([
+          { value: false, icon: PenLine, labelMs: 'Isi Sekarang',           labelEn: 'Fill In Now',     descMs: 'Masukkan maklumat saksi dalam borang ini',                                              descEn: 'Enter witness details in this form' },
+          { value: true,  icon: Clock,   labelMs: 'Isi Semasa Tandatangan', labelEn: 'Fill At Signing', descMs: 'Biarkan kosong — isi secara tulis tangan semasa menandatangani dokumen bercetak',       descEn: 'Leave blank — fill in by hand when signing the printed document' },
+        ] as const).map(({ value, icon: Icon, labelMs, labelEn, descMs, descEn }) => (
+          <button
+            key={String(value)}
+            type="button"
+            onClick={() => setDeferred(value)}
+            className={`flex flex-col items-start gap-1.5 rounded-xl border-2 p-4 text-left transition ${
+              deferred === value
+                ? 'border-primary bg-primary/5'
+                : 'border-border bg-background hover:border-primary/40'
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              <Icon className={`w-4 h-4 ${deferred === value ? 'text-primary' : 'text-muted-foreground'}`} />
+              <span className={`text-sm font-semibold ${deferred === value ? 'text-primary' : 'text-foreground'}`}>
+                {ms ? labelMs : labelEn}
+              </span>
+            </div>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              {ms ? descMs : descEn}
+            </p>
+          </button>
+        ))}
       </div>
-      </InfoTip>
 
-      {/* Duplicate IC warning */}
-      {hasDuplicateIC && (
-        <div className="flex items-center gap-2 p-3 rounded-lg bg-destructive/5 border border-destructive text-sm text-destructive">
-          <AlertTriangle className="w-4 h-4 shrink-0" />
-          <span>{ms ? 'Saksi-saksi mestilah orang yang berbeza.' : 'All witnesses must be different individuals.'}</span>
-        </div>
-      )}
-
-      {/* Gender combination warning */}
-      {witnesses.length >= 2 && !genderValid && (
-        <div className="flex items-center gap-2 p-3 rounded-lg bg-destructive/5 border border-destructive text-sm text-destructive">
-          <AlertTriangle className="w-4 h-4 shrink-0" />
-          <span>
+      {deferred ? (
+        <div className="rounded-xl border border-border bg-muted/30 p-5 text-sm space-y-2">
+          <p className="font-medium text-foreground">
+            {ms ? 'Maklumat saksi akan diisi semasa tandatangan.' : 'Witness details will be filled in at signing.'}
+          </p>
+          <p className="text-xs text-muted-foreground leading-relaxed">
             {ms
-              ? 'Kombinasi saksi tidak sah. Diperlukan: 2 lelaki Muslim, ATAU 1 lelaki + 2 perempuan Muslim.'
-              : 'Invalid witness combination. Required: 2 Muslim men, OR 1 Muslim man + 2 Muslim women.'}
-          </span>
+              ? 'PDF akan dijanakan dengan ruangan saksi yang kosong. Tuliskan nama, no. kad pengenalan, alamat dan tandatangan saksi secara tangan pada dokumen bercetak semasa majlis tandatangan.'
+              : 'The PDF will be generated with blank witness fields. Write in the witness names, IC numbers, addresses and signatures by hand on the printed document at signing.'}
+          </p>
         </div>
-      )}
-
-      {/* Hint: needs 3rd witness */}
-      {needsThirdWitness && (
-        <div className="flex items-center gap-2 p-3 rounded-lg bg-blue-50 border border-blue-300 text-sm text-blue-700">
-          <AlertTriangle className="w-4 h-4 shrink-0" />
-          <span>
-            {ms
-              ? 'Anda mempunyai 1 lelaki + 1 perempuan. Sila tambah saksi ketiga (perempuan Muslim) untuk melengkapkan kombinasi yang sah.'
-              : 'You have 1 male + 1 female. Please add a 3rd witness (Muslim woman) to complete a valid combination.'}
-          </span>
-        </div>
-      )}
-
-      <WitnessForm num={1} data={w1} isBeneficiary={w1IsBeneficiary} ms={ms} update={updateW1} />
-      <WitnessForm num={2} data={w2} isBeneficiary={w2IsBeneficiary} ms={ms} update={updateW2} />
-
-      {/* Optional 3rd witness */}
-      {w3 ? (
-        <WitnessForm
-          num={3}
-          data={w3}
-          isBeneficiary={w3IsBeneficiary}
-          ms={ms}
-          update={updateW3}
-          onRemove={() => setW3(null)}
-        />
       ) : (
-        <button
-          type="button"
-          onClick={() => setW3({ ...EMPTY_WITNESS })}
-          className="flex items-center gap-2 text-sm text-primary hover:text-primary/80 font-medium py-2 transition"
-        >
-          <Plus className="w-4 h-4" />
-          {ms ? 'Tambah Saksi Ketiga (jika perlu)' : 'Add 3rd Witness (if needed)'}
-        </button>
+        <>
+          <InfoTip titleMs="ℹ️ Syarat Saksi — Baca Sebelum Isi" titleEn="ℹ️ Witness Requirements — Read First" ms={ms} variant="amber">
+            <div className="text-sm text-amber-800 space-y-2 mt-2">
+              <p className="font-semibold">{ms ? 'Syarat Saksi Wasiat' : 'Witness Requirements'}</p>
+              <ul className="space-y-1 text-xs leading-relaxed list-none">
+                <li>✓ {ms ? <><strong>Muslim</strong> — saksi mestilah beragama Islam</> : <><strong>Muslim</strong> — witnesses must be Muslim</>}</li>
+                <li>✓ {ms
+                  ? <><strong>Bilangan &amp; jantina</strong> — dua lelaki Muslim, ATAU seorang lelaki + dua perempuan Muslim (3 saksi)</>
+                  : <><strong>Number &amp; gender</strong> — two Muslim men, OR one Muslim man + two Muslim women (3 witnesses)</>}
+                </li>
+                <li>✓ {ms ? <><strong>Baligh &amp; berakal</strong> — dewasa dan sihat akal</> : <><strong>Baligh &amp; berakal</strong> — adult and of sound mind</>}</li>
+                <li>✓ {ms ? <><strong>Adil</strong> — berkelakuan baik dan boleh dipercayai</> : <><strong>Adil</strong> — of good character and trustworthy</>}</li>
+                <li>✗ {ms ? <><strong>Bukan penerima manfaat</strong> dalam wasiat ini</> : <><strong>Not a beneficiary</strong> in this Wasiat</>}</li>
+                <li>✗ {ms ? <><strong>Bukan suami/isteri</strong> kepada mana-mana penerima manfaat</> : <><strong>Not spouse</strong> of any beneficiary</>}</li>
+              </ul>
+              <p className="text-xs text-amber-700 italic border-t border-amber-300 pt-2">
+                {ms
+                  ? 'Jantina dikesan secara automatik daripada digit terakhir No. IC Malaysia (ganjil = lelaki, genap = perempuan).'
+                  : 'Gender is auto-detected from the last digit of the Malaysian IC (odd = male, even = female).'}
+              </p>
+            </div>
+          </InfoTip>
+
+          {hasDuplicateIC && (
+            <div className="flex items-center gap-2 p-3 rounded-lg bg-destructive/5 border border-destructive text-sm text-destructive">
+              <AlertTriangle className="w-4 h-4 shrink-0" />
+              <span>{ms ? 'Saksi-saksi mestilah orang yang berbeza.' : 'All witnesses must be different individuals.'}</span>
+            </div>
+          )}
+
+          {witnesses.length >= 2 && !genderValid && (
+            <div className="flex items-center gap-2 p-3 rounded-lg bg-destructive/5 border border-destructive text-sm text-destructive">
+              <AlertTriangle className="w-4 h-4 shrink-0" />
+              <span>
+                {ms
+                  ? 'Kombinasi saksi tidak sah. Diperlukan: 2 lelaki Muslim, ATAU 1 lelaki + 2 perempuan Muslim.'
+                  : 'Invalid witness combination. Required: 2 Muslim men, OR 1 Muslim man + 2 Muslim women.'}
+              </span>
+            </div>
+          )}
+
+          {needsThirdWitness && (
+            <div className="flex items-center gap-2 p-3 rounded-lg bg-blue-50 border border-blue-300 text-sm text-blue-700">
+              <AlertTriangle className="w-4 h-4 shrink-0" />
+              <span>
+                {ms
+                  ? 'Anda mempunyai 1 lelaki + 1 perempuan. Sila tambah saksi ketiga (perempuan Muslim) untuk melengkapkan kombinasi yang sah.'
+                  : 'You have 1 male + 1 female. Please add a 3rd witness (Muslim woman) to complete a valid combination.'}
+              </span>
+            </div>
+          )}
+
+          <WitnessForm num={1} data={w1} isBeneficiary={w1IsBeneficiary} ms={ms} update={updateW1} />
+          <WitnessForm num={2} data={w2} isBeneficiary={w2IsBeneficiary} ms={ms} update={updateW2} />
+
+          {w3 ? (
+            <WitnessForm
+              num={3}
+              data={w3}
+              isBeneficiary={w3IsBeneficiary}
+              ms={ms}
+              update={updateW3}
+              onRemove={() => setW3(null)}
+            />
+          ) : (
+            <button
+              type="button"
+              onClick={() => setW3({ ...EMPTY_WITNESS })}
+              className="flex items-center gap-2 text-sm text-primary hover:text-primary/80 font-medium py-2 transition"
+            >
+              <Plus className="w-4 h-4" />
+              {ms ? 'Tambah Saksi Ketiga (jika perlu)' : 'Add 3rd Witness (if needed)'}
+            </button>
+          )}
+        </>
       )}
     </div>
   )
