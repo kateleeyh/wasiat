@@ -113,13 +113,21 @@ export function WillStep1TestatorInfo({ initialData, onChange, onValidChange, do
           <div className="bg-amber-100 rounded-lg p-3 space-y-1">
             <p className="font-semibold text-amber-900">{ms ? 'Formula Akta Pembahagian 1958:' : 'Distribution Act 1958 Formula:'}</p>
             <ul className="space-y-0.5 list-none">
-              <li>• {ms ? 'Ada pasangan & anak (tiada ibu bapa hidup) → Pasangan 1/3, Anak 2/3' : 'Spouse & children (no surviving parents) → Spouse ⅓, Children ⅔'}</li>
               <li>• {ms ? 'Ada pasangan, anak & ibu bapa (ketiga-tiganya hidup) → Pasangan ¼, Anak ½, Ibu bapa ¼' : 'Spouse, children & parents (all three surviving) → Spouse ¼, Children ½, Parents ¼'}</li>
-              <li>• {ms ? 'Ada pasangan sahaja (tiada anak) → Pasangan ½, Ibu bapa ½' : 'Spouse only (no children) → Spouse ½, Parents ½'}</li>
-              <li>• {ms ? 'Ada anak sahaja (tiada pasangan) → Anak semua' : 'Children only (no spouse) → Children take all'}</li>
+              <li>• {ms ? 'Ada pasangan & anak (tiada ibu bapa hidup) → Pasangan 1/3, Anak 2/3' : 'Spouse & children (no surviving parents) → Spouse ⅓, Children ⅔'}</li>
+              <li>• {ms ? 'Ada pasangan & ibu bapa (tiada anak) → Pasangan ½, Ibu bapa ½' : 'Spouse & parents (no children) → Spouse ½, Parents ½'}</li>
+              <li>• {ms ? 'Ada anak & ibu bapa (tiada pasangan) → Anak 2/3, Ibu bapa 1/3' : 'Children & parents (no spouse) → Children ⅔, Parents ⅓'}</li>
+              <li>• {ms ? 'Ada pasangan sahaja (tiada anak, tiada ibu bapa) → Pasangan semua' : 'Spouse only (no children, no parents) → Spouse takes all'}</li>
+              <li>• {ms ? 'Ada anak sahaja (tiada pasangan, tiada ibu bapa) → Anak semua' : 'Children only (no spouse, no parents) → Children take all'}</li>
+              <li>• {ms ? 'Ada ibu bapa sahaja (tiada pasangan, tiada anak) → Ibu bapa semua' : 'Parents only (no spouse, no children) → Parents take all'}</li>
               <li>• {ms ? 'Tiada pasangan, anak, atau ibu bapa → Saudara mara' : 'No spouse, children, or parents → Siblings/relatives'}</li>
             </ul>
           </div>
+          <p className="text-amber-700">
+            {ms
+              ? '⚠ Formula ini hanya terpakai kepada bukan-Muslim di Semenanjung Malaysia dan Sarawak (bukan anak negeri). Anak negeri Sabah & Sarawak tertakluk kepada hukum adat masing-masing; Sabah pula mempunyai undang-undang berasingan (Intestate Succession Ordinance 1960) dengan bahagian yang berbeza.'
+              : '⚠ This formula only applies to non-Muslims in Peninsular Malaysia and Sarawak (non-natives). Sabah & Sarawak natives follow their own native customary law instead; Sabah also has a separate law (Intestate Succession Ordinance 1960) with different shares.'}
+          </p>
           <p className="text-amber-700">
             {ms
               ? '⚠ Akta ini tidak memperuntukkan bahagian kepada rakan, kekasih, badan amal, atau mana-mana orang yang anda pilih di luar keluarga. Surat Wasiat membolehkan anda menentukannya sendiri.'

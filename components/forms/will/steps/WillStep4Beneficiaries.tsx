@@ -108,18 +108,20 @@ function makeBen(relationship: string, pct: number): WillBeneficiary {
 // (b) Spouse + Children, no parents → 33% / 67%
 // (c) Spouse + Parents, no children → 50% / 50%
 // (d) Spouse only → 100%
-// (e) Children only (no spouse) → 100%
-// (f) Parents only → 100%
-// (g) No spouse/children/parents → Siblings — must fill manually
+// (e) Children + Parents, no spouse → 67% / 33%
+// (f) Children only → 100%
+// (g) Parents only → 100%
+// (h) No spouse/children/parents → Siblings — must fill manually
 function buildSuggestion(maritalStatus: MaritalStatus | undefined, hasChildren: boolean, parentsAlive: boolean): WillBeneficiary[] {
   const isMarried = maritalStatus === 'married'
   if (isMarried && hasChildren && parentsAlive)   return [makeBen('Spouse / Suami / Isteri', 25), makeBen('Child / Anak', 50), makeBen('Parent / Ibu Bapa', 25)]
   if (isMarried && hasChildren && !parentsAlive)  return [makeBen('Spouse / Suami / Isteri', 33), makeBen('Child / Anak', 67)]
   if (isMarried && !hasChildren && parentsAlive)  return [makeBen('Spouse / Suami / Isteri', 50), makeBen('Parent / Ibu Bapa', 50)]
   if (isMarried && !hasChildren && !parentsAlive) return [makeBen('Spouse / Suami / Isteri', 100)]
+  if (hasChildren && parentsAlive)                return [makeBen('Child / Anak', 67), makeBen('Parent / Ibu Bapa', 33)]
   if (hasChildren)                                return [makeBen('Child / Anak', 100)]
   if (parentsAlive)                               return [makeBen('Parent / Ibu Bapa', 100)]
-  return [{ ...EMPTY_BEN }] // (g) siblings — user must enter manually
+  return [{ ...EMPTY_BEN }] // (h) siblings — user must enter manually
 }
 
 function suggestionLabel(maritalStatus: MaritalStatus | undefined, hasChildren: boolean, parentsAlive: boolean, ms: boolean): string {
@@ -128,6 +130,7 @@ function suggestionLabel(maritalStatus: MaritalStatus | undefined, hasChildren: 
   if (isMarried && hasChildren && !parentsAlive)  return ms ? 'Pasangan ⅓ (33%), Anak-anak ⅔ (67%)' : 'Spouse ⅓ (33%), Children ⅔ (67%)'
   if (isMarried && !hasChildren && parentsAlive)  return ms ? 'Pasangan ½ (50%), Ibu Bapa ½ (50%)' : 'Spouse ½ (50%), Parents ½ (50%)'
   if (isMarried && !hasChildren && !parentsAlive) return ms ? 'Pasangan 100%' : 'Spouse 100%'
+  if (hasChildren && parentsAlive)                return ms ? 'Anak-anak ⅔ (67%), Ibu Bapa ⅓ (33%)' : 'Children ⅔ (67%), Parents ⅓ (33%)'
   if (hasChildren)                                return ms ? 'Anak-anak 100% (bahagi sama rata)' : 'Children 100% (divided equally)'
   if (parentsAlive)                               return ms ? 'Ibu Bapa 100% (bahagi sama rata)' : 'Parents 100% (divided equally)'
   return ms ? 'Adik-beradik 100% — sila isi nama secara manual' : 'Siblings 100% — please enter names manually'
@@ -185,9 +188,7 @@ export function WillStep4Beneficiaries({
   const [parentsAlive, setParentsAlive] = useState<boolean | null>(null)
   const [showActInfo, setShowActInfo] = useState(false)
 
-  // parents question is needed unless: no spouse AND has children (case e — always children 100%)
-  const needsParentsQuestion = !(testatorInfo?.marital_status !== 'married' && hasChildren === true)
-  const canApplyFormula = hasChildren !== null && (!needsParentsQuestion || parentsAlive !== null)
+  const canApplyFormula = hasChildren !== null && parentsAlive !== null
 
   // ── Validation ──
   const poolValid = pool.length > 0 && pool.every(p =>
@@ -636,7 +637,8 @@ export function WillStep4Beneficiaries({
                       { s: '✓', c: '✓', p: '✗', d: ms ? 'Pasangan ⅓ (33%), Anak ⅔ (67%)' : 'Spouse ⅓ (33%), Children ⅔ (67%)' },
                       { s: '✓', c: '✗', p: '✓', d: ms ? 'Pasangan ½ (50%), Ibu Bapa ½ (50%)' : 'Spouse ½ (50%), Parents ½ (50%)' },
                       { s: '✓', c: '✗', p: '✗', d: ms ? 'Pasangan 100%' : 'Spouse 100%' },
-                      { s: '✗', c: '✓', p: '—', d: ms ? 'Anak-anak 100%' : 'Children 100%' },
+                      { s: '✗', c: '✓', p: '✓', d: ms ? 'Anak ⅔ (67%), Ibu Bapa ⅓ (33%)' : 'Children ⅔ (67%), Parents ⅓ (33%)' },
+                      { s: '✗', c: '✓', p: '✗', d: ms ? 'Anak-anak 100%' : 'Children 100%' },
                       { s: '✗', c: '✗', p: '✓', d: ms ? 'Ibu Bapa 100%' : 'Parents 100%' },
                       { s: '✗', c: '✗', p: '✗', d: ms ? 'Adik-beradik 100%' : 'Siblings 100%' },
                     ].map((row, i) => (
@@ -652,8 +654,8 @@ export function WillStep4Beneficiaries({
               </div>
               <p className="text-muted-foreground italic pt-1">
                 {ms
-                  ? '* Formula ini hanya digunakan jika tiada Surat Wasiat. Dengan Surat Wasiat, anda bebas menentukan sendiri.'
-                  : '* This formula only applies if there is no Will. With a Will, you are free to decide for yourself.'}
+                  ? '* Formula ini terpakai kepada bukan-Muslim di Semenanjung Malaysia dan Sarawak (bukan anak negeri) sahaja — ia hanya digunakan jika tiada Surat Wasiat. Sabah dan anak negeri Sabah/Sarawak tertakluk kepada undang-undang berbeza. Dengan Surat Wasiat, anda bebas menentukan sendiri.'
+                  : '* This formula applies to non-Muslims in Peninsular Malaysia and Sarawak (non-natives) only — it is only used if there is no Will. Sabah and Sabah/Sarawak natives are governed by different laws. With a Will, you are free to decide for yourself.'}
               </p>
             </div>
           )}
@@ -673,8 +675,8 @@ export function WillStep4Beneficiaries({
             </div>
           </div>
 
-          {/* Q2: Parents alive — shown when relevant */}
-          {hasChildren !== null && needsParentsQuestion && (
+          {/* Q2: Parents alive */}
+          {hasChildren !== null && (
             <div>
               <p className="text-sm font-medium mb-2">
                 {ms ? '2. Adakah ibu atau bapa anda masih hidup?' : '2. Are either of your parents still alive?'}
@@ -695,13 +697,6 @@ export function WillStep4Beneficiaries({
             <div className="bg-white border border-border rounded-lg p-3 text-xs space-y-1.5">
               <p className="font-semibold text-foreground">{ms ? 'Formula yang akan digunakan:' : 'Formula that will be applied:'}</p>
               <p className="text-primary font-medium">{suggestionLabel(maritalStatus, hasChildren!, parentsAlive ?? false, ms)}</p>
-              {hasChildren && maritalStatus !== 'married' && (
-                <p className="text-muted-foreground">
-                  {ms
-                    ? 'ℹ Ibu bapa tidak termasuk — anak-anak lebih utama daripada ibu bapa mengikut Akta Pembahagian 1958.'
-                    : 'ℹ Parents are excluded — children take priority over parents under the Distribution Act 1958.'}
-                </p>
-              )}
               {!hasChildren && !parentsAlive && maritalStatus !== 'married' && (
                 <p className="text-amber-600">
                   {ms

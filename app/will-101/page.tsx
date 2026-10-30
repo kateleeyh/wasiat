@@ -485,23 +485,66 @@ export default async function Will101() {
             </div>
             <div className="p-4 space-y-2 text-xs">
               {(ms ? [
+                { situation: 'Pasangan sahaja (tiada anak, tiada ibu bapa)', formula: 'Pasangan menerima keseluruhan' },
                 { situation: 'Pasangan + Anak',              formula: 'Pasangan ⅓ · Anak ⅔' },
                 { situation: 'Pasangan + Ibu Bapa (tiada anak)', formula: 'Pasangan ½ · Ibu Bapa ½' },
                 { situation: 'Pasangan + Anak + Ibu Bapa',   formula: 'Pasangan ¼ · Anak ½ · Ibu Bapa ¼' },
-                { situation: 'Anak sahaja (tiada pasangan)', formula: 'Anak menerima keseluruhan' },
+                { situation: 'Anak + Ibu Bapa (tiada pasangan)', formula: 'Anak ⅔ · Ibu Bapa ⅓' },
+                { situation: 'Anak sahaja (tiada pasangan, tiada ibu bapa)', formula: 'Anak menerima keseluruhan' },
                 { situation: 'Ibu Bapa sahaja',              formula: 'Ibu Bapa menerima keseluruhan' },
                 { situation: 'Tiada sesiapa di atas',        formula: 'Jatuh kepada pihak paling dekat mengikut undang-undang' },
               ] : [
+                { situation: 'Spouse only (no children, no parents)', formula: 'Spouse receives the whole' },
                 { situation: 'Spouse + Children',              formula: 'Spouse ⅓ · Children ⅔' },
                 { situation: 'Spouse + Parents (no children)', formula: 'Spouse ½ · Parents ½' },
                 { situation: 'Spouse + Children + Parents',    formula: 'Spouse ¼ · Children ½ · Parents ¼' },
-                { situation: 'Children only (no spouse)',      formula: 'Children receive the whole' },
+                { situation: 'Children + Parents (no spouse)', formula: 'Children ⅔ · Parents ⅓' },
+                { situation: 'Children only (no spouse, no parents)', formula: 'Children receive the whole' },
                 { situation: 'Parents only',                   formula: 'Parents receive the whole' },
                 { situation: 'None of the above',              formula: 'Passes to nearest kin by law' },
               ]).map((row, i) => (
                 <div key={i} className="flex justify-between items-center border-b border-slate-100 pb-2 last:border-0 last:pb-0">
                   <span className="text-slate-700 font-medium">{row.situation}</span>
                   <span className="text-slate-500 text-right">{row.formula}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-4 bg-amber-50 border border-amber-200 rounded-xl p-4 text-xs text-amber-800">
+            <p className="font-semibold">{ms ? '⚠ Formula ini tidak terpakai kepada semua orang:' : '⚠ This formula does not apply to everyone:'}</p>
+            <p className="mt-1">
+              {ms
+                ? 'Akta Pembahagian 1958 hanya terpakai kepada bukan-Muslim di Semenanjung Malaysia dan Sarawak (bukan anak negeri). Anak negeri Sabah dan Sarawak tertakluk kepada hukum adat masing-masing, bukan Akta ini. Sabah pula mempunyai undang-undang berasingan — Intestate Succession Ordinance 1960 — dengan bahagian yang berbeza (contohnya, ibu bapa tidak menerima apa-apa jika ada anak, walaupun pasangan masih hidup).'
+                : 'The Distribution Act 1958 only applies to non-Muslims in Peninsular Malaysia and Sarawak (non-natives). Sabah and Sarawak natives are instead governed by their own native customary law, not this Act. Sabah also has a separate law — the Intestate Succession Ordinance 1960 — with different shares (for example, parents receive nothing if issue survive, even alongside a spouse).'}
+            </p>
+          </div>
+
+          <div className="mt-5 bg-slate-50 border border-slate-200 rounded-xl overflow-hidden">
+            <div className="bg-slate-700 px-4 py-2.5">
+              <p className="text-white text-xs font-bold">
+                {ms ? 'Undang-Undang Mana Yang Terpakai Kepada Anda?' : 'Which Law Applies to You?'}
+              </p>
+            </div>
+            <div className="p-4 space-y-2 text-xs">
+              {(ms ? [
+                { who: 'Bukan-Muslim, Semenanjung Malaysia',        law: 'Akta Pembahagian 1958',               note: 'Formula di atas' },
+                { who: 'Bukan-Muslim, Sarawak (bukan anak negeri)', law: 'Akta Pembahagian 1958',               note: 'Berkuat kuasa di Sarawak sejak 1986' },
+                { who: 'Anak negeri Sarawak',                       law: 'Hukum adat anak negeri',               note: 'Tiada formula berkanun yang tetap' },
+                { who: 'Bukan-Muslim, Sabah (bukan anak negeri)',   law: 'Intestate Succession Ordinance 1960', note: 'Bahagian berbeza daripada Akta Pembahagian 1958' },
+                { who: 'Anak negeri Sabah',                         law: 'Hukum adat anak negeri',               note: 'Tiada formula berkanun yang tetap' },
+                { who: 'Muslim (di mana-mana negeri)',              law: 'Faraid',                               note: 'Lihat Wasiat Islam' },
+              ] : [
+                { who: 'Non-Muslim, Peninsular Malaysia',        law: 'Distribution Act 1958',               note: 'Formula above' },
+                { who: 'Non-Muslim, Sarawak (non-native)',       law: 'Distribution Act 1958',               note: 'In force in Sarawak since 1986' },
+                { who: 'Sarawak natives',                        law: 'Native customary law',                note: 'No fixed statutory formula' },
+                { who: 'Non-Muslim, Sabah (non-native)',         law: 'Intestate Succession Ordinance 1960', note: 'Shares differ from the Distribution Act 1958' },
+                { who: 'Sabah natives',                          law: 'Native customary law',                note: 'No fixed statutory formula' },
+                { who: 'Muslims (any state)',                    law: 'Faraid',                               note: 'See Islamic Wasiat' },
+              ]).map((row, i) => (
+                <div key={i} className="flex flex-col sm:flex-row sm:justify-between gap-0.5 border-b border-slate-100 pb-2 last:border-0 last:pb-0">
+                  <span className="text-slate-700 font-medium">{row.who}</span>
+                  <span className="text-slate-500 sm:text-right">{row.law} <span className="text-slate-400">— {row.note}</span></span>
                 </div>
               ))}
             </div>
