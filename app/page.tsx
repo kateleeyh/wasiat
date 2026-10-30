@@ -256,16 +256,15 @@ export default async function LandingPage() {
       {/* ── TRUST BAR ── */}
       <section className="bg-white border-b border-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex flex-wrap justify-center items-center gap-4 sm:gap-6 lg:gap-10">
+          <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:justify-center sm:items-center sm:gap-6 lg:gap-10">
             {[
-              { emoji: '🔒', label: isMalay ? 'SSL Selamat' : 'SSL Secured', sub: isMalay ? 'Data disulitkan' : 'Data encrypted' },
-              { emoji: null, label: t('trust.secure'), sub: t('trust.secureDesc') },
-              { emoji: '🇲🇾', label: isMalay ? 'Patuh PDPA' : 'PDPA Compliant', sub: isMalay ? 'Perlindungan data' : 'Data protected' },
-              { emoji: '⚡', label: isMalay ? 'PDF Segera' : 'Instant PDF', sub: isMalay ? 'Jana dalam minit' : 'Generated in minutes' },
-              { emoji: '📋', label: isMalay ? 'Akta Wasiat 1959' : 'Wills Act 1959', sub: isMalay ? 'Rangka kerja undang-undang' : 'Legal framework' },
-              { emoji: '🧑‍🤝‍🧑', label: t('trust.allRaces'), sub: t('trust.allRacesDesc') },
-            ].map(({ emoji, label, sub }) => (
-              <div key={label} className="flex items-center gap-2.5 px-4 py-2.5 bg-slate-50 rounded-xl border border-slate-100">
+              { emoji: '🔒', label: isMalay ? 'SSL Selamat' : 'SSL Secured', sub: isMalay ? 'Data disulitkan' : 'Data encrypted', wide: false },
+              { emoji: '🇲🇾', label: isMalay ? 'Patuh PDPA' : 'PDPA Compliant', sub: isMalay ? 'Perlindungan data' : 'Data protected', wide: false },
+              { emoji: null, label: t('trust.secure'), sub: null, wide: true },
+              { emoji: '📋', label: isMalay ? 'Akta Wasiat 1959' : 'Wills Act 1959', sub: isMalay ? 'Rangka kerja undang-undang' : 'Legal framework', wide: false },
+              { emoji: '🧑‍🤝‍🧑', label: t('trust.allRaces'), sub: t('trust.allRacesDesc'), wide: false },
+            ].map(({ emoji, label, sub, wide }) => (
+              <div key={label} className={`flex items-center gap-2.5 px-3 py-2 sm:px-4 sm:py-2.5 bg-slate-50 rounded-xl border border-slate-100 ${wide ? 'col-span-2 sm:col-span-1 justify-center sm:justify-start' : ''}`}>
                 {emoji === null ? (
                   <div className="flex items-center gap-1">
                     <img src="/payment/fpx.svg"        alt="FPX"     className="h-5 w-auto rounded" />
@@ -279,7 +278,7 @@ export default async function LandingPage() {
                 )}
                 <div>
                   <div className="text-xs font-semibold text-slate-800">{label}</div>
-                  <div className="text-[10px] text-slate-400">{sub}</div>
+                  {sub && <div className="hidden sm:block text-[10px] text-slate-400">{sub}</div>}
                 </div>
               </div>
             ))}
