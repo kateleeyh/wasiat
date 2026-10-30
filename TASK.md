@@ -62,8 +62,7 @@
 ### 2A. SEO — Search Engine Visibility
 **Goal: Rank on Google for "wasiat online malaysia", "tukar nama kereta arwah", etc.**
 
-- [ ] Submit sitemap to Google Search Console (`search.google.com/search-console`)
-      → Add `wasiathub.my` → verify via Cloudflare DNS TXT record → submit sitemap URL
+- [x] Submit sitemap to Google Search Console — done 30 Oct 2026, verified via Cloudflare DNS TXT record under `mywasiathub@gmail.com`, submitted `https://wasiathub.my/sitemap.xml`
 - [x] Create OG image (1200×630px) — `public/og-image.png`
       → Dark gradient + WasiatHub logo + tagline + stats, matches hero design (was previously referenced in metadata but the file never existed — every social share was broken)
 - [ ] Write 4 more Insights articles (from SEO cluster plan):
@@ -71,7 +70,7 @@
   - [ ] "Kenapa Tukar Nama Kereta RM100 Tapi Kos Boleh RM10,000?"
   - [ ] "Rumah Arwah Tak Boleh Terus Jual — Ini Sebabnya"
   - [ ] "Berapa Kos Sebenar Urus Harta Pusaka Tanpa Wasiat?"
-- [ ] Internal linking — ensure all articles link to pillar & to `/auth/register`
+- [x] Internal linking — done 30 Oct 2026, shared `RelatedArticles` component gives every article 3 cross-links; pillar is linked to from all other articles. All articles already had `/auth/register` CTAs.
 - [ ] Add article dates to sitemap (dynamic, based on actual publish dates)
 
 ### 2B. Social Media — Awareness & Reach
