@@ -240,7 +240,7 @@ export default async function Wasiat101() {
                   'Wang KWSP (ada prosedur penama tersendiri)',
                   'Harta yang telah diwakafkan',
                   'Harta yang telah dijual atau dipindah milik',
-                  'Harta yang diperoleh melalui Hibah',
+                  'Harta yang telah dihibahkan (diberikan) semasa hayat',
                   'Wang pinjaman (bukan milik anda)',
                   'Wang saguhati & insurans (ada penama)',
                 ] : [
@@ -249,7 +249,7 @@ export default async function Wasiat101() {
                   'EPF / KWSP (has its own nomination process)',
                   'Property already under Wakaf',
                   'Assets already sold or transferred',
-                  'Assets received via Hibah',
+                  'Assets already given away via Hibah during your lifetime',
                   'Borrowed money (not your property)',
                   'Gratuity & insurance (has nominees)',
                 ]).map((item, i) => (

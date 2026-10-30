@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "BUILDING_CF=1 next build",
+    "build": "cross-env BUILDING_CF=1 next build",
     "start": "next start",
     "lint": "next lint",
     "deploy": "npm run build && npx opennextjs-cloudflare build && node -e \"const fs=require('fs'); const f='.open-next/cloudflare/next-env.mjs'; if(fs.existsSync(f)){const lines=[...new Set(fs.readFileSync(f,'utf8').trim().split('\\n'))]; fs.writeFileSync(f,lines.join('\\n')+'\\n');}\" && npx wrangler deploy"
@@ -28,10 +28,11 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
-    "@opennextjs/cloudflare": "^1.19.2",
+    "@opennextjs/cloudflare": "^1.20.4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "cross-env": "^10.1.0",
     "eslint": "^9",
     "eslint-config-next": "^16.2.2",
     "postcss": "^8",

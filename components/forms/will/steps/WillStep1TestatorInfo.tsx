@@ -92,8 +92,8 @@ export function WillStep1TestatorInfo({ initialData, onChange, onValidChange, do
       <InfoTip titleMs="ℹ️ Akta Wasiat 1959 — Asas Perundangan" titleEn="ℹ️ Wills Act 1959 — Legal Basis" ms={ms} variant="blue">
         <p className="text-xs text-blue-700 leading-relaxed mt-2">
           {ms
-            ? 'Surat Wasiat Am ini disediakan di bawah Akta Wasiat 1959 (Malaysia). Ia boleh dibuat oleh mana-mana individu yang berumur 18 tahun ke atas dan sihat akal, tanpa mengira agama. Nota untuk penduduk Sabah: Akta Wasiat Sabah memerlukan umur minimum 21 tahun.'
-            : 'This General Will is prepared under the Wills Act 1959 (Malaysia). It may be made by any individual aged 18 and above of sound mind, regardless of religion. Note for Sabah residents: The Sabah Wills Ordinance requires a minimum age of 21 years.'}
+            ? 'Surat Wasiat Am ini disediakan di bawah Akta Wasiat 1959 (Semenanjung Malaysia). Ia boleh dibuat oleh mana-mana individu yang berumur 18 tahun ke atas dan sihat akal, tanpa mengira agama. Nota untuk penduduk Sabah: Akta Wasiat Sabah memerlukan umur minimum 21 tahun.'
+            : 'This General Will is prepared under the Wills Act 1959 (Peninsular Malaysia). It may be made by any individual aged 18 and above of sound mind, regardless of religion. Note for Sabah residents: The Sabah Wills Ordinance requires a minimum age of 21 years.'}
         </p>
       </InfoTip>
 
@@ -113,7 +113,8 @@ export function WillStep1TestatorInfo({ initialData, onChange, onValidChange, do
           <div className="bg-amber-100 rounded-lg p-3 space-y-1">
             <p className="font-semibold text-amber-900">{ms ? 'Formula Akta Pembahagian 1958:' : 'Distribution Act 1958 Formula:'}</p>
             <ul className="space-y-0.5 list-none">
-              <li>• {ms ? 'Ada pasangan & anak → Pasangan ¼, Anak ¾' : 'Spouse & children → Spouse ¼, Children ¾'}</li>
+              <li>• {ms ? 'Ada pasangan & anak (tiada ibu bapa hidup) → Pasangan 1/3, Anak 2/3' : 'Spouse & children (no surviving parents) → Spouse ⅓, Children ⅔'}</li>
+              <li>• {ms ? 'Ada pasangan, anak & ibu bapa (ketiga-tiganya hidup) → Pasangan ¼, Anak ½, Ibu bapa ¼' : 'Spouse, children & parents (all three surviving) → Spouse ¼, Children ½, Parents ¼'}</li>
               <li>• {ms ? 'Ada pasangan sahaja (tiada anak) → Pasangan ½, Ibu bapa ½' : 'Spouse only (no children) → Spouse ½, Parents ½'}</li>
               <li>• {ms ? 'Ada anak sahaja (tiada pasangan) → Anak semua' : 'Children only (no spouse) → Children take all'}</li>
               <li>• {ms ? 'Tiada pasangan, anak, atau ibu bapa → Saudara mara' : 'No spouse, children, or parents → Siblings/relatives'}</li>

@@ -2,6 +2,11 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "wasiat",
   "main": ".open-next/worker.js",
+  "workers_dev": true,
+  "routes": [
+    { "pattern": "wasiathub.my", "custom_domain": true },
+    { "pattern": "www.wasiathub.my", "custom_domain": true }
+  ],
   "compatibility_date": "2026-04-20",
   "observability": {
     "enabled": true

@@ -76,8 +76,8 @@ export default async function Will101() {
           </h2>
           <p>
             {ms
-              ? 'Surat Wasiat Am adalah dokumen undang-undang bertulis di mana anda — semasa masih hidup dan waras akal — menyatakan hasrat anda tentang pengagihan harta selepas kematian. Di Malaysia, ia dikawal oleh Akta Wasiat 1959 (untuk Semenanjung Malaysia dan Sarawak) dan Ordinan Wasiat Sabah (Bab. 158) untuk Sabah.'
-              : 'A General Will is a written legal document in which you — while alive and of sound mind — state your wishes about the distribution of your assets after death. In Malaysia, it is governed by the Wills Act 1959 (for Peninsular Malaysia and Sarawak) and the Wills Ordinance Sabah (Cap. 158) for Sabah.'}
+              ? 'Surat Wasiat Am adalah dokumen undang-undang bertulis di mana anda — semasa masih hidup dan waras akal — menyatakan hasrat anda tentang pengagihan harta selepas kematian. Di Malaysia, ia dikawal oleh Akta Wasiat 1959 (Semenanjung Malaysia) dan Ordinan Wasiat Sabah (Bab. 158) untuk Sabah.'
+              : 'A General Will is a written legal document in which you — while alive and of sound mind — state your wishes about the distribution of your assets after death. In Malaysia, it is governed by the Wills Act 1959 (Peninsular Malaysia) and the Wills Ordinance Sabah (Cap. 158) for Sabah.'}
           </p>
           <p className="mt-3">
             {ms
@@ -133,8 +133,8 @@ export default async function Will101() {
               <p className="font-bold text-slate-800 text-xs mb-1">② {ms ? 'Umur minimum' : 'Minimum age'}</p>
               <p className="text-xs text-slate-600">
                 {ms
-                  ? '18 tahun ke atas (Semenanjung Malaysia dan Sarawak) — Seksyen 4, Akta Wasiat 1959. 21 tahun ke atas di Sabah (Ordinan Wasiat Sabah, Bab. 158). Tiada had umur maksimum selagi anda masih waras akal.'
-                  : '18 years and above (Peninsular Malaysia and Sarawak) — Section 4, Wills Act 1959. 21 years and above in Sabah (Wills Ordinance Sabah, Cap. 158). There is no maximum age limit as long as you are of sound mind.'}
+                  ? '18 tahun ke atas (Semenanjung Malaysia) — Seksyen 4, Akta Wasiat 1959. 21 tahun ke atas di Sabah (Ordinan Wasiat Sabah, Bab. 158). Tiada had umur maksimum selagi anda masih waras akal.'
+                  : '18 years and above (Peninsular Malaysia) — Section 4, Wills Act 1959. 21 years and above in Sabah (Wills Ordinance Sabah, Cap. 158). There is no maximum age limit as long as you are of sound mind.'}
               </p>
             </div>
             <div className="border border-slate-200 rounded-xl p-4">
