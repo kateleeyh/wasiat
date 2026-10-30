@@ -258,13 +258,12 @@ export default async function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:justify-center sm:items-center sm:gap-6 lg:gap-10">
             {[
-              { emoji: '🔒', label: isMalay ? 'SSL Selamat' : 'SSL Secured', sub: isMalay ? 'Data disulitkan' : 'Data encrypted', wide: false },
-              { emoji: '🇲🇾', label: isMalay ? 'Patuh PDPA' : 'PDPA Compliant', sub: isMalay ? 'Perlindungan data' : 'Data protected', wide: false },
-              { emoji: null, label: t('trust.secure'), sub: null, wide: true },
-              { emoji: '📋', label: isMalay ? 'Akta Wasiat 1959' : 'Wills Act 1959', sub: isMalay ? 'Rangka kerja undang-undang' : 'Legal framework', wide: false },
-              { emoji: '🧑‍🤝‍🧑', label: t('trust.allRaces'), sub: t('trust.allRacesDesc'), wide: false },
-            ].map(({ emoji, label, sub, wide }) => (
-              <div key={label} className={`flex items-center gap-2.5 px-3 py-2 sm:px-4 sm:py-2.5 bg-slate-50 rounded-xl border border-slate-100 ${wide ? 'col-span-2 sm:col-span-1 justify-center sm:justify-start' : ''}`}>
+              { key: 'ssl',     emoji: '🔒', label: isMalay ? 'SSL Selamat' : 'SSL Secured', sub: isMalay ? 'Data disulitkan' : 'Data encrypted' },
+              { key: 'pdpa',    emoji: '🇲🇾', label: isMalay ? 'Patuh PDPA' : 'PDPA Compliant', sub: isMalay ? 'Perlindungan data' : 'Data protected' },
+              { key: 'payment', emoji: null, label: null, sub: null },
+              { key: 'wills',   emoji: '📋', label: isMalay ? 'Akta Wasiat 1959' : 'Wills Act 1959', sub: isMalay ? 'Rangka kerja undang-undang' : 'Legal framework' },
+            ].map(({ key, emoji, label, sub }, i, arr) => (
+              <div key={key} className={`flex items-center justify-center gap-2.5 px-3 py-2 sm:px-4 sm:py-2.5 bg-slate-50 rounded-xl border border-slate-100 ${emoji === null || i === arr.length - 1 ? 'col-span-2 sm:col-span-1' : ''}`}>
                 {emoji === null ? (
                   <div className="flex items-center gap-1">
                     <img src="/payment/fpx.svg"        alt="FPX"     className="h-5 w-auto rounded" />
@@ -274,12 +273,14 @@ export default async function LandingPage() {
                     <img src="/payment/mastercard.svg" alt="MC"      className="h-5 w-auto rounded" />
                   </div>
                 ) : (
-                  <span className="text-xl">{emoji}</span>
+                  <>
+                    <span className="text-xl">{emoji}</span>
+                    <div>
+                      <div className="text-xs font-semibold text-slate-800">{label}</div>
+                      {sub && <div className="hidden sm:block text-[10px] text-slate-400">{sub}</div>}
+                    </div>
+                  </>
                 )}
-                <div>
-                  <div className="text-xs font-semibold text-slate-800">{label}</div>
-                  {sub && <div className="hidden sm:block text-[10px] text-slate-400">{sub}</div>}
-                </div>
               </div>
             ))}
           </div>
