@@ -130,7 +130,7 @@ export default async function InsightsPage() {
 
         {/* Wasiat 101 banner */}
         <Link href="/wasiat-101">
-          <div className="mb-8 bg-emerald-900 rounded-2xl p-5 flex items-center justify-between gap-4 hover:bg-emerald-800 transition-colors group">
+          <div className="mb-4 bg-emerald-900 rounded-2xl p-5 flex items-center justify-between gap-4 hover:bg-emerald-800 transition-colors group">
             <div>
               <span className="text-emerald-300 text-xs font-bold uppercase tracking-wider">
                 {ms ? 'Baca Sebelum Mulakan' : 'Read Before You Start'}
@@ -143,6 +143,24 @@ export default async function InsightsPage() {
               </p>
             </div>
             <ArrowRight className="w-5 h-5 text-emerald-400 shrink-0 group-hover:translate-x-1 transition-transform" />
+          </div>
+        </Link>
+
+        {/* General Will 101 banner */}
+        <Link href="/will-101">
+          <div className="mb-8 bg-blue-900 rounded-2xl p-5 flex items-center justify-between gap-4 hover:bg-blue-800 transition-colors group">
+            <div>
+              <span className="text-blue-300 text-xs font-bold uppercase tracking-wider">
+                {ms ? 'Baca Sebelum Mulakan' : 'Read Before You Start'}
+              </span>
+              <p className="text-white font-bold mt-1">
+                {ms ? 'General Will 101 — Semua Yang Perlu Anda Tahu Tentang Surat Wasiat Am' : 'General Will 101 — Everything You Need to Know About a General Will'}
+              </p>
+              <p className="text-blue-300 text-xs mt-1">
+                {ms ? 'Kebebasan penuh tanpa had ⅓, syarat saksi, akibat tiada Will & lebih.' : 'Full freedom with no ⅓ limit, witness rules, consequences of no Will & more.'}
+              </p>
+            </div>
+            <ArrowRight className="w-5 h-5 text-blue-400 shrink-0 group-hover:translate-x-1 transition-transform" />
           </div>
         </Link>
 
