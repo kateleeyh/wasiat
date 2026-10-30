@@ -2,6 +2,7 @@ import { cookies } from 'next/headers'
 import Link from 'next/link'
 import { ArrowLeft, X, Check } from 'lucide-react'
 import type { Metadata } from 'next'
+import { RelatedArticles } from '@/components/insights/RelatedArticles'
 
 export const metadata: Metadata = {
   title: 'EPF Nomination Bukan Wasiat — Ramai Yang Silap Faham Ini',
@@ -148,6 +149,8 @@ export default async function Article() {
             ? '📌 Rujukan undang-undang: Akta Kumpulan Wang Simpanan Pekerja 1991 (Seksyen 74) — peruntukan penamaan KWSP. Bagi penama Muslim, hukum Faraid terpakai di bawah undang-undang Syariah negeri masing-masing. Maklumat ini adalah umum — sila rujuk KWSP atau peguam untuk nasihat khusus.'
             : '📌 Legal references: Employees Provident Fund Act 1991 (Section 74) — EPF nomination provisions. For Muslim nominees, Faraid applies under each state&apos;s Syariah law. This information is general — consult EPF or a lawyer for specific advice.'}</p>
         </div>
+
+        <RelatedArticles ms={ms} slugs={['salah-faham-wasiat', 'akaun-bank-dibekukan', 'kereta-tanpa-wasiat']} />
 
         <div className="mt-6 p-6 bg-slate-900 rounded-2xl text-center">
           <p className="text-white font-bold text-lg mb-2">

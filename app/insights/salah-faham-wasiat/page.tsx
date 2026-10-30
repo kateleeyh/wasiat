@@ -2,6 +2,7 @@ import { cookies } from 'next/headers'
 import Link from 'next/link'
 import { ArrowLeft, XCircle, CheckCircle } from 'lucide-react'
 import type { Metadata } from 'next'
+import { RelatedArticles } from '@/components/insights/RelatedArticles'
 
 export const metadata: Metadata = {
   title: '5 Salah Faham Tentang Wasiat Yang Ramai Orang Malaysia Percaya',
@@ -175,15 +176,15 @@ export default async function Article() {
 
         </div>
 
-        <div className="mt-8 p-5 bg-slate-50 border border-slate-200 rounded-xl text-sm">
-          <p className="font-semibold text-slate-800 mb-2">{ms ? 'Baca juga:' : 'Read also:'}</p>
-          <Link href="/insights/epf-nomination-bukan-wasiat" className="text-emerald-600 hover:underline block">
-            → {ms ? 'EPF Nomination Bukan Wasiat — Ramai Yang Silap Faham' : 'EPF Nomination Is NOT a Will'}
-          </Link>
-          <Link href="/wasiat-101" className="text-emerald-600 hover:underline block mt-1">
-            → {ms ? 'Wasiat 101 — Semua Yang Perlu Anda Tahu Tentang Wasiat Islam' : 'Wasiat 101 — Everything You Need to Know About Islamic Will'}
-          </Link>
-        </div>
+        <RelatedArticles
+          ms={ms}
+          slugs={['kereta-tanpa-wasiat', 'epf-nomination-bukan-wasiat', 'grant-of-probate-vs-loa']}
+          extra={{
+            href: '/wasiat-101',
+            labelMs: 'Wasiat 101 — Semua Yang Perlu Anda Tahu Tentang Wasiat Islam',
+            labelEn: 'Wasiat 101 — Everything You Need to Know About Islamic Will',
+          }}
+        />
 
         <div className="mt-6 p-6 bg-slate-900 rounded-2xl text-center">
           <p className="text-white font-bold text-lg mb-2">

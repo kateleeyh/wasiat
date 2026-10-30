@@ -2,6 +2,7 @@ import { cookies } from 'next/headers'
 import Link from 'next/link'
 import { ArrowLeft, Clock, DollarSign, FileText, CheckCircle, XCircle } from 'lucide-react'
 import type { Metadata } from 'next'
+import { RelatedArticles } from '@/components/insights/RelatedArticles'
 
 export const metadata: Metadata = {
   title: 'Tukar Nama Kereta Arwah di Malaysia: Proses, Kos & Kenapa Boleh Cecah RM10,000+',
@@ -233,6 +234,8 @@ export default async function Article() {
           </div>
 
         </div>
+
+        <RelatedArticles ms={ms} slugs={['grant-of-probate-vs-loa', 'salah-faham-wasiat', 'akaun-bank-dibekukan']} />
 
         <div className="mt-10 p-6 bg-slate-900 rounded-2xl text-center">
           <p className="text-white font-bold text-lg mb-2">

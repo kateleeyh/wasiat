@@ -2,6 +2,7 @@ import { cookies } from 'next/headers'
 import Link from 'next/link'
 import { ArrowLeft, FileText } from 'lucide-react'
 import type { Metadata } from 'next'
+import { RelatedArticles } from '@/components/insights/RelatedArticles'
 
 export const metadata: Metadata = {
   title: 'Grant of Probate vs Letter of Administration — Apa Bezanya?',
@@ -183,15 +184,7 @@ export default async function Article() {
 
         </div>
 
-        <div className="mt-8 p-5 bg-slate-50 border border-slate-200 rounded-xl text-sm">
-          <p className="font-semibold text-slate-800 mb-2">{ms ? 'Baca juga:' : 'Read also:'}</p>
-          <Link href="/insights/kereta-tanpa-wasiat" className="text-emerald-600 hover:underline block">
-            → {ms ? 'Tukar Nama Kereta Arwah — Ini Proses Sebenar' : 'Transferring a Deceased\'s Car — The Real Process'}
-          </Link>
-          <Link href="/insights/akaun-bank-dibekukan" className="text-emerald-600 hover:underline block mt-1">
-            → {ms ? 'Akaun Bank Dibekukan Bila Meninggal — Ini Yang Berlaku' : 'Bank Account Frozen When Someone Dies'}
-          </Link>
-        </div>
+        <RelatedArticles ms={ms} slugs={['kereta-tanpa-wasiat', 'akaun-bank-dibekukan', 'salah-faham-wasiat']} />
 
         <div className="mt-6 p-6 bg-slate-900 rounded-2xl text-center">
           <p className="text-white font-bold text-lg mb-2">
