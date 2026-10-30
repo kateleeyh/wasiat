@@ -1258,9 +1258,9 @@ User can:
 Distribution Act pre-fill questions:
 
 1. Do you have children?
-2. Are either of your parents alive? This question is skipped if the testator is not married and has children.
+2. Are either of your parents alive? Always asked once Q1 is answered.
 
-Suggested shares:
+Suggested shares (Distribution Act 1958, Section 6 — non-Muslim, Peninsular Malaysia & Sarawak non-natives only; Sabah uses the Intestate Succession Ordinance 1960 instead, and Sabah/Sarawak natives follow native customary law — not implemented in this pre-fill):
 
 | Scenario | Suggested beneficiaries |
 |---|---|
@@ -1268,7 +1268,8 @@ Suggested shares:
 | Married + children + no parents | Spouse 33%, Child 67% |
 | Married + no children + parents alive | Spouse 50%, Parent 50% |
 | Married + no children + no parents | Spouse 100% |
-| Not married + children | Child 100% |
+| Not married + children + parents alive | Child 67%, Parent 33% |
+| Not married + children + no parents | Child 100% |
 | No spouse/children + parents alive | Parent 100% |
 | No spouse/children/parents | Manual sibling entry |
 

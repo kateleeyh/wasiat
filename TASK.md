@@ -29,12 +29,14 @@
 - [x] Wasi/Witness addresses in PDF
 - [x] Disclaimer removed from PDF (on website only)
 - [x] Privacy Policy, Terms, Disclaimer, Contact pages
+- [x] Fixed missing/mislabeled Distribution Act 1958 scenarios (will-101, Step1 InfoTip, and the live beneficiary auto-suggester in WillStep4Beneficiaries — previously skipped asking about surviving parents for unmarried testators with children)
+- [x] Added Sabah/Sarawak-native jurisdiction caveats — Distribution Act 1958 only governs non-Muslims in Peninsular Malaysia & Sarawak non-natives; Sabah uses the Intestate Succession Ordinance 1960 (different shares); Sabah/Sarawak natives follow native customary law
 
 ### Landing Page
 - [x] "Your Will, Your Way." tagline
 - [x] "One price. Zero limits." differentiator
 - [x] Document mockup stack visual in hero
-- [x] Trust badges: SSL / FPX / PDPA / Wills Act 1959
+- [x] Trust badges: SSL / Payment logos / PDPA / Wills Act 1959 (mobile 2-column grid, payment logos get a full-width row — removed "Instant PDF" duplicate and "For All Malaysians" to keep it to 3 compact rows on mobile)
 - [x] Pricing: RM79 / RM129 (centralized in `lib/pricing.ts`)
 
 ### SEO (Technical)
@@ -51,6 +53,7 @@
   - [x] 5 Salah Faham Tentang Wasiat
   - [x] EPF Nomination Bukan Wasiat
   - [x] Wasiat Islam vs Surat Wasiat Am
+- [x] General Will 101 banner added to Insights page (previously only Wasiat 101 had one)
 
 ---
 
@@ -61,8 +64,8 @@
 
 - [ ] Submit sitemap to Google Search Console (`search.google.com/search-console`)
       → Add `wasiathub.my` → verify via Cloudflare DNS TXT record → submit sitemap URL
-- [ ] Create OG image (1200×630px) — `public/og-image.png`
-      → Dark background + WasiatHub logo + tagline (needed for social sharing previews)
+- [x] Create OG image (1200×630px) — `public/og-image.png`
+      → Dark gradient + WasiatHub logo + tagline + stats, matches hero design (was previously referenced in metadata but the file never existed — every social share was broken)
 - [ ] Write 4 more Insights articles (from SEO cluster plan):
   - [ ] "Boleh Tak Guna Kereta Arwah Tanpa Tukar Nama?"
   - [ ] "Kenapa Tukar Nama Kereta RM100 Tapi Kos Boleh RM10,000?"
@@ -199,4 +202,4 @@
 - Admin access: edit `ADMIN_EMAILS` in `app/admin/layout.tsx` then redeploy
 
 ---
-*Last updated: 16 May 2026 | WasiatHub*
+*Last updated: 30 Oct 2026 | WasiatHub*
